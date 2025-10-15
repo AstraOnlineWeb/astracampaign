@@ -90,20 +90,22 @@ model UserTenant {
 }
 
 model GlobalSettings {
-  id              String   @id @default(uuid())
-  singleton       Boolean  @default(true) @unique // Ensures only one record
-  wahaHost        String   @default("") @map("waha_host")
-  wahaApiKey      String   @default("") @map("waha_api_key")
-  evolutionHost   String   @default("") @map("evolution_host")
-  evolutionApiKey String   @default("") @map("evolution_api_key")
-  logoUrl         String?  @map("logo_url")
-  faviconUrl      String?  @map("favicon_url")
-  iconUrl         String?  @map("icon_url")
-  companyName     String?  @map("company_name")
-  pageTitle       String?  @map("page_title")
-  primaryColor    String?  @map("primary_color")
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  id               String   @id @default(uuid())
+  singleton        Boolean  @default(true) @unique // Ensures only one record
+  wahaHost         String   @default("") @map("waha_host")
+  wahaApiKey       String   @default("") @map("waha_api_key")
+  evolutionHost    String   @default("") @map("evolution_host")
+  evolutionApiKey  String   @default("") @map("evolution_api_key")
+  digitalSacHost   String   @default("") @map("digitalsac_host")
+  digitalSacToken  String   @default("") @map("digitalsac_token")
+  logoUrl          String?  @map("logo_url")
+  faviconUrl       String?  @map("favicon_url")
+  iconUrl          String?  @map("icon_url")
+  companyName      String?  @map("company_name")
+  pageTitle        String?  @map("page_title")
+  primaryColor     String?  @map("primary_color")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
 
   @@map("global_settings")
 }
@@ -167,6 +169,7 @@ model WhatsAppSession {
   criadoEm       DateTime   @default(now()) @map("criado_em")
   atualizadoEm   DateTime   @updatedAt @map("atualizado_em")
   provider       String     @default("WAHA")
+  connectionUuid String?    @map("connection_uuid") // UUID para conexões DigitalSac
   campaigns      Campaign[]
 
   // Relations

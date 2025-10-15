@@ -153,15 +153,20 @@ router.get('/sessions/:sessionName', authMiddleware, async (req: AuthenticatedRe
 // Criar nova sessão
 router.post('/sessions', authMiddleware, checkConnectionQuota, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { name, provider = 'WAHA' } = req.body;
-    console.log('➕ POST /sessions - name:', name, 'provider:', provider, 'user:', req.user?.email, 'tenantId:', req.tenantId);
+    const { name, provider = 'WAHA', connectionUuid } = req.body;
+    console.log('➕ POST /sessions - name:', name, 'provider:', provider, 'connectionUuid:', connectionUuid, 'user:', req.user?.email, 'tenantId:', req.tenantId);
 
     if (!name) {
       return res.status(400).json({ error: 'Nome da sessão é obrigatório' });
     }
 
-    if (!['WAHA', 'EVOLUTION'].includes(provider)) {
-      return res.status(400).json({ error: 'Provedor deve ser WAHA ou EVOLUTION' });
+    if (!['WAHA', 'EVOLUTION', 'DIGITALSAC'].includes(provider)) {
+      return res.status(400).json({ error: 'Provedor deve ser WAHA, EVOLUTION ou DIGITALSAC' });
+    }
+
+    // Para DigitalSac, connectionUuid é obrigatório
+    if (provider === 'DIGITALSAC' && !connectionUuid) {
+      return res.status(400).json({ error: 'UUID da conexão é obrigatório para DigitalSac' });
     }
 
     // Usar tenantId do usuário autenticado (SUPERADMIN pode especificar tenant no body se necessário)
@@ -203,6 +208,38 @@ router.post('/sessions', authMiddleware, checkConnectionQuota, async (req: Authe
         provider: 'EVOLUTION',
         tenantId
       });
+    } else if (provider === 'DIGITALSAC') {
+      // DigitalSac: apenas registrar o UUID da conexão
+      // Não há processo de "criação" - a conexão já existe no DigitalSac
+      const { digitalSacApiService } = await import('../services/digitalSacApiService');
+      
+      // Validar se as configurações globais estão corretas
+      const isValid = await digitalSacApiService.validateConfig();
+      if (!isValid) {
+        return res.status(400).json({ error: 'Configurações do DigitalSac não encontradas. Configure Host e Token nas configurações do sistema.' });
+      }
+
+      // Apenas registrar no banco local - sem chamada de API
+      await WhatsAppSessionService.createOrUpdateSession({
+        name: realName,
+        displayName,
+        status: 'WORKING', // Sempre WORKING - API direta, sem conexão
+        provider: 'DIGITALSAC',
+        connectionUuid,
+        tenantId
+      });
+
+      result = {
+        success: true,
+        message: 'UUID da conexão DigitalSac registrado com sucesso',
+        session: {
+          name: realName,
+          displayName,
+          status: 'WORKING',
+          provider: 'DIGITALSAC',
+          connectionUuid
+        }
+      };
     } else {
       // WAHA (comportamento original)
       result = await WahaSyncService.createSession(realName);
@@ -260,6 +297,14 @@ router.post('/sessions/:sessionName/start', authMiddleware, async (req: Authenti
         provider: 'EVOLUTION',
         tenantId: sessionData.tenantId
       });
+    } else if (sessionProvider === 'DIGITALSAC') {
+      // DigitalSac é API direta - não tem processo de "iniciar"
+      // Apenas retornar sucesso (já está sempre ativo se configurado)
+      result = {
+        success: true,
+        message: 'DigitalSac é uma API direta - sempre ativo quando configurado',
+        status: 'WORKING'
+      };
     } else {
       // Usar WAHA com chamada direta
       result = await wahaRequest(`/api/sessions/${sessionName}/start`, {
@@ -306,6 +351,20 @@ router.post('/sessions/:sessionName/stop', authMiddleware, async (req: Authentic
         provider: 'EVOLUTION',
         tenantId: sessionData.tenantId
       });
+    } else if (sessionProvider === 'DIGITALSAC') {
+      // DigitalSac é API direta - não há "parar"
+      // A conexão continua ativa no DigitalSac, apenas desabilitamos localmente
+      result = { 
+        success: true,
+        message: 'Sessão DigitalSac desabilitada localmente (a conexão continua ativa no DigitalSac)' 
+      };
+      await WhatsAppSessionService.createOrUpdateSession({
+        name: sessionName,
+        status: 'STOPPED',
+        provider: 'DIGITALSAC',
+        connectionUuid: sessionData.connectionUuid,
+        tenantId: sessionData.tenantId
+      });
     } else {
       result = await WahaSyncService.stopSession(sessionName);
     }
@@ -341,6 +400,17 @@ router.post('/sessions/:sessionName/restart', async (req, res) => {
         status: 'SCAN_QR_CODE',
         provider: 'EVOLUTION'
       });
+    } else if (sessionProvider === 'DIGITALSAC') {
+      // DigitalSac é API direta - apenas reabilitar localmente
+      result = {
+        success: true,
+        message: 'Sessão DigitalSac reabilitada localmente'
+      };
+      await WhatsAppSessionService.createOrUpdateSession({
+        name: sessionName,
+        status: 'WORKING',
+        provider: 'DIGITALSAC'
+      });
     } else {
       result = await WahaSyncService.restartSession(sessionName);
     }
@@ -362,10 +432,10 @@ router.delete('/sessions/:sessionName', authMiddleware, async (req: Authenticate
     const tenantId = req.user?.role === 'SUPERADMIN' ? undefined : req.tenantId;
 
     // Verificar o provedor da sessão
-    let sessionProvider: 'WAHA' | 'EVOLUTION' = 'WAHA';
+    let sessionProvider: 'WAHA' | 'EVOLUTION' | 'DIGITALSAC' = 'WAHA';
     try {
       const savedSession = await WhatsAppSessionService.getSession(sessionName, tenantId);
-      sessionProvider = (savedSession.provider as 'WAHA' | 'EVOLUTION') || 'WAHA';
+      sessionProvider = (savedSession.provider as 'WAHA' | 'EVOLUTION' | 'DIGITALSAC') || 'WAHA';
     } catch (error) {
       console.error('❌ Sessão não encontrada ou não pertence ao tenant:', error);
       return res.status(404).json({ error: 'Sessão não encontrada' });
@@ -385,6 +455,15 @@ router.delete('/sessions/:sessionName', authMiddleware, async (req: Authenticate
       try {
         await WhatsAppSessionService.deleteSession(sessionName, tenantId);
         console.log(`✅ Sessão ${sessionName} removida do banco de dados`);
+      } catch (error) {
+        console.warn(`⚠️ Erro ao deletar ${sessionName} do banco:`, error);
+      }
+    } else if (sessionProvider === 'DIGITALSAC') {
+      // DigitalSac: apenas remove registro local
+      // A conexão permanece ativa no DigitalSac - é responsabilidade do usuário gerenciar lá
+      try {
+        await WhatsAppSessionService.deleteSession(sessionName, tenantId);
+        console.log(`✅ Registro DigitalSac ${sessionName} removido do banco local (conexão permanece no DigitalSac)`);
       } catch (error) {
         console.warn(`⚠️ Erro ao deletar ${sessionName} do banco:`, error);
       }

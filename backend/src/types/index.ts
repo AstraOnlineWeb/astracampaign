@@ -64,3 +64,18 @@ export interface ImportResult {
   errors: string[];
   message?: string;
 }
+
+// WhatsApp Provider Types
+export type WhatsAppProvider = 'WAHA' | 'EVOLUTION' | 'DIGITALSAC';
+
+export interface WhatsAppSession {
+  id: string;
+  name: string;
+  displayName?: string | null;
+  status: string;
+  provider: WhatsAppProvider;
+  connectionUuid?: string | null; // Para DigitalSac
+  tenantId?: string | null;
+  criadoEm: Date;
+  atualizadoEm: Date;
+}

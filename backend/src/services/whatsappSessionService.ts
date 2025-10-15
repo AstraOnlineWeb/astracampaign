@@ -6,8 +6,9 @@ export interface WhatsAppSessionData {
   name: string; // Nome real usado na API (ex: vendas_c52982e8)
   displayName?: string; // Nome exibido ao usuário (ex: vendas)
   status: 'WORKING' | 'SCAN_QR_CODE' | 'STOPPED' | 'FAILED';
-  provider: 'WAHA' | 'EVOLUTION';
+  provider: 'WAHA' | 'EVOLUTION' | 'DIGITALSAC';
   config?: any;
+  connectionUuid?: string; // UUID da conexão DigitalSac
   me?: {
     id: string;
     pushName: string;
@@ -43,8 +44,9 @@ export class WhatsAppSessionService {
       name: session.name,
       displayName: session.displayName || session.name,
       status: session.status,
-      provider: session.provider as 'WAHA' | 'EVOLUTION',
+      provider: session.provider as 'WAHA' | 'EVOLUTION' | 'DIGITALSAC',
       config: session.config ? JSON.parse(session.config) : {},
+      connectionUuid: session.connectionUuid,
       me: session.meId ? {
         id: session.meId,
         pushName: session.mePushName || '',

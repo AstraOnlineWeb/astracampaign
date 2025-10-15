@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { sendMessage, checkContactExists } from './wahaApiService';
 import { sendMessageViaEvolution, checkContactExistsEvolution } from './evolutionMessageService';
+import { sendMessageViaDigitalSac, checkContactExistsDigitalSac } from './digitalSacMessageService';
 import { ContactService } from './contactService';
 import { openaiService } from './openaiService';
 import { groqService } from './groqService';
@@ -286,6 +287,12 @@ class CampaignSchedulerService {
 
       if (provider === 'EVOLUTION') {
         contactCheck = await checkContactExistsEvolution(selectedSession, message.contactPhone);
+      } else if (provider === 'DIGITALSAC') {
+        // DigitalSac precisa do connectionUuid da sessão
+        const sessionData = await prisma.whatsAppSession.findUnique({
+          where: { name: selectedSession }
+        });
+        contactCheck = await checkContactExistsDigitalSac(sessionData?.connectionUuid || '', message.contactPhone);
       } else {
         contactCheck = await checkContactExists(selectedSession, message.contactPhone);
       }
@@ -316,6 +323,8 @@ class CampaignSchedulerService {
 
       if (provider === 'EVOLUTION') {
         console.log(`✅ Contact ${message.contactPhone} exists on Evolution. Using validated phone: ${contactCheck.validPhone}`);
+      } else if (provider === 'DIGITALSAC') {
+        console.log(`✅ Contact ${message.contactPhone} exists on DigitalSac. Using validated phone: ${contactCheck.validPhone}`);
       } else {
         console.log(`✅ Contact ${message.contactPhone} exists on WAHA. Using chatId: ${contactCheck.chatId}`);
       }
@@ -325,6 +334,19 @@ class CampaignSchedulerService {
       if (provider === 'EVOLUTION') {
         result = await this.sendMessageViaEvolution(
           selectedSession,
+          contactCheck.validPhone || message.contactPhone,
+          campaign.messageType,
+          processedContent,
+          contact,
+          campaign.tenantId
+        );
+      } else if (provider === 'DIGITALSAC') {
+        // DigitalSac precisa do connectionUuid
+        const sessionData = await prisma.whatsAppSession.findUnique({
+          where: { name: selectedSession }
+        });
+        result = await this.sendMessageViaDigitalSac(
+          sessionData?.connectionUuid || '',
           contactCheck.validPhone || message.contactPhone,
           campaign.messageType,
           processedContent,
@@ -682,6 +704,129 @@ class CampaignSchedulerService {
       return {
         success: true,
         messageId: (result as any)?.key?.id || (result as any)?.id || null
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
+  }
+
+  private async sendMessageViaDigitalSac(connectionUuid: string, phone: string, messageType: string, content: any, contactData?: any, tenantId?: string): Promise<{ success: boolean; messageId?: string; error?: string }> {
+    try {
+      let result;
+      const externalKey = `campaign_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+      switch (messageType) {
+        case 'text':
+          result = await sendMessageViaDigitalSac(connectionUuid, phone, { text: content.text }, externalKey);
+          break;
+
+        case 'image':
+          result = await sendMessageViaDigitalSac(connectionUuid, phone, {
+            image: { url: content.url },
+            caption: content.caption || '',
+            fileName: 'imagem.jpg'
+          }, externalKey);
+          break;
+
+        case 'video':
+          result = await sendMessageViaDigitalSac(connectionUuid, phone, {
+            video: { url: content.url },
+            caption: content.caption || '',
+            fileName: 'video.mp4'
+          }, externalKey);
+          break;
+
+        case 'audio':
+          result = await sendMessageViaDigitalSac(connectionUuid, phone, {
+            audio: { url: content.url },
+            fileName: 'audio.ogg'
+          }, externalKey);
+          break;
+
+        case 'document':
+          result = await sendMessageViaDigitalSac(connectionUuid, phone, {
+            document: { url: content.url },
+            fileName: content.fileName || 'documento.pdf',
+            caption: content.caption || ''
+          }, externalKey);
+          break;
+
+        case 'openai':
+          // Gerar mensagem usando OpenAI
+          console.log('🤖 Gerando mensagem com OpenAI (DigitalSac)...', content);
+
+          const openaiResult = await openaiService.generateMessage(content, contactData, tenantId);
+
+          if (!openaiResult.success) {
+            throw new Error(`OpenAI error: ${openaiResult.error}`);
+          }
+
+          console.log('✅ Mensagem gerada pela OpenAI (DigitalSac):', openaiResult.message);
+
+          // Enviar a mensagem gerada como texto
+          result = await sendMessageViaDigitalSac(connectionUuid, phone, { text: openaiResult.message }, externalKey);
+          break;
+
+        case 'groq':
+          // Gerar mensagem usando Groq
+          console.log('⚡ Gerando mensagem com Groq (DigitalSac)...', content);
+
+          const groqResult = await groqService.generateMessage(content, contactData, tenantId);
+
+          if (!groqResult.success) {
+            throw new Error(`Groq error: ${groqResult.error}`);
+          }
+
+          console.log('✅ Mensagem gerada pelo Groq (DigitalSac):', groqResult.message);
+
+          // Enviar a mensagem gerada como texto
+          result = await sendMessageViaDigitalSac(connectionUuid, phone, { text: groqResult.message }, externalKey);
+          break;
+
+        case 'sequence':
+          // Enviar sequência de mensagens (sem suporte a automation trigger no DigitalSac por enquanto)
+          let lastResult: any = { success: true };
+
+          for (let i = 0; i < content.sequence.length; i++) {
+            const item = content.sequence[i];
+
+            // Tratar tipo 'wait' como delay personalizado
+            if (item.type === 'wait') {
+              const waitTime = item.content?.waitTime || 30; // Default 30 segundos se não especificado
+              console.log(`⏰ Aplicando espera personalizada de ${waitTime} segundos...`);
+              await new Promise(resolve => setTimeout(resolve, waitTime * 1000));
+
+              // Para o wait, consideramos como "sucesso" para continuar a sequência
+              lastResult = { success: true, messageId: 'wait-delay' };
+              console.log(`✅ Espera de ${waitTime} segundos concluída`);
+              continue; // Pular para próximo item da sequência
+            }
+
+            lastResult = await this.sendMessageViaDigitalSac(connectionUuid, phone, item.type, item.content, contactData, tenantId);
+
+            if (!lastResult.success) {
+              throw new Error(`Failed to send sequence item ${i + 1}: ${lastResult.error}`);
+            }
+
+            // Adicionar delay de 2-5 segundos entre mensagens da sequência para evitar spam (apenas entre mensagens reais)
+            if (i < content.sequence.length - 1 && content.sequence[i + 1].type !== 'wait') {
+              const sequenceDelay = Math.floor(Math.random() * 3000) + 2000; // 2-5 segundos
+              await new Promise(resolve => setTimeout(resolve, sequenceDelay));
+            }
+          }
+          result = lastResult;
+          break;
+
+        default:
+          throw new Error(`Unsupported message type for DigitalSac: ${messageType}`);
+      }
+
+      return {
+        success: true,
+        messageId: (result as any)?.id || (result as any)?.messageId || externalKey
       };
     } catch (error) {
       return {
