@@ -133,7 +133,11 @@ app.get('/api/health', (req, res) => {
 });
 
 // Servir uploads estaticamente (público)
-app.use('/api/uploads', express.static('/app/uploads'));
+const UPLOAD_DIR = process.env.UPLOAD_DIR || '/app/uploads';
+if (!fs.existsSync(UPLOAD_DIR)) {
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+}
+app.use('/api/uploads', express.static(UPLOAD_DIR));
 
 // Rotas protegidas (requerem autenticação)
 app.use('/api/contatos', authMiddleware, contactRoutes);

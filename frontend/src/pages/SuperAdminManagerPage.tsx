@@ -130,6 +130,8 @@ interface Settings {
   wahaApiKey: string;
   evolutionHost: string;
   evolutionApiKey: string;
+  digitalSacHost: string;
+  digitalSacToken: string;
   logoUrl?: string;
   companyName?: string;
   faviconUrl?: string;
@@ -140,17 +142,23 @@ interface Settings {
 }
 
 const settingsSchema = z.object({
-  wahaHost: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
+  wahaHost: z.string().optional().refine((val) => !val || z.string().url().safeParse(val).success, {
     message: 'Host deve ser uma URL válida ou vazio'
   }),
-  wahaApiKey: z.string().refine((val) => !val || val.length >= 10, {
+  wahaApiKey: z.string().optional().refine((val) => !val || val.length >= 10, {
     message: 'API Key deve ter pelo menos 10 caracteres ou estar vazia'
   }),
-  evolutionHost: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
+  evolutionHost: z.string().optional().refine((val) => !val || z.string().url().safeParse(val).success, {
     message: 'Host deve ser uma URL válida ou vazio'
   }),
-  evolutionApiKey: z.string().refine((val) => !val || val.length >= 10, {
+  evolutionApiKey: z.string().optional().refine((val) => !val || val.length >= 10, {
     message: 'API Key deve ter pelo menos 10 caracteres ou estar vazia'
+  }),
+  digitalSacHost: z.string().optional().refine((val) => !val || z.string().url().safeParse(val).success, {
+    message: 'Host deve ser uma URL válida ou vazio'
+  }),
+  digitalSacToken: z.string().optional().refine((val) => !val || val.length >= 10, {
+    message: 'Token deve ter pelo menos 10 caracteres ou estar vazio'
   }),
 });
 
@@ -205,7 +213,7 @@ export function SuperAdminManagerPage() {
   });
   const [tenantSearchQuery, setTenantSearchQuery] = useState('');
 
-  const [activeModal, setActiveModal] = useState<'waha' | 'evolution' | null>(null);
+  const [activeModal, setActiveModal] = useState<'waha' | 'evolution' | 'digitalsac' | null>(null);
   const [integrationSettings, setIntegrationSettings] = useState<Settings | null>(null);
 
   // General settings states
@@ -335,6 +343,8 @@ export function SuperAdminManagerPage() {
         setValue('wahaApiKey', data.wahaApiKey);
         setValue('evolutionHost', data.evolutionHost);
         setValue('evolutionApiKey', data.evolutionApiKey);
+        setValue('digitalSacHost', data.digitalSacHost);
+        setValue('digitalSacToken', data.digitalSacToken);
       }
     } catch (error) {
       console.error('Erro ao carregar configurações de integração:', error);
@@ -1799,6 +1809,32 @@ export function SuperAdminManagerPage() {
                   </span>
                 </div>
               </div>
+
+              {/* DigitalSac API Card */}
+              <div
+                onClick={() => setActiveModal('digitalsac')}
+                className="bg-gray-50 hover:bg-gray-100 border-2 border-gray-200 hover:border-blue-300 rounded-lg p-6 cursor-pointer transition-all duration-200 flex flex-col items-center min-h-[180px] group"
+              >
+                <div className="flex-1 flex items-center justify-center">
+                  <div className="w-32 h-18 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <img
+                      src="/assets/logos/digitalsac-izing.webp"
+                      alt="DigitalSac Izing Pro Logo"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                </div>
+                <div className="mt-auto text-center">
+                  <p className="text-xs text-gray-500 mb-2">DigitalSac Izing Pro</p>
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                    integrationSettings?.digitalSacHost && integrationSettings?.digitalSacToken
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-gray-100 text-gray-600'
+                  }`}>
+                    {integrationSettings?.digitalSacHost && integrationSettings?.digitalSacToken ? 'Configurado' : 'Não configurado'}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -2198,6 +2234,83 @@ export function SuperAdminManagerPage() {
                     {errors.evolutionApiKey.message}
                   </p>
                 )}
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setActiveModal(null)}
+                  className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {isSubmitting ? 'Salvando...' : 'Salvar'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal DigitalSac API */}
+      {activeModal === 'digitalsac' && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">📱 Configurar DigitalSac Izing Pro</h3>
+              <button
+                onClick={() => setActiveModal(null)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleFormSubmit(onIntegrationSubmit)} className="space-y-4">
+              <div>
+                <label htmlFor="digitalSacHost" className="block text-sm font-medium text-gray-700 mb-1">
+                  Host DigitalSac Izing Pro *
+                </label>
+                <input
+                  id="digitalSacHost"
+                  type="url"
+                  {...register('digitalSacHost')}
+                  placeholder="https://api.digitalsac.com"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                {errors.digitalSacHost && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.digitalSacHost.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="digitalSacToken" className="block text-sm font-medium text-gray-700 mb-1">
+                  Token DigitalSac Izing Pro *
+                </label>
+                <input
+                  id="digitalSacToken"
+                  type="password"
+                  {...register('digitalSacToken')}
+                  placeholder="seu-token-digitalsac-izing-aqui"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                {errors.digitalSacToken && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.digitalSacToken.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
+                <p className="font-semibold mb-1">ℹ️ Configuração Global</p>
+                <p className="text-xs">O Host e Token são globais. Ao criar uma conexão, você fornecerá o UUID específico de cada conexão DigitalSac Izing Pro.</p>
               </div>
 
               <div className="flex gap-3 pt-4">

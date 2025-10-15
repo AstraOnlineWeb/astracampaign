@@ -288,11 +288,8 @@ class CampaignSchedulerService {
       if (provider === 'EVOLUTION') {
         contactCheck = await checkContactExistsEvolution(selectedSession, message.contactPhone);
       } else if (provider === 'DIGITALSAC') {
-        // DigitalSac precisa do connectionUuid da sessão
-        const sessionData = await prisma.whatsAppSession.findUnique({
-          where: { name: selectedSession }
-        });
-        contactCheck = await checkContactExistsDigitalSac(sessionData?.connectionUuid || '', message.contactPhone);
+        // DigitalSac não precisa validar contato (validação acontece no envio)
+        contactCheck = await checkContactExistsDigitalSac('', message.contactPhone);
       } else {
         contactCheck = await checkContactExists(selectedSession, message.contactPhone);
       }
@@ -341,12 +338,19 @@ class CampaignSchedulerService {
           campaign.tenantId
         );
       } else if (provider === 'DIGITALSAC') {
-        // DigitalSac precisa do connectionUuid
+        // DigitalSac precisa do connectionUuid e externalKey
         const sessionData = await prisma.whatsAppSession.findUnique({
           where: { name: selectedSession }
         });
+        
+        if (!sessionData?.connectionUuid || !sessionData?.externalKey || !sessionData?.token) {
+          throw new Error('URL, ExternalKey ou Token da conexão DigitalSac não encontrados na sessão');
+        }
+        
         result = await this.sendMessageViaDigitalSac(
-          sessionData?.connectionUuid || '',
+          sessionData.connectionUuid,
+          sessionData.token,
+          sessionData.externalKey,
           contactCheck.validPhone || message.contactPhone,
           campaign.messageType,
           processedContent,
@@ -713,18 +717,17 @@ class CampaignSchedulerService {
     }
   }
 
-  private async sendMessageViaDigitalSac(connectionUuid: string, phone: string, messageType: string, content: any, contactData?: any, tenantId?: string): Promise<{ success: boolean; messageId?: string; error?: string }> {
+  private async sendMessageViaDigitalSac(connectionUrl: string, token: string, externalKey: string, phone: string, messageType: string, content: any, contactData?: any, tenantId?: string): Promise<{ success: boolean; messageId?: string; error?: string }> {
     try {
       let result;
-      const externalKey = `campaign_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
       switch (messageType) {
         case 'text':
-          result = await sendMessageViaDigitalSac(connectionUuid, phone, { text: content.text }, externalKey);
+          result = await sendMessageViaDigitalSac(connectionUrl, token, phone, { text: content.text }, externalKey);
           break;
 
         case 'image':
-          result = await sendMessageViaDigitalSac(connectionUuid, phone, {
+          result = await sendMessageViaDigitalSac(connectionUrl, token, phone, {
             image: { url: content.url },
             caption: content.caption || '',
             fileName: 'imagem.jpg'
@@ -732,7 +735,7 @@ class CampaignSchedulerService {
           break;
 
         case 'video':
-          result = await sendMessageViaDigitalSac(connectionUuid, phone, {
+          result = await sendMessageViaDigitalSac(connectionUrl, token, phone, {
             video: { url: content.url },
             caption: content.caption || '',
             fileName: 'video.mp4'
@@ -740,14 +743,14 @@ class CampaignSchedulerService {
           break;
 
         case 'audio':
-          result = await sendMessageViaDigitalSac(connectionUuid, phone, {
+          result = await sendMessageViaDigitalSac(connectionUrl, token, phone, {
             audio: { url: content.url },
             fileName: 'audio.ogg'
           }, externalKey);
           break;
 
         case 'document':
-          result = await sendMessageViaDigitalSac(connectionUuid, phone, {
+          result = await sendMessageViaDigitalSac(connectionUrl, token, phone, {
             document: { url: content.url },
             fileName: content.fileName || 'documento.pdf',
             caption: content.caption || ''
@@ -767,7 +770,7 @@ class CampaignSchedulerService {
           console.log('✅ Mensagem gerada pela OpenAI (DigitalSac):', openaiResult.message);
 
           // Enviar a mensagem gerada como texto
-          result = await sendMessageViaDigitalSac(connectionUuid, phone, { text: openaiResult.message }, externalKey);
+          result = await sendMessageViaDigitalSac(connectionUrl, token, phone, { text: openaiResult.message }, externalKey);
           break;
 
         case 'groq':
@@ -783,7 +786,7 @@ class CampaignSchedulerService {
           console.log('✅ Mensagem gerada pelo Groq (DigitalSac):', groqResult.message);
 
           // Enviar a mensagem gerada como texto
-          result = await sendMessageViaDigitalSac(connectionUuid, phone, { text: groqResult.message }, externalKey);
+          result = await sendMessageViaDigitalSac(connectionUrl, token, phone, { text: groqResult.message }, externalKey);
           break;
 
         case 'sequence':
@@ -805,7 +808,7 @@ class CampaignSchedulerService {
               continue; // Pular para próximo item da sequência
             }
 
-            lastResult = await this.sendMessageViaDigitalSac(connectionUuid, phone, item.type, item.content, contactData, tenantId);
+            lastResult = await this.sendMessageViaDigitalSac(connectionUrl, token, externalKey, phone, item.type, item.content, contactData, tenantId);
 
             if (!lastResult.success) {
               throw new Error(`Failed to send sequence item ${i + 1}: ${lastResult.error}`);

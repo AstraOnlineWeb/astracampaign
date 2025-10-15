@@ -8,7 +8,9 @@ export interface WhatsAppSessionData {
   status: 'WORKING' | 'SCAN_QR_CODE' | 'STOPPED' | 'FAILED';
   provider: 'WAHA' | 'EVOLUTION' | 'DIGITALSAC';
   config?: any;
-  connectionUuid?: string; // UUID da conexão DigitalSac
+  connectionUuid?: string; // URL completa da conexão DigitalSac
+  externalKey?: string; // ExternalKey da conexão DigitalSac
+  token?: string; // Token da conexão DigitalSac
   me?: {
     id: string;
     pushName: string;
@@ -47,6 +49,8 @@ export class WhatsAppSessionService {
       provider: session.provider as 'WAHA' | 'EVOLUTION' | 'DIGITALSAC',
       config: session.config ? JSON.parse(session.config) : {},
       connectionUuid: session.connectionUuid,
+      externalKey: session.externalKey,
+      token: session.token,
       me: session.meId ? {
         id: session.meId,
         pushName: session.mePushName || '',
@@ -110,6 +114,9 @@ export class WhatsAppSessionService {
       status: data.status,
       provider: data.provider,
       config: data.config ? JSON.stringify(data.config) : null,
+      connectionUuid: data.connectionUuid || null,
+      externalKey: data.externalKey || null,
+      token: data.token || null,
       meId: data.me?.id || null,
       mePushName: data.me?.pushName || null,
       meLid: data.me?.lid || null,

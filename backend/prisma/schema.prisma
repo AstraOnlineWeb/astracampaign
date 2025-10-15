@@ -169,7 +169,9 @@ model WhatsAppSession {
   criadoEm       DateTime   @default(now()) @map("criado_em")
   atualizadoEm   DateTime   @updatedAt @map("atualizado_em")
   provider       String     @default("WAHA")
-  connectionUuid String?    @map("connection_uuid") // UUID para conexões DigitalSac
+  connectionUuid String?    @map("connection_uuid") // URL completa para conexões DigitalSac
+  externalKey    String?    @map("external_key") // ExternalKey para conexões DigitalSac
+  token          String?    @map("token") // Token para conexões DigitalSac
   campaigns      Campaign[]
 
   // Relations

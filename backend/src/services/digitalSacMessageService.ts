@@ -6,8 +6,9 @@ function normalizeBrazilianPhone(phone: string | number): string {
     return '';
   }
   const phoneStr = String(phone);
+  // Remove todos os caracteres não numéricos (incluindo o +)
   let cleanPhone = phoneStr.replace(/\D/g, '');
-  console.log(`📱 Número brasileiro DigitalSac: ${phone} -> ${cleanPhone}`);
+  console.log(`📱 Número brasileiro DigitalSac (sem +): ${phone} -> ${cleanPhone}`);
   return cleanPhone;
 }
 
@@ -23,38 +24,41 @@ interface DigitalSacMessage {
 
 /**
  * Envia mensagem via DigitalSac API
- * @param connectionUuid UUID da conexão DigitalSac (configurado por sessão)
- * @param phone Número do telefone no formato DDI+DDD+NUMERO
+ * @param connectionUrl URL completa da conexão DigitalSac (ex: http://host/v1/api/external/uuid)
+ * @param token Token de autenticação da conexão
+ * @param phone Número do telefone no formato DDI+DDD+NUMERO (sem +)
  * @param message Objeto com o conteúdo da mensagem
- * @param externalKey ID único para rastreamento (opcional)
+ * @param externalKey ID único para rastreamento (obrigatório)
  */
 export async function sendMessageViaDigitalSac(
-  connectionUuid: string,
+  connectionUrl: string,
+  token: string,
   phone: string | number,
   message: DigitalSacMessage,
-  externalKey?: string
+  externalKey: string
 ) {
   try {
-    const config = await settingsService.getDigitalSacConfig();
-
-    if (!config.host || !config.token) {
-      throw new Error('Configurações DigitalSac não encontradas. Configure nas configurações do sistema.');
+    if (!token) {
+      throw new Error('Token da conexão DigitalSac não fornecido.');
     }
 
-    if (!connectionUuid) {
-      throw new Error('UUID da conexão DigitalSac não fornecido.');
+    if (!connectionUrl) {
+      throw new Error('URL da conexão DigitalSac não fornecida.');
+    }
+
+    if (!externalKey) {
+      throw new Error('ExternalKey da conexão DigitalSac não fornecido.');
     }
 
     const normalizedPhone = normalizeBrazilianPhone(phone);
-    const endpoint = `/v1/api/external/${connectionUuid}`;
-    const url = `${config.host}${endpoint}`;
 
     // Para mensagens de texto, usar JSON
     if (message.text) {
+      const url = connectionUrl;
       const requestBody = {
         body: message.text,
         number: normalizedPhone,
-        externalKey: externalKey || `msg_${Date.now()}`
+        externalKey: externalKey
       };
 
       console.log(`DigitalSac API - Enviando texto para: ${url}`);
@@ -64,7 +68,7 @@ export async function sendMessageViaDigitalSac(
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${config.token}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(requestBody)
       });
@@ -84,6 +88,9 @@ export async function sendMessageViaDigitalSac(
 
     // Para mensagens com mídia, usar FormData
     if (message.image || message.video || message.audio || message.document) {
+      // URL para mídia é diferente - adiciona /send-media-caption
+      const url = `${connectionUrl}/send-media-caption`;
+      
       let mediaUrl = '';
       let caption = message.caption || '';
 
@@ -108,26 +115,46 @@ export async function sendMessageViaDigitalSac(
       }
 
       const mediaBuffer = await mediaResponse.arrayBuffer();
-      const mediaBlob = new Blob([mediaBuffer]);
+      
+      // Detectar o tipo MIME correto
+      const contentType = mediaResponse.headers.get('content-type') || 
+                         (message.image ? 'image/jpeg' : 
+                          message.video ? 'video/mp4' : 
+                          message.audio ? 'audio/ogg' : 
+                          'application/octet-stream');
+      
+      const mediaBlob = new Blob([mediaBuffer], { type: contentType });
+      
+      console.log(`DigitalSac API - Tipo de mídia detectado: ${contentType}`);
 
-      // Determinar nome do arquivo
+      // Determinar nome do arquivo com extensão correta
       const fileName = message.fileName || 
                       (message.image ? 'image.jpg' : 
                        message.video ? 'video.mp4' : 
                        message.audio ? 'audio.ogg' : 
                        'document.pdf');
 
+      // Caption é obrigatório na API DigitalSac
+      // Se vazio, usar caractere invisível (espaço não-quebrável - ALT+255)
+      const finalCaption = caption && caption.trim() ? caption : '\u00A0';
+      
+      if (!caption || !caption.trim()) {
+        console.log(`DigitalSac API - Caption vazio, usando caractere invisível (ALT+255)`);
+      } else {
+        console.log(`DigitalSac API - Caption: ${caption}`);
+      }
+
       // Criar FormData
       const formData = new FormData();
       formData.append('media', mediaBlob, fileName);
-      formData.append('body', caption);
+      formData.append('caption', finalCaption); // API requer 'caption' e não 'body'
       formData.append('number', normalizedPhone);
-      formData.append('externalKey', externalKey || `media_${Date.now()}`);
+      formData.append('externalKey', externalKey);
 
       const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${config.token}`
+          'Authorization': `Bearer ${token}`
           // Não incluir Content-Type, o fetch adiciona automaticamente com boundary
         },
         body: formData

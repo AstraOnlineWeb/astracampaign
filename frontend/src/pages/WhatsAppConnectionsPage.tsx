@@ -45,7 +45,7 @@ interface WhatsAppSession {
   name: string; // Nome real usado na API (ex: vendas_c52982e8)
   displayName?: string; // Nome exibido ao usuário (ex: vendas)
   status: 'WORKING' | 'SCAN_QR_CODE' | 'STOPPED' | 'FAILED';
-  provider: 'WAHA' | 'EVOLUTION';
+  provider: 'WAHA' | 'EVOLUTION' | 'DIGITALSAC';
   qr?: string;
   qrExpiresAt?: Date;
   me?: {
@@ -61,7 +61,10 @@ export function WhatsAppConnectionsPage() {
   const [sessions, setSessions] = useState<WhatsAppSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [newSessionName, setNewSessionName] = useState('');
-  const [newSessionProvider, setNewSessionProvider] = useState<'WAHA' | 'EVOLUTION'>('WAHA');
+  const [newSessionProvider, setNewSessionProvider] = useState<'WAHA' | 'EVOLUTION' | 'DIGITALSAC'>('WAHA');
+  const [connectionUuid, setConnectionUuid] = useState('');
+  const [externalKey, setExternalKey] = useState('');
+  const [token, setToken] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [loadingQR, setLoadingQR] = useState<string | null>(null);
   const [qrModalOpen, setQrModalOpen] = useState(false);
@@ -209,14 +212,39 @@ export function WhatsAppConnectionsPage() {
       return;
     }
 
+    if (newSessionProvider === 'DIGITALSAC') {
+      if (!connectionUuid.trim()) {
+        toast.error('Digite a URL da conexão DigitalSac Izing Pro');
+        return;
+      }
+      if (!externalKey.trim()) {
+        toast.error('Digite o ExternalKey da conexão DigitalSac Izing Pro');
+        return;
+      }
+      if (!token.trim()) {
+        toast.error('Digite o Token da conexão DigitalSac Izing Pro');
+        return;
+      }
+    }
+
     setIsCreating(true);
     try {
+      const body: any = {
+        name: newSessionName.trim(),
+        provider: newSessionProvider
+      };
+
+      // Adicionar connectionUuid, externalKey e token para DigitalSac
+      if (newSessionProvider === 'DIGITALSAC') {
+        // Usar a URL completa sem extrair UUID
+        body.connectionUuid = connectionUuid.trim();
+        body.externalKey = externalKey.trim();
+        body.token = token.trim();
+      }
+
       const response = await authenticatedFetch('/api/waha/sessions', {
         method: 'POST',
-        body: JSON.stringify({
-          name: newSessionName.trim(),
-          provider: newSessionProvider
-        })
+        body: JSON.stringify(body)
       });
 
       if (!response.ok) {
@@ -237,6 +265,9 @@ export function WhatsAppConnectionsPage() {
       toast.success(`Sessão ${newSessionProvider} criada com sucesso`);
       setNewSessionName('');
       setNewSessionProvider('WAHA');
+      setConnectionUuid('');
+      setExternalKey('');
+      setToken('');
 
       // Recarregar imediatamente
       await loadSessions();
@@ -491,8 +522,14 @@ export function WhatsAppConnectionsPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h4 className="text-lg font-medium text-gray-900">{session.displayName || session.name}</h4>
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${session.provider === 'EVOLUTION' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>
-                        {session.provider === 'EVOLUTION' ? '🚀 Evolution' : '🔗 WAHA'}
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        session.provider === 'EVOLUTION' ? 'bg-blue-100 text-blue-800' : 
+                        session.provider === 'DIGITALSAC' ? 'bg-purple-100 text-purple-800' : 
+                        'bg-green-100 text-green-800'
+                      }`}>
+                        {session.provider === 'EVOLUTION' ? '🚀 Evolution' : 
+                         session.provider === 'DIGITALSAC' ? '📱 DigitalSac Izing Pro' : 
+                         '🔗 WAHA'}
                       </span>
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(session.status)}`}>
                         {getStatusText(session.status)}
@@ -547,8 +584,8 @@ export function WhatsAppConnectionsPage() {
 
       {/* Modal Criar Sessão */}
       {createSessionModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-100" role="dialog" aria-labelledby="create-session-title">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-100 my-8 max-h-[90vh] overflow-y-auto" role="dialog" aria-labelledby="create-session-title">
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -571,12 +608,13 @@ export function WhatsAppConnectionsPage() {
                 <select
                   id="session-provider"
                   value={newSessionProvider}
-                  onChange={(e) => setNewSessionProvider(e.target.value as 'WAHA' | 'EVOLUTION')}
+                  onChange={(e) => setNewSessionProvider(e.target.value as 'WAHA' | 'EVOLUTION' | 'DIGITALSAC')}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
                   disabled={isCreating}
                 >
                   <option value="WAHA">🔗 WAHA - WhatsApp HTTP API</option>
                   <option value="EVOLUTION">🚀 Evolution API</option>
+                  <option value="DIGITALSAC">📱 DigitalSac Izing Pro</option>
                 </select>
                 <p className="text-xs text-gray-500 mt-2">
                   Escolha o provedor para conectar ao WhatsApp
@@ -602,6 +640,63 @@ export function WhatsAppConnectionsPage() {
                 </p>
               </div>
 
+              {newSessionProvider === 'DIGITALSAC' && (
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="text-blue-600 text-xl">ℹ️</div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-blue-900 mb-1">DigitalSac Izing Pro - Conexão Existente</h4>
+                      <p className="text-xs text-blue-700">
+                        DigitalSac Izing Pro usa conexões já existentes. Cole a URL completa, ExternalKey e Token.
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <label htmlFor="connection-uuid" className="block text-sm font-semibold text-gray-700 mb-2">
+                    URL Completa da Conexão *
+                  </label>
+                  <input
+                    id="connection-uuid"
+                    type="text"
+                    value={connectionUuid}
+                    onChange={(e) => setConnectionUuid(e.target.value)}
+                    placeholder="http://host:porta/v1/api/external/uuid"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm mb-4"
+                    disabled={isCreating}
+                  />
+
+                  <label htmlFor="external-key" className="block text-sm font-semibold text-gray-700 mb-2">
+                    ExternalKey *
+                  </label>
+                  <input
+                    id="external-key"
+                    type="text"
+                    value={externalKey}
+                    onChange={(e) => setExternalKey(e.target.value)}
+                    placeholder="ExternalKey para validação"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm mb-4"
+                    disabled={isCreating}
+                  />
+
+                  <label htmlFor="token" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Token *
+                  </label>
+                  <input
+                    id="token"
+                    type="password"
+                    value={token}
+                    onChange={(e) => setToken(e.target.value)}
+                    placeholder="Token de autenticação"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    disabled={isCreating}
+                  />
+                  
+                  <p className="text-xs text-gray-500 mt-2">
+                    💡 Exemplo URL: http://localhost:3030/v1/api/external/999ab3a2-9f1f-4ffb-969a-bfb72234ece1
+                  </p>
+                </div>
+              )}
+
               <div className="flex gap-4 pt-6">
                 <button
                   type="button"
@@ -609,6 +704,9 @@ export function WhatsAppConnectionsPage() {
                     setCreateSessionModalOpen(false);
                     setNewSessionName('');
                     setNewSessionProvider('WAHA');
+                    setConnectionUuid('');
+                    setExternalKey('');
+                    setToken('');
                   }}
                   className="flex-1 bg-gray-100 text-gray-700 py-3 px-6 rounded-xl hover:bg-gray-200 font-medium transition-all duration-200 border border-gray-200"
                   disabled={isCreating}
@@ -621,7 +719,11 @@ export function WhatsAppConnectionsPage() {
                     await createSession();
                     setCreateSessionModalOpen(false);
                   }}
-                  disabled={isCreating || !newSessionName.trim()}
+                  disabled={
+                    isCreating ||
+                    !newSessionName.trim() ||
+                    (newSessionProvider === 'DIGITALSAC' && (!connectionUuid.trim() || !externalKey.trim() || !token.trim()))
+                  }
                   className="flex-1 bg-green-600 text-white py-3 px-6 rounded-xl hover:bg-green-700 font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {isCreating ? (

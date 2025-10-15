@@ -93,6 +93,20 @@ export const settingsValidation = [
       throw new Error('API Key Evolution deve ter pelo menos 10 caracteres');
     }
     return true;
+  }),
+  body('digitalSacHost').optional().custom((value) => {
+    if (!value || value === '') return true;
+    if (!/^https?:\/\/.+/.test(value)) {
+      throw new Error('Host DigitalSac deve ser uma URL válida');
+    }
+    return true;
+  }),
+  body('digitalSacToken').optional().custom((value) => {
+    if (!value || value === '') return true;
+    if (value.length < 10) {
+      throw new Error('Token DigitalSac deve ter pelo menos 10 caracteres');
+    }
+    return true;
   })
 ];
 
@@ -157,7 +171,7 @@ export const updateSettings = async (req: AuthenticatedRequest, res: Response) =
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { wahaHost, wahaApiKey, evolutionHost, evolutionApiKey, companyName, pageTitle, openaiApiKey, groqApiKey, tenantId } = req.body;
+    const { wahaHost, wahaApiKey, evolutionHost, evolutionApiKey, digitalSacHost, digitalSacToken, companyName, pageTitle, openaiApiKey, groqApiKey, tenantId } = req.body;
 
     // Atualizar configurações globais
     const globalSettings = await settingsService.updateSettings({
@@ -165,6 +179,8 @@ export const updateSettings = async (req: AuthenticatedRequest, res: Response) =
       wahaApiKey,
       evolutionHost,
       evolutionApiKey,
+      digitalSacHost,
+      digitalSacToken,
       companyName,
       pageTitle
     });

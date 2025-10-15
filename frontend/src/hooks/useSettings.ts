@@ -4,6 +4,10 @@ interface Settings {
   id: string;
   wahaHost: string;
   wahaApiKey: string;
+  evolutionHost: string;
+  evolutionApiKey: string;
+  digitalSacHost: string;
+  digitalSacToken: string;
   logoUrl?: string;
   companyName?: string;
   faviconUrl?: string;

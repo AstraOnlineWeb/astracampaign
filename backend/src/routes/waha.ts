@@ -153,8 +153,8 @@ router.get('/sessions/:sessionName', authMiddleware, async (req: AuthenticatedRe
 // Criar nova sessão
 router.post('/sessions', authMiddleware, checkConnectionQuota, async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const { name, provider = 'WAHA', connectionUuid } = req.body;
-    console.log('➕ POST /sessions - name:', name, 'provider:', provider, 'connectionUuid:', connectionUuid, 'user:', req.user?.email, 'tenantId:', req.tenantId);
+    const { name, provider = 'WAHA', connectionUuid, externalKey, token } = req.body;
+    console.log('➕ POST /sessions - name:', name, 'provider:', provider, 'connectionUuid:', connectionUuid, 'externalKey:', externalKey, 'user:', req.user?.email, 'tenantId:', req.tenantId);
 
     if (!name) {
       return res.status(400).json({ error: 'Nome da sessão é obrigatório' });
@@ -164,9 +164,17 @@ router.post('/sessions', authMiddleware, checkConnectionQuota, async (req: Authe
       return res.status(400).json({ error: 'Provedor deve ser WAHA, EVOLUTION ou DIGITALSAC' });
     }
 
-    // Para DigitalSac, connectionUuid é obrigatório
+    // Para DigitalSac, connectionUuid, externalKey e token são obrigatórios
     if (provider === 'DIGITALSAC' && !connectionUuid) {
-      return res.status(400).json({ error: 'UUID da conexão é obrigatório para DigitalSac' });
+      return res.status(400).json({ error: 'URL da conexão é obrigatória para DigitalSac' });
+    }
+
+    if (provider === 'DIGITALSAC' && !externalKey) {
+      return res.status(400).json({ error: 'ExternalKey é obrigatório para DigitalSac' });
+    }
+
+    if (provider === 'DIGITALSAC' && !token) {
+      return res.status(400).json({ error: 'Token é obrigatório para DigitalSac' });
     }
 
     // Usar tenantId do usuário autenticado (SUPERADMIN pode especificar tenant no body se necessário)
@@ -226,18 +234,22 @@ router.post('/sessions', authMiddleware, checkConnectionQuota, async (req: Authe
         status: 'WORKING', // Sempre WORKING - API direta, sem conexão
         provider: 'DIGITALSAC',
         connectionUuid,
+        externalKey,
+        token,
         tenantId
       });
 
       result = {
         success: true,
-        message: 'UUID da conexão DigitalSac registrado com sucesso',
+        message: 'Conexão DigitalSac registrada com sucesso',
         session: {
           name: realName,
           displayName,
           status: 'WORKING',
           provider: 'DIGITALSAC',
-          connectionUuid
+          connectionUuid,
+          externalKey,
+          token: '***' // Não retornar o token completo
         }
       };
     } else {
