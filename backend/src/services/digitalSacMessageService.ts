@@ -88,9 +88,6 @@ export async function sendMessageViaDigitalSac(
 
     // Para mensagens com mídia, usar FormData
     if (message.image || message.video || message.audio || message.document) {
-      // URL para mídia é diferente - adiciona /send-media-caption
-      const url = `${connectionUrl}/send-media-caption`;
-      
       let mediaUrl = '';
       let caption = message.caption || '';
 
@@ -104,6 +101,12 @@ export async function sendMessageViaDigitalSac(
         mediaUrl = message.document.url;
         caption = message.caption || message.fileName || '';
       }
+      
+      // Decidir qual API usar baseado na presença de caption
+      const hasCaption = caption && caption.trim();
+      const url = hasCaption 
+        ? `${connectionUrl}/send-media-caption`  // Com caption
+        : connectionUrl;                          // Sem caption (URL base)
 
       console.log(`DigitalSac API - Enviando mídia para: ${url}`);
       console.log(`DigitalSac API - Media URL: ${mediaUrl}`);
@@ -134,22 +137,20 @@ export async function sendMessageViaDigitalSac(
                        message.audio ? 'audio.ogg' : 
                        'document.pdf');
 
-      // Caption é obrigatório na API DigitalSac
-      // Se vazio, usar caractere invisível (espaço não-quebrável - ALT+255)
-      const finalCaption = caption && caption.trim() ? caption : '\u00A0';
-      
-      if (!caption || !caption.trim()) {
-        console.log(`DigitalSac API - Caption vazio, usando caractere invisível (ALT+255)`);
-      } else {
-        console.log(`DigitalSac API - Caption: ${caption}`);
-      }
-
       // Criar FormData
       const formData = new FormData();
       formData.append('media', mediaBlob, fileName);
-      formData.append('caption', finalCaption); // API requer 'caption' e não 'body'
       formData.append('number', normalizedPhone);
       formData.append('externalKey', externalKey);
+      
+      // Se tiver caption usa 'caption', se não tiver usa 'body' (API base)
+      if (hasCaption) {
+        formData.append('caption', caption);
+        console.log(`DigitalSac API - Enviando COM caption: ${caption}`);
+      } else {
+        formData.append('body', caption || ''); // API base usa 'body' ao invés de 'caption'
+        console.log(`DigitalSac API - Enviando SEM caption (API base com body)`);
+      }
 
       const response = await fetch(url, {
         method: 'POST',
