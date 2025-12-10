@@ -152,6 +152,7 @@ model Category {
   contacts    Contact[]
   tenant      Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
+  @@unique([nome, tenantId]) // Previne categorias duplicadas por tenant (case-insensitive será tratado no código)
   @@index([tenantId])
   @@map("categories")
 }
