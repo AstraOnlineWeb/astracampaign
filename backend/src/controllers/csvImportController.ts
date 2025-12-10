@@ -1,7 +1,7 @@
 import { Response } from 'express';
-import { AuthenticatedRequest } from '../middleware/auth';
 import multer from 'multer';
 import * as path from 'path';
+import { AuthenticatedRequest } from '../middleware/auth';
 import { CSVImportService } from '../services/csvImportService';
 import { ApiError } from '../types';
 
@@ -81,11 +81,11 @@ export class CSVImportController {
   static async downloadTemplate(req: AuthenticatedRequest, res: Response) {
     try {
       // CSV template com cabeçalhos em português
-      const csvTemplate = `nome,telefone,email,observacoes,categoriaId
-João Silva,+5511999999999,joao@email.com,Cliente desde 2020,550e8400-e29b-41d4-a716-446655440000
-Maria Santos,+5511888888888,maria@email.com,Fornecedor de materiais,550e8400-e29b-41d4-a716-446655440001
+      const csvTemplate = `nome,telefone,email,observacoes,categoria
+João Silva,+5511999999999,joao@email.com,Cliente desde 2020,Clientes
+Maria Santos,+5511888888888,maria@email.com,Fornecedor de materiais,Fornecedores
 Pedro Oliveira,+5511777777777,pedro@email.com,,
-Ana Costa,+5511666666666,ana@email.com,Parceiro estratégico,550e8400-e29b-41d4-a716-446655440000`;
+Ana Costa,+5511666666666,ana@email.com,Parceiro estratégico,Fornecedores`;
 
       res.setHeader('Content-Type', 'text/csv');
       res.setHeader('Content-Disposition', 'attachment; filename="template-contatos.csv"');

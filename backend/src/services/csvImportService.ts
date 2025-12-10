@@ -1,7 +1,8 @@
-import * as fs from 'fs';
 import csvParser from 'csv-parser';
-import { ContactService } from './contactService';
+import * as fs from 'fs';
 import { ContactInput, ImportResult } from '../types';
+import { CategoryService } from './categoryService';
+import { ContactService } from './contactService';
 
 interface CSVRow {
   nome?: string;
@@ -9,7 +10,8 @@ interface CSVRow {
   email?: string;
   observacoes?: string;
   tags?: string;
-  categoriaid?: string; // CSV parser converte para lowercase
+  categoria?: string; // Nome da categoria (não ID)
+  categoriaid?: string; // Mantido para compatibilidade
 }
 
 export class CSVImportService {
@@ -46,6 +48,21 @@ export class CSVImportService {
                 continue;
               }
 
+              // Processar categoria: buscar por nome ou criar se não existir
+              let categoriaId: string | undefined = undefined;
+              const categoriaNome = row.categoria?.trim() || row.categoriaid?.trim();
+
+              if (categoriaNome) {
+                try {
+                  categoriaId = await CategoryService.findOrCreateCategoryByName(categoriaNome, tenantId);
+                  console.log(`📂 Linha ${rowNumber} - Categoria "${categoriaNome}": ${categoriaId ? 'encontrada/criada' : 'não encontrada'}`);
+                } catch (error) {
+                  const errorMessage = error instanceof Error ? error.message : 'Erro ao processar categoria';
+                  console.warn(`⚠️ Linha ${rowNumber} - Erro ao processar categoria "${categoriaNome}": ${errorMessage}`);
+                  // Continua sem categoria se houver erro
+                }
+              }
+
               // Preparar dados do contato incluindo tenantId
               const tags = row.tags ? row.tags.split(',').map((tag: string) => tag.trim()) : [];
               const contactData: ContactInput = {
@@ -54,12 +71,12 @@ export class CSVImportService {
                 email: row.email?.trim() || undefined,
                 observacoes: row.observacoes?.trim() || undefined,
                 tags: tags,
-                categoriaId: row.categoriaid?.trim() || undefined,
+                categoriaId: categoriaId,
                 tenantId: tenantId
               };
 
               console.log(`🏷️ Linha ${rowNumber} - Tags extraídas:`, tags);
-              console.log(`📂 Linha ${rowNumber} - CategoriaId:`, row.categoriaid);
+              console.log(`📂 Linha ${rowNumber} - Categoria: "${categoriaNome}" -> ID: ${categoriaId || 'nenhuma'}`);
 
               // Criar contato
               await ContactService.createContact(contactData);

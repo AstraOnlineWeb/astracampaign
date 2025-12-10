@@ -43,6 +43,7 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 ## 🎯 Recursos Principais
 
 ### 🏢 **Arquitetura Multi-Tenant (SaaS)**
+
 - ✅ Isolamento completo de dados por empresa (tenant)
 - ✅ Sistema de quotas personalizáveis (usuários, contatos, campanhas, conexões)
 - ✅ Gerenciamento centralizado via Super Admin
@@ -52,6 +53,7 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 - ✅ Mensagens amigáveis para upgrade de plano
 
 ### 💾 **Backup & Restore**
+
 - ✅ Backup automático agendado (cron configurável)
 - ✅ Backup manual sob demanda
 - ✅ Restauração completa do banco de dados
@@ -60,6 +62,7 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 - ✅ Gerenciamento via interface web
 
 ### 👥 **Gerenciamento de Contatos**
+
 - ✅ CRUD completo de contatos
 - ✅ Importação em massa via CSV
 - ✅ **Importação do Chatwoot**: Sincronização de contatos do Chatwoot
@@ -71,6 +74,7 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 - ✅ Edição em massa de contatos
 
 ### 📱 **Conexões WhatsApp (Múltiplos Provedores)**
+
 - ✅ **WAHA API**: Suporte completo com QR Code
 - ✅ **Evolution API**: Integração nativa com Evolution
 - ✅ **QuePasa**: Integração com API QuePasa
@@ -82,6 +86,7 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 - ✅ Seleção de provedor ao criar sessão
 
 ### 🎯 **Campanhas Inteligentes**
+
 - ✅ **Tipos de Mensagem**: Texto, Imagem, Vídeo, Áudio, Documentos
 - ✅ **Sequências Complexas**: Múltiplas mensagens em ordem
 - ✅ **Randomização**: Textos, imagens, vídeos e arquivos aleatórios
@@ -94,6 +99,7 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 - ✅ **Preview em Tempo Real**: Visualização da mensagem antes do envio
 
 ### 🎲 **Sistema de Randomização**
+
 - ✅ **Textos Aleatórios**: Pool de mensagens para variar conteúdo
 - ✅ **Imagens Aleatórias**: Múltiplas imagens no pool
 - ✅ **Vídeos Aleatórios**: Seleção aleatória de vídeos
@@ -102,6 +108,7 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 - ✅ **Humanização**: Evita detecção de envios automatizados
 
 ### 📊 **Relatórios e Analytics**
+
 - ✅ Dashboard em tempo real
 - ✅ Estatísticas detalhadas (enviadas, falharam, pendentes)
 - ✅ Distribuição por sessão WhatsApp
@@ -111,6 +118,7 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 - ✅ Métricas por tenant
 
 ### 👤 **Sistema de Usuários e Roles**
+
 - ✅ **SUPERADMIN**: Gerencia todos os tenants
 - ✅ **ADMIN**: Gerencia seu tenant
 - ✅ **USER**: Acesso limitado às funcionalidades
@@ -120,6 +128,7 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 - ✅ Associação many-to-many com tenants
 
 ### ⚙️ **Configurações do Sistema**
+
 - ✅ Configurações globais (Super Admin)
 - ✅ Configurações por tenant
 - ✅ Integração WAHA configurável
@@ -130,6 +139,7 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 - ✅ Sistema de alertas e notificações
 
 ### 🔔 **Sistema de Alertas e Monitoramento**
+
 - ✅ Alertas de quota (85% e 100% de uso)
 - ✅ Monitoramento de saúde do sistema
 - ✅ Notificações de falhas de conexão
@@ -141,6 +151,7 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 ## 🛠️ Tecnologias Utilizadas
 
 ### 🎨 **Frontend**
+
 - **React 18** - Framework JavaScript moderno
 - **TypeScript** - Tipagem estática para JavaScript
 - **Vite** - Build tool ultra-rápida
@@ -150,6 +161,7 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 - **React Router Dom** - Roteamento SPA
 
 ### ⚡ **Backend**
+
 - **Node.js 20** - Runtime JavaScript
 - **Express** - Framework web minimalista
 - **TypeScript** - Tipagem estática
@@ -162,17 +174,20 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 - **socket.io** - WebSocket para real-time
 
 ### 🗄️ **Banco de Dados**
+
 - **PostgreSQL 16** - Banco de dados relacional
 - **Redis 7** - Cache e filas
 - **Prisma** - ORM com type-safety
 
 ### 🐳 **Infraestrutura**
+
 - **Docker & Docker Swarm** - Containerização e orquestração
 - **Traefik v2** - Proxy reverso e SSL automático
 - **Nginx** - Servidor web para frontend
 - **Docker Hub** - Imagens oficiais pré-construídas
 
 ### 🔌 **Integrações**
+
 - **WAHA API** - WhatsApp Web API
 - **Evolution API** - API alternativa para WhatsApp
 - **QuePasa** - API WhatsApp multi-dispositivo
@@ -185,6 +200,7 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 ## 🚀 Instalação
 
 ### 📋 **Pré-requisitos**
+
 - Docker 20.10+
 - Docker Compose/Swarm
 - Traefik configurado (para produção)
@@ -193,18 +209,21 @@ O **Astra Campaign** é uma **plataforma SaaS multi-tenant** completa e open-sou
 ### 🐳 **Instalação via Docker (Recomendado)**
 
 1. **Clone o repositório**
+
 ```bash
 git clone https://github.com/AstraOnlineWeb/astracampaign.git
 cd astracampaign
 ```
 
 2. **Configure as variáveis de ambiente**
+
 ```bash
 # Edite o docker-stack.yml com suas configurações
 nano docker-stack.yml
 ```
 
 Principais variáveis:
+
 ```yaml
 environment:
   - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/contacts
@@ -222,6 +241,7 @@ environment:
 ```
 
 3. **Deploy no Docker Swarm**
+
 ```bash
 # Produção
 docker stack deploy -c docker-stack.yml work
@@ -231,6 +251,7 @@ docker-compose up -d
 ```
 
 4. **Verificar serviços**
+
 ```bash
 docker service ls
 docker service logs -f work_backend
@@ -239,6 +260,7 @@ docker service logs -f work_backend
 ### 🛠️ **Desenvolvimento Local**
 
 1. **Backend**
+
 ```bash
 cd backend
 npm install
@@ -247,6 +269,7 @@ npm run dev          # Servidor de desenvolvimento
 ```
 
 2. **Frontend**
+
 ```bash
 cd frontend
 npm install
@@ -272,10 +295,12 @@ npm run dev          # Servidor de desenvolvimento (porta 3000)
 ### 🔗 **Endpoints da API**
 
 #### **Autenticação**
+
 - `POST /api/auth/login` - Login do usuário
 - `POST /api/auth/logout` - Logout do usuário
 
 #### **Tenants (SUPERADMIN)**
+
 - `GET /api/tenants` - Listar todos os tenants
 - `POST /api/tenants` - Criar novo tenant
 - `PUT /api/tenants/:id` - Atualizar tenant
@@ -283,6 +308,7 @@ npm run dev          # Servidor de desenvolvimento (porta 3000)
 - `GET /api/tenants/:id` - Detalhes do tenant
 
 #### **Contatos**
+
 - `GET /api/contatos` - Listar contatos (com paginação/busca)
 - `POST /api/contatos` - Criar contato
 - `PUT /api/contatos/:id` - Atualizar contato
@@ -292,6 +318,7 @@ npm run dev          # Servidor de desenvolvimento (porta 3000)
 - `PATCH /api/contatos/bulk-edit` - Edição em massa de contatos
 
 #### **Campanhas**
+
 - `GET /api/campaigns` - Listar campanhas
 - `POST /api/campaigns` - Criar campanha
 - `PATCH /api/campaigns/:id/toggle` - Pausar/Retomar
@@ -299,18 +326,21 @@ npm run dev          # Servidor de desenvolvimento (porta 3000)
 - `GET /api/campaigns/:id/report` - Relatório detalhado
 
 #### **Sessões WhatsApp**
+
 - `GET /api/waha/sessions` - Listar sessões
 - `POST /api/waha/sessions` - Criar sessão (WAHA, Evolution ou QuePasa)
 - `DELETE /api/waha/sessions/:name` - Remover sessão
 - `POST /api/waha/sessions/:name/restart` - Reiniciar
 
 #### **Backup & Restore**
+
 - `GET /api/backup/stats` - Estatísticas de backup
 - `POST /api/backup` - Criar backup manual
 - `POST /api/backup/restore/:filename` - Restaurar backup
 - `GET /api/backup/list` - Listar backups disponíveis
 
 #### **Analytics**
+
 - `GET /api/analytics/overview` - Visão geral do sistema
 - `GET /api/analytics/campaigns` - Métricas de campanhas
 - `GET /api/analytics/sessions` - Métricas de sessões
@@ -354,11 +384,11 @@ interface Campaign {
   nome: string;
   targetCategories: string[];
   sessionNames: string[];
-  messageType: 'text' | 'image' | 'video' | 'audio' | 'document' | 'sequence';
+  messageType: "text" | "image" | "video" | "audio" | "document" | "sequence";
   messageContent: MessageContent;
   randomize: boolean; // Randomizar conteúdo
   randomDelay: number;
-  status: 'PENDING' | 'RUNNING' | 'COMPLETED' | 'PAUSED' | 'FAILED';
+  status: "PENDING" | "RUNNING" | "COMPLETED" | "PAUSED" | "FAILED";
 }
 
 // Sessão WhatsApp
@@ -368,7 +398,7 @@ interface WhatsAppSession {
   name: string;
   displayName?: string;
   status: string;
-  provider: 'WAHA' | 'EVOLUTION' | 'QUEPASA';
+  provider: "WAHA" | "EVOLUTION" | "QUEPASA";
   qr?: string;
   quepasaToken?: string; // Token para QuePasa
 }
@@ -416,9 +446,9 @@ labels:
 ### 📝 **Formato CSV para Importação**
 
 ```csv
-nome,telefone,email,categoria,observacoes
-João Silva,+5511999999999,joao@email.com,Cliente VIP,Cliente preferencial
-Maria Santos,+5511888888888,maria@email.com,Prospect,Interessada em produto X
+nome,telefone,email,observacoes,categoria
+João Silva,+5511999999999,joao@email.com,Cliente preferencial,Cliente VIP
+Maria Santos,+5511888888888,maria@email.com,Interessada em produto X,Prospect
 ```
 
 ### 💬 **Integração com Chatwoot**
@@ -426,10 +456,12 @@ Maria Santos,+5511888888888,maria@email.com,Prospect,Interessada em produto X
 Para importar contatos do Chatwoot:
 
 1. **Configure o Chatwoot** nas configurações do tenant:
+
    - URL do Chatwoot: `https://seu-chatwoot.com`
    - Token de API: Obtenha em Perfil → Tokens de Acesso
 
 2. **Importe os contatos**:
+
    - Acesse a página de Contatos
    - Clique em "Importar do Chatwoot"
    - Selecione a categoria desejada
@@ -446,10 +478,12 @@ Para importar contatos do Chatwoot:
 Para usar o QuePasa como provedor WhatsApp:
 
 1. **Configure o QuePasa** nas configurações:
+
    - Host: `https://seu-quepasa.com` ou `http://ip:31000`
    - Token: Token de autenticação do QuePasa
 
 2. **Crie uma sessão**:
+
    - Na página de Conexões WhatsApp
    - Selecione "QuePasa" como provedor
    - O token será gerado automaticamente
@@ -613,16 +647,19 @@ Este projeto está licenciado sob a **GNU Affero General Public License v3.0 (AG
 ## 📞 Suporte
 
 ### 💬 **Comunidade**
+
 - 💬 [Grupo WhatsApp](https://chat.whatsapp.com/LMa44csoeoS9gMjamMpbOK) - **Comunidade aberta para discussões**
 - 💬 [Discussions](https://github.com/AstraOnlineWeb/astracampaign/discussions) - Discussões técnicas no GitHub
 - 🐛 [Issues](https://github.com/AstraOnlineWeb/astracampaign/issues) - Bugs e features
 
 ### 🛠️ **Suporte Profissional**
+
 **Precisa de ajuda para melhorar, customizar ou implementar o projeto?**
 
 📱 **WhatsApp**: [+55 61 9 9687-8959](https://wa.me/5561996878959)
 
 💼 Temos uma equipe especializada para:
+
 - ✅ Customizações e melhorias
 - ✅ Implementação e deploy completo
 - ✅ Configuração de arquitetura SaaS
@@ -633,6 +670,7 @@ Este projeto está licenciado sob a **GNU Affero General Public License v3.0 (AG
 - ✅ Treinamento e documentação
 
 ### 📚 **Recursos Úteis**
+
 - 📖 [Documentação WAHA](https://waha.devlike.pro/docs/)
 - 📖 [Documentação Evolution API](https://doc.evolution-api.com/)
 - 📖 [Documentação QuePasa](https://github.com/nocodeleaks/quepasa)

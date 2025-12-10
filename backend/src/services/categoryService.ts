@@ -1,5 +1,5 @@
-import { CategoryInput, CategoriesResponse } from '../types';
 import { PrismaClient } from '@prisma/client';
+import { CategoriesResponse, CategoryInput } from '../types';
 
 const prisma = new PrismaClient();
 
@@ -147,5 +147,83 @@ export class CategoryService {
         criadoEm: 'desc'
       }
     });
+  }
+
+  static async findOrCreateCategoryByName(nome: string, tenantId?: string): Promise<string> {
+    if (!nome || !nome.trim()) {
+      throw new Error('Nome da categoria é obrigatório');
+    }
+
+    const nomeTrimmed = nome.trim();
+    const where: any = {
+      nome: {
+        equals: nomeTrimmed,
+        mode: 'insensitive'
+      }
+    };
+
+    // Apply tenant filter
+    if (tenantId !== undefined) {
+      where.tenantId = tenantId;
+    }
+
+    // Buscar categoria existente (case-insensitive)
+    const existingCategory = await prisma.category.findFirst({ where });
+
+    if (existingCategory) {
+      return existingCategory.id;
+    }
+
+    // Selecionar cor aleatória da lista de cores padrão
+    const defaultColors = [
+      '#1e3a5f', // Astra Dark Blue
+      '#4a9eff', // Astra Light Blue
+      '#10B981', // Green
+      '#F59E0B', // Yellow
+      '#EF4444', // Red
+      '#8B5CF6', // Purple
+      '#F97316', // Orange
+      '#06B6D4', // Cyan
+      '#84CC16', // Lime
+      '#EC4899', // Pink
+    ];
+    const randomColor = defaultColors[Math.floor(Math.random() * defaultColors.length)];
+
+    try {
+      // Tentar criar a categoria diretamente
+      // A constraint única garante que não haverá duplicatas
+      const newCategory = await prisma.category.create({
+        data: {
+          nome: nomeTrimmed,
+          cor: randomColor,
+          descricao: null,
+          tenantId
+        }
+      });
+
+      return newCategory.id;
+    } catch (error: any) {
+      // Se falhar por violação de constraint única (P2002), significa que outra
+      // requisição criou a categoria simultaneamente (race condition)
+      // Buscar novamente a categoria criada
+      if (error.code === 'P2002') {
+        const category = await prisma.category.findFirst({ where });
+        if (category) {
+          return category.id;
+        }
+        // Se ainda não encontrar, pode ser um problema de case-sensitivity
+        // Tentar buscar sem case-insensitive como fallback
+        const fallbackWhere: any = { nome: nomeTrimmed };
+        if (tenantId !== undefined) {
+          fallbackWhere.tenantId = tenantId;
+        }
+        const fallbackCategory = await prisma.category.findFirst({ where: fallbackWhere });
+        if (fallbackCategory) {
+          return fallbackCategory.id;
+        }
+      }
+      // Se não for erro de duplicata, relançar o erro
+      throw error;
+    }
   }
 }
