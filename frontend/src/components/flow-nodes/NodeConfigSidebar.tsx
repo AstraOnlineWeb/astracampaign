@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
-import { Node, Edge } from 'reactflow';
-import { Connection } from '../../services/interactiveCampaignApi';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
+import { useEffect, useRef, useState } from 'react';
+import { Edge, Node } from 'reactflow';
+import { Connection } from '../../services/interactiveCampaignApi';
 
 interface Category {
   id: string;
@@ -678,8 +678,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
 
                       {/* Campo de legenda para imagem e vídeo */}
                       {hasFile && ['image', 'video'].includes(config.actionType) && (
-                        <input
-                          type="text"
+                        <textarea
                           placeholder="Legenda..."
                           value={variation.caption || ''}
                           onChange={(e) => {
@@ -1156,8 +1155,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
 
                     {/* Campo de legenda para imagem e vídeo */}
                     {hasFile && ['image', 'video'].includes(mediaType) && (
-                      <input
-                        type="text"
+                      <textarea
                         placeholder="Legenda..."
                         value={variation.caption || ''}
                         onChange={(e) => {
@@ -1255,11 +1253,10 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Legenda (opcional)
                   </label>
-                  <input
-                    type="text"
+                  <textarea
                     value={config.caption || ''}
                     onChange={(e) => setConfig({ ...config, caption: e.target.value })}
-                    placeholder="Digite uma legenda para a mídia..."
+                    placeholder="Digite uma legenda para a mídia... Use variáveis como {{nome}}, {{email}}, {{telefone}}, {{categoria}}, {{observacoes}}"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 </div>

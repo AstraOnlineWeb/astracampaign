@@ -28,7 +28,7 @@ export async function sendMessageViaEvolution(instanceName: string, phone: strin
     if (!config.host || !config.apiKey) {
       throw new Error('Configurações Evolution API não encontradas. Configure nas configurações do sistema.');
     }
-
+    console.log('sendMessageViaEvolution message', message);
     const normalizedPhone = normalizeBrazilianPhone(phone);
     let endpoint = '';
     let requestBody: any = {

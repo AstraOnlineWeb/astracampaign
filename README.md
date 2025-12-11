@@ -504,9 +504,9 @@ labels:
 ### 📝 **Formato CSV para Importação**
 
 ```csv
-nome,telefone,email,categoria,observacoes
-João Silva,+5511999999999,joao@email.com,Cliente VIP,Cliente preferencial
-Maria Santos,+5511888888888,maria@email.com,Prospect,Interessada em produto X
+nome,telefone,email,observacoes,categoria
+João Silva,+5511999999999,joao@email.com,Cliente preferencial,Cliente VIP
+Maria Santos,+5511888888888,maria@email.com,Interessada em produto X,Prospect
 ```
 
 ### 💬 **Integração com Chatwoot**

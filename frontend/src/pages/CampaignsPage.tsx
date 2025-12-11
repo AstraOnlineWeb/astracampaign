@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Header } from '../components/Header';
 import { Portal } from '../components/Portal';
@@ -1832,9 +1832,8 @@ export function CampaignsPage() {
 
                                               {/* Campo de legenda para imagem e vídeo */}
                                               {hasFile && ['image', 'video'].includes(item.type) && (
-                                                <input
-                                                  type="text"
-                                                  placeholder="Legenda..."
+                                                <textarea
+                                                  placeholder="Legenda... Use variáveis como {{nome}}, {{email}}, {{telefone}}, {{categoria}}, {{observacoes}}"
                                                   value={variation.caption || ''}
                                                   onChange={(e) => {
                                                     const currentSequence = ('sequence' in formData.messageContent) ? formData.messageContent.sequence : [];
