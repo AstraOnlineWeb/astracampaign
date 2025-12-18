@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useUsers } from '../hooks/useUsers';
 import { UserList } from '../components/UserList';
 import { UserForm } from '../components/UserForm';
@@ -7,6 +8,7 @@ import toast from 'react-hot-toast';
 import { Header } from '../components/Header';
 
 export function UsersPage() {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -52,16 +54,16 @@ export function UsersPage() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage = errorData.message || 'Erro ao criar usuário';
+        const errorMessage = errorData.message || t('errors.generic');
         throw new Error(errorMessage);
       }
 
-      toast.success('Usuário criado com sucesso!');
+      toast.success(t('users.messages.created'));
       setIsFormOpen(false);
       refresh();
     } catch (err) {
       console.error('Erro ao criar usuário:', err);
-      toast.error(err instanceof Error ? err.message : 'Erro ao criar usuário');
+      toast.error(err instanceof Error ? err.message : t('errors.generic'));
     }
   };
 
@@ -75,29 +77,29 @@ export function UsersPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Erro ao atualizar usuário');
+        throw new Error(t('errors.generic'));
       }
 
-      toast.success('Usuário atualizado com sucesso!');
+      toast.success(t('users.messages.updated'));
       setIsFormOpen(false);
       setEditingUser(undefined);
       refresh();
     } catch (err) {
       console.error('Erro ao atualizar usuário:', err);
-      toast.error('Erro ao atualizar usuário');
+      toast.error(t('errors.generic'));
     }
   };
 
   const handleDeleteUser = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir este usuário?')) {
+    if (!confirm(t('users.messages.deleteConfirm'))) {
       return;
     }
 
     try {
       await deleteUser(id);
-      toast.success('Usuário excluído com sucesso!');
+      toast.success(t('users.messages.deleted'));
     } catch (err) {
-      toast.error('Erro ao excluir usuário');
+      toast.error(t('errors.generic'));
     }
   };
 
@@ -114,14 +116,14 @@ export function UsersPage() {
   return (
     <>
       <Header
-        title="Usuários"
-        subtitle={`${users.length} ${users.length === 1 ? 'usuário cadastrado' : 'usuários cadastrados'}`}
+        title={t('users.title')}
+        subtitle={t('common.selected', { count: users.length })}
         actions={
           <button
             onClick={() => setIsFormOpen(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium transition-colors"
           >
-            + Novo Usuário
+            {t('users.newUser')}
           </button>
         }
       />
@@ -130,53 +132,52 @@ export function UsersPage() {
         <div className="mb-4">
           <input
             type="text"
-            placeholder="Buscar usuários..."
+            placeholder={t('common.search') + '...'}
             value={search}
             onChange={handleSearchChange}
             className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
 
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-4">
-          {error}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-4">
+            {error}
+          </div>
+        )}
+
+        <div className="bg-white rounded-lg shadow">
+          <UserList
+            users={users}
+            loading={loading}
+            onEdit={handleEditUser}
+            onDelete={handleDeleteUser}
+          />
         </div>
-      )}
 
-      <div className="bg-white rounded-lg shadow">
-        <UserList
-          users={users}
-          loading={loading}
-          onEdit={handleEditUser}
-          onDelete={handleDeleteUser}
-        />
-      </div>
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-6 space-x-2">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`px-3 py-2 rounded-lg ${page === currentPage
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+        )}
 
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-6 space-x-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => setCurrentPage(page)}
-              className={`px-3 py-2 rounded-lg ${
-                page === currentPage
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {isFormOpen && (
-        <UserForm
-          user={editingUser}
-          onSubmit={editingUser ? handleUpdateUser : handleCreateUser}
-          onCancel={handleCloseForm}
-        />
-      )}
+        {isFormOpen && (
+          <UserForm
+            user={editingUser}
+            onSubmit={editingUser ? handleUpdateUser : handleCreateUser}
+            onCancel={handleCloseForm}
+          />
+        )}
       </div>
     </>
   );

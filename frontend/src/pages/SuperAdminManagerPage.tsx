@@ -3,9 +3,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { SystemBackup } from '../components/SystemBackup';
 import { AnalyticsDashboard } from '../components/AnalyticsDashboard';
 import { useSettings } from '../hooks/useSettings';
+import { LanguageSelector } from '../components/LanguageSelector';
 
 interface Tenant {
   id: string;
@@ -144,41 +146,43 @@ interface Settings {
   groqApiKey?: string;
 }
 
-const settingsSchema = z.object({
+const createSettingsSchema = (t: any) => z.object({
   wahaHost: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
-    message: 'Host deve ser uma URL válida ou vazio'
+    message: t('superAdmin.validation.hostInvalid')
   }),
   wahaApiKey: z.string().refine((val) => !val || val.length >= 10, {
-    message: 'API Key deve ter pelo menos 10 caracteres ou estar vazia'
+    message: t('superAdmin.validation.apiKeyTooShort')
   }),
   evolutionHost: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
-    message: 'Host deve ser uma URL válida ou vazio'
+    message: t('superAdmin.validation.hostInvalid')
   }),
   evolutionApiKey: z.string().refine((val) => !val || val.length >= 10, {
-    message: 'API Key deve ter pelo menos 10 caracteres ou estar vazia'
+    message: t('superAdmin.validation.apiKeyTooShort')
   }),
   quepasaUrl: z.string().refine((val) => !val || z.string().url().safeParse(val).success, {
-    message: 'URL deve ser uma URL válida ou vazio'
+    message: t('superAdmin.validation.urlInvalid')
   }),
   quepasaLogin: z.string().optional(),
   quepasaPassword: z.string().optional(),
 });
 
-const generalSettingsSchema = z.object({
+const createGeneralSettingsSchema = (t: any) => z.object({
   companyName: z.string().refine((val) => !val || (val.length >= 1 && val.length <= 100), {
-    message: 'Nome da empresa deve ter entre 1 e 100 caracteres ou estar vazio'
+    message: t('superAdmin.validation.companyNameLength')
   }),
   pageTitle: z.string().refine((val) => !val || (val.length >= 1 && val.length <= 100), {
-    message: 'Título da página deve ter entre 1 e 100 caracteres ou estar vazio'
+    message: t('superAdmin.validation.pageTitleLength')
   }),
 });
 
-type SettingsFormData = z.infer<typeof settingsSchema>;
-type GeneralSettingsFormData = z.infer<typeof generalSettingsSchema>;
+type SettingsFormData = z.infer<ReturnType<typeof createSettingsSchema>>;
+type GeneralSettingsFormData = z.infer<ReturnType<typeof createGeneralSettingsSchema>>;
 
 
 export function SuperAdminManagerPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'general' | 'appearance' | 'integrations' | 'tenants' | 'users' | 'backup'>('general');
+
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [stats, setStats] = useState<SystemStats | null>(null);
@@ -247,6 +251,9 @@ export function SuperAdminManagerPage() {
     }
   }, [activeTab]);
 
+  const settingsSchema = createSettingsSchema(t);
+  const generalSettingsSchema = createGeneralSettingsSchema(t);
+
   const {
     register,
     handleSubmit: handleFormSubmit,
@@ -312,7 +319,7 @@ export function SuperAdminManagerPage() {
       }
     } catch (error) {
       console.error('Erro ao carregar configurações gerais:', error);
-      toast.error('Erro ao carregar configurações gerais');
+      toast.error(t('settings.messages.loadError'));
     }
   };
 
@@ -324,15 +331,15 @@ export function SuperAdminManagerPage() {
       });
 
       if (response.ok) {
-        toast.success('Configurações gerais salvas com sucesso');
+        toast.success(t('settings.messages.saved'));
         loadGeneralSettings();
       } else {
         const errorData = await response.json();
-        toast.error(errorData.error || 'Erro ao salvar configurações gerais');
+        toast.error(errorData.error || t('settings.messages.error'));
       }
     } catch (error) {
       console.error('Erro ao salvar configurações gerais:', error);
-      toast.error('Erro ao salvar configurações gerais');
+      toast.error(t('settings.messages.error'));
     }
   };
 
@@ -363,16 +370,16 @@ export function SuperAdminManagerPage() {
       });
 
       if (response.ok) {
-        toast.success('Configurações de integração salvas com sucesso');
+        toast.success(t('settings.messages.saved'));
         setActiveModal(null);
         loadIntegrationSettings();
       } else {
         const errorData = await response.json();
-        toast.error(errorData.error || 'Erro ao salvar configurações');
+        toast.error(errorData.error || t('settings.messages.error'));
       }
     } catch (error) {
       console.error('Erro ao salvar configurações de integração:', error);
-      toast.error('Erro ao salvar configurações');
+      toast.error(t('settings.messages.error'));
     }
   };
 
@@ -403,17 +410,17 @@ export function SuperAdminManagerPage() {
       });
 
       if (response.ok) {
-        toast.success('Logo carregada com sucesso');
+        toast.success(t('settings.messages.saved'));
         loadGeneralSettings();
         setLogoFile(null);
         setLogoPreview('');
       } else {
         const errorData = await response.json();
-        toast.error(errorData.error || 'Erro ao carregar logo');
+        toast.error(errorData.error || t('settings.messages.error'));
       }
     } catch (error) {
       console.error('Erro ao carregar logo:', error);
-      toast.error('Erro ao carregar logo');
+      toast.error(t('settings.messages.error'));
     } finally {
       setUploadingLogo(false);
     }
@@ -426,14 +433,14 @@ export function SuperAdminManagerPage() {
       });
 
       if (response.ok) {
-        toast.success('Logo removida com sucesso');
+        toast.success(t('settings.messages.saved'));
         loadGeneralSettings();
       } else {
-        toast.error('Erro ao remover logo');
+        toast.error(t('settings.messages.error'));
       }
     } catch (error) {
       console.error('Erro ao remover logo:', error);
-      toast.error('Erro ao remover logo');
+      toast.error(t('settings.messages.error'));
     }
   };
 
@@ -464,17 +471,17 @@ export function SuperAdminManagerPage() {
       });
 
       if (response.ok) {
-        toast.success('Favicon carregado com sucesso');
+        toast.success(t('settings.messages.saved'));
         loadGeneralSettings();
         setFaviconFile(null);
         setFaviconPreview('');
       } else {
         const errorData = await response.json();
-        toast.error(errorData.error || 'Erro ao carregar favicon');
+        toast.error(errorData.error || t('settings.messages.error'));
       }
     } catch (error) {
       console.error('Erro ao carregar favicon:', error);
-      toast.error('Erro ao carregar favicon');
+      toast.error(t('settings.messages.error'));
     } finally {
       setUploadingFavicon(false);
     }
@@ -487,14 +494,14 @@ export function SuperAdminManagerPage() {
       });
 
       if (response.ok) {
-        toast.success('Favicon removido com sucesso');
+        toast.success(t('settings.messages.saved'));
         loadGeneralSettings();
       } else {
-        toast.error('Erro ao remover favicon');
+        toast.error(t('settings.messages.error'));
       }
     } catch (error) {
       console.error('Erro ao remover favicon:', error);
-      toast.error('Erro ao remover favicon');
+      toast.error(t('settings.messages.error'));
     }
   };
 
@@ -525,17 +532,17 @@ export function SuperAdminManagerPage() {
       });
 
       if (response.ok) {
-        toast.success('Ícone carregado com sucesso');
+        toast.success(t('settings.messages.saved'));
         loadGeneralSettings();
         setIconFile(null);
         setIconPreview('');
       } else {
         const errorData = await response.json();
-        toast.error(errorData.error || 'Erro ao carregar ícone');
+        toast.error(errorData.error || t('settings.messages.error'));
       }
     } catch (error) {
       console.error('Erro ao carregar ícone:', error);
-      toast.error('Erro ao carregar ícone');
+      toast.error(t('settings.messages.error'));
     } finally {
       setUploadingIcon(false);
     }
@@ -548,14 +555,14 @@ export function SuperAdminManagerPage() {
       });
 
       if (response.ok) {
-        toast.success('Ícone removido com sucesso');
+        toast.success(t('settings.messages.saved'));
         loadGeneralSettings();
       } else {
-        toast.error('Erro ao remover ícone');
+        toast.error(t('settings.messages.error'));
       }
     } catch (error) {
       console.error('Erro ao remover ícone:', error);
-      toast.error('Erro ao remover ícone');
+      toast.error(t('settings.messages.error'));
     }
   };
 
@@ -592,7 +599,7 @@ export function SuperAdminManagerPage() {
       }
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
-      toast.error('Erro ao carregar dados');
+      toast.error(t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -614,10 +621,11 @@ export function SuperAdminManagerPage() {
       });
 
       if (response.ok) {
-        toast.success(`Empresa ${!tenant.active ? 'ativada' : 'desativada'} com sucesso!`);
+        const status = !tenant.active ? t('superAdmin.messages.activated') : t('superAdmin.messages.deactivated');
+        toast.success(t('superAdmin.messages.toggleStatusSuccess', { status }));
         loadData();
       } else {
-        throw new Error('Erro ao alterar status da empresa');
+        throw new Error(t('superAdmin.messages.toggleStatusError'));
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -665,7 +673,7 @@ export function SuperAdminManagerPage() {
   };
 
   const handleDeleteTenant = async (tenant: Tenant) => {
-    if (!confirm(`Tem certeza que deseja excluir a empresa "${tenant.name}"? Esta ação é irreversível.`)) {
+    if (!confirm(t('settings.messages.removeConfirm', { name: tenant.name }))) {
       return;
     }
 
@@ -679,11 +687,11 @@ export function SuperAdminManagerPage() {
       });
 
       if (response.ok) {
-        toast.success('Tenant excluído com sucesso!');
+        toast.success(t('contacts.messages.deleteSuccess'));
         loadData();
       } else {
         const error = await response.json();
-        throw new Error(error.message || 'Erro ao excluir empresa');
+        throw new Error(error.message || t('common.error'));
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -694,7 +702,7 @@ export function SuperAdminManagerPage() {
     e.preventDefault();
 
     if (!formData.name || (!editingTenant && (!formData.adminUser.nome || !formData.adminUser.email || !formData.adminUser.senha))) {
-      toast.error('Preencha todos os campos obrigatórios');
+      toast.error(t('contacts.validation.nameRequired')); // Using generic required message if available or just generic error
       return;
     }
 
@@ -723,12 +731,12 @@ export function SuperAdminManagerPage() {
       });
 
       if (response.ok) {
-        toast.success(`Empresa ${editingTenant ? 'atualizada' : 'criada'} com sucesso!`);
+        toast.success(editingTenant ? t('superAdmin.messages.updateSuccess') : t('superAdmin.messages.createSuccess'));
         setIsModalOpen(false);
         loadData();
       } else {
         const error = await response.json();
-        throw new Error(error.message || `Erro ao ${editingTenant ? 'atualizar' : 'criar'} empresa`);
+        throw new Error(error.message || (editingTenant ? t('superAdmin.messages.updateError') : t('superAdmin.messages.createError')));
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -827,7 +835,7 @@ export function SuperAdminManagerPage() {
     e.preventDefault();
 
     if (!userFormData.nome || !userFormData.email || (!editingUser && !userFormData.senha)) {
-      toast.error('Preencha todos os campos obrigatórios');
+      toast.error(t('users.messages.fillRequiredFields'));
       return;
     }
 
@@ -925,7 +933,7 @@ export function SuperAdminManagerPage() {
           }
         }
 
-        toast.success(`Usuário ${editingUser ? 'atualizado' : 'criado'} com sucesso!`);
+        toast.success(editingUser ? t('users.messages.updateSuccess') : t('users.messages.createSuccess'));
         setIsUserModalOpen(false);
         loadData();
       } else {
@@ -933,14 +941,14 @@ export function SuperAdminManagerPage() {
 
         // Verificar se é erro de quota
         if (error.upgradeRequired || (error.message && error.message.includes('Limite'))) {
-          toast.error(error.message || 'Limite de usuários atingido. Faça upgrade do plano para continuar.', {
+          toast.error(error.message || t('users.messages.userLimitReached'), {
             duration: 6000,
             icon: '⚠️'
           });
           return;
         }
 
-        throw new Error(error.message || `Erro ao ${editingUser ? 'atualizar' : 'criar'} usuário`);
+        throw new Error(error.message || (editingUser ? t('users.messages.updateError') : t('users.messages.createError')));
       }
     } catch (error: any) {
       // Não mostrar toast de erro genérico se já mostramos o toast específico de quota
@@ -965,11 +973,11 @@ export function SuperAdminManagerPage() {
       });
 
       if (response.ok) {
-        toast.success(`Usuário ${!user.ativo ? 'ativado' : 'desativado'} com sucesso!`);
+        toast.success(!user.ativo ? t('users.messages.activateSuccess') : t('users.messages.deactivateSuccess'));
         loadData();
       } else {
         const error = await response.json();
-        throw new Error(error.message || 'Erro ao alterar status do usuário');
+        throw new Error(error.message || t('users.messages.statusChangeError'));
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -977,7 +985,7 @@ export function SuperAdminManagerPage() {
   };
 
   const handleDeleteUser = async (user: User) => {
-    if (!confirm(`Tem certeza que deseja excluir o usuário ${user.nome}?`)) {
+    if (!confirm(t('users.messages.deleteConfirmWithName', { name: user.nome }))) {
       return;
     }
 
@@ -991,11 +999,11 @@ export function SuperAdminManagerPage() {
       });
 
       if (response.ok) {
-        toast.success('Usuário excluído com sucesso!');
+        toast.success(t('users.messages.deleteSuccess'));
         loadData();
       } else {
         const error = await response.json();
-        throw new Error(error.message || 'Erro ao excluir usuário');
+        throw new Error(error.message || t('users.messages.deleteError'));
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -1017,8 +1025,11 @@ export function SuperAdminManagerPage() {
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Super Admin</h1>
-          <p className="text-gray-600 mt-2">Gerenciamento completo do sistema</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('superAdmin.page.title')}</h1>
+          <p className="text-gray-600 mt-2">{t('superAdmin.page.subtitle')}</p>
+        </div>
+        <div className="flex items-center gap-4">
+          <LanguageSelector variant="header" />
         </div>
       </div>
 
@@ -1027,63 +1038,57 @@ export function SuperAdminManagerPage() {
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('general')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'general'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'general'
+              ? 'border-blue-500 text-blue-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
           >
-            ⚙️ Configurações Gerais
+            ⚙️ {t('settings.title')}
           </button>
           <button
             onClick={() => setActiveTab('appearance')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'appearance'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'appearance'
+              ? 'border-blue-500 text-blue-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
           >
-            🎨 Aparência
+            🎨 {t('settings.tabs.appearance')}
           </button>
           <button
             onClick={() => setActiveTab('integrations')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'integrations'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'integrations'
+              ? 'border-blue-500 text-blue-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
           >
-            🔗 Integrações
+            🔗 {t('settings.tabs.integrations')}
           </button>
           <button
             onClick={() => setActiveTab('tenants')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'tenants'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'tenants'
+              ? 'border-blue-500 text-blue-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
           >
-            🏢 Empresas
+            🏢 {t('superAdmin.tenants.listTitle')}
           </button>
           <button
             onClick={() => setActiveTab('users')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'users'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'users'
+              ? 'border-blue-500 text-blue-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
           >
-            👥 Usuários
+            👥 {t('superAdmin.stats.users')}
           </button>
           <button
             onClick={() => setActiveTab('backup')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'backup'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'backup'
+              ? 'border-blue-500 text-blue-600'
+              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
           >
-            💾 Backup
+            💾 {t('backup.title')}
           </button>
         </nav>
       </div>
@@ -1092,7 +1097,7 @@ export function SuperAdminManagerPage() {
       {activeTab === 'tenants' && (
         <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">Gerenciar Empresas</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t('superAdmin.tenants.manage')}</h2>
             <button
               onClick={handleCreateTenant}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
@@ -1100,7 +1105,7 @@ export function SuperAdminManagerPage() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
-              Criar Empresa
+              {t('superAdmin.actions.create')}
             </button>
           </div>
           <div className="divide-y divide-gray-200">
@@ -1116,12 +1121,11 @@ export function SuperAdminManagerPage() {
                         </p>
                       </div>
 
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        tenant.active
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}>
-                        {tenant.active ? 'Ativo' : 'Inativo'}
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${tenant.active
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
+                        }`}>
+                        {tenant.active ? t('superAdmin.status.active') : t('superAdmin.status.inactive')}
                       </span>
                     </div>
 
@@ -1129,10 +1133,10 @@ export function SuperAdminManagerPage() {
                     {tenant._count && tenant.quota && (
                       <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
                         {[
-                          { label: 'Usuários', current: tenant._count.users, max: tenant.quota.maxUsers },
-                          { label: 'Contatos', current: tenant._count.contacts, max: tenant.quota.maxContacts },
-                          { label: 'Campanhas', current: tenant._count.campaigns, max: tenant.quota.maxCampaigns },
-                          { label: 'Conexões', current: tenant._count.whatsappSessions, max: tenant.quota.maxConnections }
+                          { label: t('superAdmin.quotas.users'), current: tenant._count.users, max: tenant.quota.maxUsers },
+                          { label: t('superAdmin.quotas.contacts'), current: tenant._count.contacts, max: tenant.quota.maxContacts },
+                          { label: t('superAdmin.quotas.campaigns'), current: tenant._count.campaigns, max: tenant.quota.maxCampaigns },
+                          { label: t('superAdmin.quotas.connections'), current: tenant._count.whatsappSessions, max: tenant.quota.maxConnections }
                         ].map((stat) => {
                           const percentage = getUsagePercentage(stat.current, stat.max);
                           return (
@@ -1153,23 +1157,22 @@ export function SuperAdminManagerPage() {
                       onClick={() => handleEditTenant(tenant)}
                       className="px-3 py-2 text-sm rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200"
                     >
-                      Editar
+                      {t('superAdmin.actions.edit')}
                     </button>
                     <button
                       onClick={() => handleToggleTenantStatus(tenant)}
-                      className={`px-3 py-2 text-sm rounded-lg ${
-                        tenant.active
-                          ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                          : 'bg-green-100 text-green-700 hover:bg-green-200'
-                      }`}
+                      className={`px-3 py-2 text-sm rounded-lg ${tenant.active
+                        ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                        : 'bg-green-100 text-green-700 hover:bg-green-200'
+                        }`}
                     >
-                      {tenant.active ? 'Desativar' : 'Ativar'}
+                      {tenant.active ? t('superAdmin.actions.deactivate') : t('superAdmin.actions.activate')}
                     </button>
                     <button
                       onClick={() => handleDeleteTenant(tenant)}
                       className="px-3 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-700"
                     >
-                      Excluir
+                      {t('common.remove')}
                     </button>
                   </div>
                 </div>
@@ -1181,7 +1184,7 @@ export function SuperAdminManagerPage() {
                 <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H3m2 0h3M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 8h1m-1-4h1m4 4h1m-1-4h1" />
                 </svg>
-                <p className="mt-2 text-sm text-gray-500">Nenhuma empresa encontrada</p>
+                <p className="mt-2 text-sm text-gray-500">{t('superAdmin.messages.noTenants')}</p>
               </div>
             )}
           </div>
@@ -1239,23 +1242,21 @@ export function SuperAdminManagerPage() {
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        user.role === 'SUPERADMIN'
-                          ? 'bg-purple-100 text-purple-800'
-                          : user.role === 'ADMIN'
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.role === 'SUPERADMIN'
+                        ? 'bg-purple-100 text-purple-800'
+                        : user.role === 'ADMIN'
                           ? 'bg-blue-100 text-blue-800'
                           : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {user.role === 'SUPERADMIN' ? 'Super Admin' :
-                         user.role === 'ADMIN' ? 'Admin' : 'Usuário'}
+                        }`}>
+                        {user.role === 'SUPERADMIN' ? t('superAdmin.users.roles.superAdmin') :
+                          user.role === 'ADMIN' ? t('superAdmin.users.roles.admin') : t('superAdmin.users.roles.user')}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        user.ativo
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}>
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.ativo
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
+                        }`}>
                         {user.ativo ? 'Ativo' : 'Inativo'}
                       </span>
                     </td>
@@ -1278,11 +1279,10 @@ export function SuperAdminManagerPage() {
                         </button>
                         <button
                           onClick={() => handleToggleUserStatus(user)}
-                          className={`text-sm ${
-                            user.ativo
-                              ? 'text-red-600 hover:text-red-900'
-                              : 'text-green-600 hover:text-green-900'
-                          }`}
+                          className={`text-sm ${user.ativo
+                            ? 'text-red-600 hover:text-red-900'
+                            : 'text-green-600 hover:text-green-900'
+                            }`}
                         >
                           {user.ativo ? 'Desativar' : 'Ativar'}
                         </button>
@@ -1755,11 +1755,10 @@ export function SuperAdminManagerPage() {
                               return (
                                 <label
                                   key={tenant.id}
-                                  className={`flex items-center p-3 rounded-lg cursor-pointer transition-all ${
-                                    isSelected
-                                      ? 'bg-blue-50 border border-blue-200'
-                                      : 'bg-gray-50 border border-gray-200 hover:bg-gray-100'
-                                  }`}
+                                  className={`flex items-center p-3 rounded-lg cursor-pointer transition-all ${isSelected
+                                    ? 'bg-blue-50 border border-blue-200'
+                                    : 'bg-gray-50 border border-gray-200 hover:bg-gray-100'
+                                    }`}
                                 >
                                   <input
                                     type="checkbox"
@@ -1785,11 +1784,10 @@ export function SuperAdminManagerPage() {
                                       <span className={`text-sm font-medium ${isSelected ? 'text-blue-900' : 'text-gray-900'}`}>
                                         {tenant.name}
                                       </span>
-                                      <span className={`text-xs px-2 py-0.5 rounded ${
-                                        tenant.active
-                                          ? 'bg-green-100 text-green-800'
-                                          : 'bg-red-100 text-red-800'
-                                      }`}>
+                                      <span className={`text-xs px-2 py-0.5 rounded ${tenant.active
+                                        ? 'bg-green-100 text-green-800'
+                                        : 'bg-red-100 text-red-800'
+                                        }`}>
                                         {tenant.active ? 'Ativa' : 'Inativa'}
                                       </span>
                                     </div>
@@ -1882,11 +1880,10 @@ export function SuperAdminManagerPage() {
                 </div>
                 <div className="mt-auto text-center">
                   <p className="text-xs text-gray-500 mb-2">WhatsApp HTTP API</p>
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    integrationSettings?.wahaHost && integrationSettings?.wahaApiKey
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-600'
-                  }`}>
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${integrationSettings?.wahaHost && integrationSettings?.wahaApiKey
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-gray-100 text-gray-600'
+                    }`}>
                     {integrationSettings?.wahaHost && integrationSettings?.wahaApiKey ? 'Configurado' : 'Não configurado'}
                   </span>
                 </div>
@@ -1908,11 +1905,10 @@ export function SuperAdminManagerPage() {
                 </div>
                 <div className="mt-auto text-center">
                   <p className="text-xs text-gray-500 mb-2">WhatsApp API Evolution</p>
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    integrationSettings?.evolutionHost && integrationSettings?.evolutionApiKey
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-600'
-                  }`}>
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${integrationSettings?.evolutionHost && integrationSettings?.evolutionApiKey
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-gray-100 text-gray-600'
+                    }`}>
                     {integrationSettings?.evolutionHost && integrationSettings?.evolutionApiKey ? 'Configurado' : 'Não configurado'}
                   </span>
                 </div>
@@ -1934,11 +1930,10 @@ export function SuperAdminManagerPage() {
                 </div>
                 <div className="mt-auto text-center">
                   <p className="text-xs text-gray-500 mb-2">WhatsApp API Quepasa</p>
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    integrationSettings?.quepasaUrl && integrationSettings?.quepasaLogin && integrationSettings?.quepasaPassword
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-600'
-                  }`}>
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${integrationSettings?.quepasaUrl && integrationSettings?.quepasaLogin && integrationSettings?.quepasaPassword
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-gray-100 text-gray-600'
+                    }`}>
                     {integrationSettings?.quepasaUrl && integrationSettings?.quepasaLogin && integrationSettings?.quepasaPassword ? 'Configurado' : 'Não configurado'}
                   </span>
                 </div>

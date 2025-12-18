@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { apiService } from '../services/api';
 
 interface PerfexLead {
@@ -49,6 +50,7 @@ interface PerfexImportModalProps {
 }
 
 export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportModalProps) {
+  const { t } = useTranslation();
   const [leads, setLeads] = useState<PerfexLead[]>([]);
   const [filteredLeads, setFilteredLeads] = useState<PerfexLead[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -85,7 +87,7 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
       setCategories(categoriesData);
     } catch (error) {
       console.error('Erro ao carregar categorias:', error);
-      toast.error('Erro ao carregar categorias');
+      toast.error(t('common.error'));
       setCategories([]);
     }
   };
@@ -108,16 +110,16 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
       setUniqueValues({ statuses, sources, countries, cities, states });
 
       if (leadsData.length === 0) {
-        toast('Nenhum lead encontrado no Perfex CRM', { icon: 'ℹ️' });
+        toast(t('perfexImport.messages.noLeads'), { icon: 'ℹ️' });
       } else {
-        toast.success(`${leadsData.length} leads carregados do Perfex CRM`);
+        toast.success(t('common.success'));
       }
     } catch (error: any) {
       console.error('Erro ao carregar leads do Perfex:', error);
-      const errorMessage = error.message || 'Erro ao carregar leads do Perfex CRM';
+      const errorMessage = error.message || t('common.error');
 
       if (errorMessage.includes('não configurado')) {
-        toast.error('Configure o Perfex CRM na página de Integrações primeiro', { duration: 5000 });
+        toast.error(t('perfexImport.messages.configError'), { duration: 5000 });
       } else {
         toast.error(errorMessage);
       }
@@ -209,12 +211,12 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
 
   const handleImport = async () => {
     if (selectedLeads.size === 0) {
-      toast.error('Selecione pelo menos um lead para importar');
+      toast.error(t('perfexImport.messages.selectLead'));
       return;
     }
 
     if (!selectedCategoryId) {
-      toast.error('Selecione uma categoria para os contatos');
+      toast.error(t('perfexImport.messages.selectCategory'));
       return;
     }
 
@@ -226,14 +228,14 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
       );
 
       toast.success(
-        `Importação concluída! ${response.imported} contatos importados, ${response.updated} atualizados`
+        t('perfexImport.messages.success', { imported: response.imported, updated: response.updated })
       );
 
       onSuccess();
       handleClose();
     } catch (error: any) {
       console.error('Erro ao importar:', error);
-      toast.error(error.message || 'Erro ao importar contatos');
+      toast.error(error.message || t('common.error'));
     } finally {
       setIsImporting(false);
     }
@@ -268,16 +270,16 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
           <div className="flex justify-between items-start mb-4">
             <div>
               <h2 className="text-xl font-bold text-gray-900">
-                Importar Leads do Perfex CRM
+                {t('perfexImport.title')}
               </h2>
               <p className="text-sm text-gray-500 mt-1">
-                Carregue e selecione leads para importar como contatos
+                {t('perfexImport.subtitle')}
               </p>
             </div>
             <button
               onClick={handleClose}
               className="text-gray-400 hover:text-gray-600 transition-colors"
-              aria-label="Fechar"
+              aria-label={t('common.close')}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -298,21 +300,21 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Carregando...
+                  {t('perfexImport.loading')}
                 </>
               ) : (
                 <>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
-                  {leads.length > 0 ? 'Atualizar Leads' : 'Carregar Leads'}
+                  {leads.length > 0 ? t('perfexImport.updateLeads') : t('perfexImport.loadLeads')}
                 </>
               )}
             </button>
 
             {leads.length > 0 && (
               <div className="text-sm text-gray-600">
-                {filteredLeads.length} de {leads.length} leads | {selectedLeads.size} selecionados
+                {t('perfexImport.stats', { filtered: filteredLeads.length, total: leads.length, selected: selectedLeads.size })}
               </div>
             )}
           </div>
@@ -322,32 +324,32 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
         {leads.length > 0 && (
           <div className="p-6 border-b border-gray-200 bg-gray-50">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="font-medium text-gray-900 text-sm">Filtros</h3>
+              <h3 className="font-medium text-gray-900 text-sm">{t('perfexImport.filters.title')}</h3>
               <button
                 onClick={clearFilters}
                 className="text-xs text-purple-600 hover:text-purple-700"
               >
-                Limpar Filtros
+                {t('perfexImport.filters.clear')}
               </button>
             </div>
             <div className="grid grid-cols-4 gap-3">
               <input
                 type="text"
-                placeholder="Nome..."
+                placeholder={t('perfexImport.filters.name')}
                 value={filters.name}
                 onChange={(e) => setFilters({ ...filters, name: e.target.value })}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
               <input
                 type="text"
-                placeholder="Email..."
+                placeholder={t('perfexImport.filters.email')}
                 value={filters.email}
                 onChange={(e) => setFilters({ ...filters, email: e.target.value })}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
               <input
                 type="text"
-                placeholder="Empresa..."
+                placeholder={t('perfexImport.filters.company')}
                 value={filters.company}
                 onChange={(e) => setFilters({ ...filters, company: e.target.value })}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -357,7 +359,7 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
                 onChange={(e) => setFilters({ ...filters, status: e.target.value })}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
-                <option value="">Todos os Status</option>
+                <option value="">{t('perfexImport.filters.status')}</option>
                 {uniqueValues.statuses.map(status => (
                   <option key={status} value={status}>{status}</option>
                 ))}
@@ -367,7 +369,7 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
                 onChange={(e) => setFilters({ ...filters, source: e.target.value })}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
-                <option value="">Todas as Fontes</option>
+                <option value="">{t('perfexImport.filters.source')}</option>
                 {uniqueValues.sources.map(source => (
                   <option key={source} value={source}>{source}</option>
                 ))}
@@ -377,7 +379,7 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
                 onChange={(e) => setFilters({ ...filters, country: e.target.value })}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
-                <option value="">Todos os Países</option>
+                <option value="">{t('perfexImport.filters.country')}</option>
                 {uniqueValues.countries.map(country => (
                   <option key={country} value={country}>{country}</option>
                 ))}
@@ -387,7 +389,7 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
                 onChange={(e) => setFilters({ ...filters, city: e.target.value })}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
-                <option value="">Todas as Cidades</option>
+                <option value="">{t('perfexImport.filters.city')}</option>
                 {uniqueValues.cities.map(city => (
                   <option key={city} value={city}>{city}</option>
                 ))}
@@ -397,7 +399,7 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
                 onChange={(e) => setFilters({ ...filters, state: e.target.value })}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
-                <option value="">Todos os Estados</option>
+                <option value="">{t('perfexImport.filters.state')}</option>
                 {uniqueValues.states.map(state => (
                   <option key={state} value={state}>{state}</option>
                 ))}
@@ -410,12 +412,11 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
         <div className="flex-1 overflow-y-auto p-6">
           {leads.length === 0 && !isLoadingLeads && (
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <h3 className="font-medium text-purple-900 text-sm mb-2">ℹ️ Como funciona</h3>
+              <h3 className="font-medium text-purple-900 text-sm mb-2">ℹ️ {t('perfexImport.instructions.title')}</h3>
               <ul className="text-xs text-purple-700 space-y-1">
-                <li>• Clique em "Carregar Leads" para buscar os leads do Perfex CRM</li>
-                <li>• Use os filtros para encontrar leads específicos</li>
-                <li>• Selecione os leads que deseja importar</li>
-                <li>• Escolha uma categoria e clique em "Importar Contatos"</li>
+                {t<string[]>('perfexImport.instructions.steps', { returnObjects: true }).map((step: string, index: number) => (
+                  <li key={index}>• {step}</li>
+                ))}
               </ul>
             </div>
           )}
@@ -427,13 +428,13 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
                   onClick={selectAllFiltered}
                   className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded"
                 >
-                  Selecionar Todos ({filteredLeads.length})
+                  {t('perfexImport.buttons.selectAll', { count: filteredLeads.length })}
                 </button>
                 <button
                   onClick={deselectAll}
                   className="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded"
                 >
-                  Desmarcar Todos
+                  {t('perfexImport.buttons.deselectAll')}
                 </button>
               </div>
 
@@ -445,12 +446,12 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">
                           <input type="checkbox" className="opacity-0" />
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">Nome</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">Email</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">Telefone</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">Empresa</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">Status</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">Fonte</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">{t('perfexImport.columns.name')}</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">{t('perfexImport.columns.email')}</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">{t('perfexImport.columns.phone')}</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">{t('perfexImport.columns.company')}</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">{t('perfexImport.columns.status')}</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-700">{t('perfexImport.columns.source')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
@@ -494,14 +495,14 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
           <div className="p-6 border-t border-gray-200 bg-gray-50">
             <div className="flex items-center gap-4 mb-4">
               <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
-                Categoria de Destino:
+                {t('perfexImport.targetCategory')}:
               </label>
               <select
                 value={selectedCategoryId}
                 onChange={(e) => setSelectedCategoryId(e.target.value)}
                 className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
-                <option value="">Selecione uma categoria</option>
+                <option value="">{t('perfexImport.selectCategory')}</option>
                 {categories.map((cat) => (
                   <option key={cat.id} value={cat.id}>
                     {cat.nome}
@@ -515,7 +516,7 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
                 onClick={handleClose}
                 className="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 font-medium transition-colors text-sm"
               >
-                Fechar
+                {t('perfexImport.buttons.close')}
               </button>
               <button
                 onClick={handleImport}
@@ -528,14 +529,14 @@ export function PerfexImportModal({ isOpen, onClose, onSuccess }: PerfexImportMo
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Importando...
+                    {t('perfexImport.buttons.importing')}
                   </>
                 ) : (
                   <>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
-                    Importar {selectedLeads.size} Contatos
+                    {t('perfexImport.buttons.import', { count: selectedLeads.size })}
                   </>
                 )}
               </button>

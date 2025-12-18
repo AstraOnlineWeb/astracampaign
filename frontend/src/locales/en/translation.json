@@ -1,0 +1,1474 @@
+{
+    "common": {
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "create": "Create",
+        "creating": "Creating...",
+        "loading": "Loading",
+        "error": "Error",
+        "success": "Success",
+        "menu": "Menu",
+        "confirm": "Confirm",
+        "close": "Close",
+        "search": "Search",
+        "filter": "Filter",
+        "clear": "Clear",
+        "add": "Add",
+        "remove": "Remove",
+        "back": "Back",
+        "next": "Next",
+        "previous": "Previous",
+        "yes": "Yes",
+        "no": "No",
+        "all": "All",
+        "none": "None",
+        "actions": "Actions",
+        "status": "Status",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "date": "Date",
+        "description": "Description",
+        "type": "Type",
+        "category": "Category",
+        "options": "Options",
+        "details": "Details",
+        "reached": "reached",
+        "sent": "sent",
+        "successRate": "Success rate",
+        "failures": "failures",
+        "settings": "Settings",
+        "refresh": "Refresh",
+        "retry": "Try again",
+        "selectAll": "Select all",
+        "deselectAll": "Deselect all",
+        "selected": "{{count}} selected",
+        "showing": "Showing {{count}} of {{total}}",
+        "noResults": "No results found",
+        "required": "Required",
+        "loadingDots": "Loading...",
+        "closeNotification": "Close notification",
+        "optional": "Optional",
+        "wait": "Please wait"
+    },
+    "auth": {
+        "login": {
+            "title": "Welcome!",
+            "subtitle": "Log in to access your account",
+            "email": "Email",
+            "emailPlaceholder": "your@email.com",
+            "password": "Password",
+            "passwordPlaceholder": "••••••••",
+            "submit": "Log in",
+            "submitting": "Logging in...",
+            "systemTitle": "Campaign Management System",
+            "systemDescription": "Manage your contacts and WhatsApp campaigns efficiently and organized."
+        },
+        "validation": {
+            "invalidEmail": "Invalid email",
+            "passwordMinLength": "Password must be at least 6 characters",
+            "invalidCredentials": "Invalid credentials",
+            "sessionExpired": "Session expired. Please log in again."
+        },
+        "logout": "Log out"
+    },
+    "navigation": {
+        "connections": "Connections",
+        "contacts": "Contacts",
+        "campaigns": "Campaigns",
+        "interactiveCampaign": "Interactive Campaign",
+        "users": "Users",
+        "settings": "Settings",
+        "superAdmin": "Super Admin",
+        "logout": "Log out"
+    },
+    "header": {
+        "roles": {
+            "admin": "Administrator",
+            "user": "User",
+            "superadmin": "Super Administrator"
+        }
+    },
+    "contacts": {
+        "title": "Contacts",
+        "subtitle": "{{count}} registered contacts",
+        "newContact": "+ New Contact",
+        "editContact": "Edit Contact",
+        "deleteContact": "Delete Contact",
+        "categories": "Categories",
+        "importCSV": "Import CSV",
+        "chatwoot": "Chatwoot",
+        "perfexCRM": "Perfex CRM",
+        "form": {
+            "title": {
+                "new": "New Contact",
+                "edit": "Edit Contact"
+            },
+            "subtitle": {
+                "new": "Fill in the data to create a new contact",
+                "edit": "Update contact information"
+            },
+            "namePlaceholder": "Enter full name",
+            "phonePlaceholder": "+1 555 123-4567",
+            "emailPlaceholder": "Enter email",
+            "selectCategory": "Select a category",
+            "loadingCategories": "Loading categories...",
+            "notes": "Notes",
+            "notesPlaceholder": "Enter additional notes",
+            "perfexId": "Perfex CRM Lead ID",
+            "perfexImported": "This contact was imported from Perfex CRM",
+            "save": "Save Contact",
+            "saving": "Saving...",
+            "saveContact": "Save Contact",
+            "updateContact": "Update Contact"
+        },
+        "validation": {
+            "nameRequired": "Name is required",
+            "phoneRequired": "Phone is required",
+            "phoneInvalid": "Invalid phone format",
+            "emailInvalid": "Invalid email"
+        },
+        "messages": {
+            "updateSuccess": "Contact updated successfully",
+            "createSuccess": "Contact created successfully",
+            "errorLoadCategories": "Error loading categories",
+            "limitReached": "Contact limit reached. Upgrade your plan to continue.",
+            "genericError": "Error saving contact",
+            "created": "Contact created successfully!",
+            "updated": "Contact updated successfully!",
+            "deleted": "Contact deleted successfully!",
+            "deleteConfirm": "Are you sure you want to delete this contact?",
+            "importSuccess": "{{count}} contacts imported successfully!",
+            "bulkEditSuccess": "{{count}} contacts updated successfully!"
+        },
+        "list": {
+            "loading": "Loading contacts",
+            "noContacts": "No contacts found.",
+            "selectAll": "Select all contacts",
+            "updatedAt": "Updated at",
+            "selectContact": "Select contact {{name}}",
+            "editContact": "Edit contact {{name}}",
+            "confirmDelete": "Confirm deletion of {{name}}",
+            "deleteContact": "Delete contact {{name}}",
+            "confirm": "Confirm?",
+            "addFirst": "Add your first contact"
+        },
+        "selectedCount": "{{count}} contact(s) selected",
+        "editSelected": "Edit Selected ({{count}})",
+        "cancelSelection": "Cancel Selection",
+        "selectAllPage": "Select all",
+        "deselectAllPage": "Deselect all",
+        "selectedOfPage": "{{selected}} of {{total}} selected on this page",
+        "showingCount": "Showing {{showing}} of {{total}} contacts"
+    },
+    "categories": {
+        "title": "Manage Categories",
+        "subtitle": "Organize your contacts into categories",
+        "searchPlaceholder": "Search categories...",
+        "clear": "Clear",
+        "newCategory": "New Category",
+        "editCategory": "Edit Category",
+        "deleteCategory": "Delete Category",
+        "form": {
+            "name": "Category Name",
+            "color": "Color",
+            "description": "Description"
+        },
+        "messages": {
+            "created": "Category created successfully!",
+            "updated": "Category updated successfully!",
+            "deleted": "Category deleted successfully!",
+            "deleteConfirm": "Are you sure you want to delete this category?"
+        },
+        "pagination": {
+            "previous": "Previous",
+            "next": "Next",
+            "showing": "Showing {{count}} of {{total}} categories (Page {{currentPage}} of {{totalPages}})"
+        }
+    },
+    "csvImport": {
+        "title": "Import Contacts via CSV",
+        "subtitle": "Import multiple contacts at once",
+        "selectFile": "Select CSV File",
+        "dragDrop": "Drag and drop the CSV file here",
+        "clickToSelect": "Click to select",
+        "or": "or",
+        "browse": "Browse",
+        "format": "Format: .csv",
+        "template": {
+            "title": "CSV Template",
+            "description": "Download the template with the correct format",
+            "download": "Download",
+            "success": "Template downloaded successfully!",
+            "error": "Error downloading CSV template"
+        },
+        "instructions": {
+            "title": "Instructions",
+            "required": "Required columns: name, phone",
+            "optional": "Optional: email, category, notes",
+            "reference": "Use the template as reference"
+        },
+        "result": {
+            "title": "Import Result",
+            "total": "Total",
+            "success": "Successes",
+            "errors": "Errors",
+            "viewErrors": "View errors",
+            "successMessage": "Import completed! {{count}} contacts imported.",
+            "partialMessage": "Partial import: {{success}} successes, {{failed}} errors.",
+            "genericError": "Error importing file"
+        },
+        "buttons": {
+            "close": "Close",
+            "import": "Import",
+            "importing": "Importing..."
+        },
+        "validation": {
+            "invalidFile": "Please select a valid CSV file",
+            "noFile": "Select a CSV file"
+        }
+    },
+    "bulkEdit": {
+        "title": "Bulk Edit",
+        "subtitle": "Editing {{count}} contacts",
+        "actions": {
+            "label": "Action",
+            "update": "Update Category",
+            "delete": "Delete Contacts"
+        },
+        "fields": {
+            "category": "Category"
+        },
+        "warning": "Warning: This action will permanently delete {{count}} contacts and cannot be undone.",
+        "buttons": {
+            "cancel": "Cancel",
+            "update": "Update",
+            "delete": "Delete",
+            "processing": "Processing..."
+        },
+        "messages": {
+            "noSelection": "No contacts selected",
+            "selectCategory": "Select a category",
+            "updateSuccess": "{{count}} contacts updated successfully!",
+            "deleteSuccess": "{{count}} contacts deleted successfully!",
+            "error": "Error in bulk operation"
+        }
+    },
+    "chatwootSync": {
+        "title": "Sync with Chatwoot",
+        "subtitle": "Import contacts from specific tags",
+        "loadTags": "Load Tags",
+        "loading": "Loading...",
+        "updateTags": "Update Tags",
+        "tagsFound": "{{count}} tags found",
+        "noTags": "No tags found via Chatwoot API",
+        "clickToLoad": "Click to load tags",
+        "columns": {
+            "tag": "Chatwoot Tag",
+            "contacts": "Contacts",
+            "category": "Target Category"
+        },
+        "placeholders": {
+            "selectCategory": "Do not import",
+            "select": "Select category"
+        },
+        "instructions": {
+            "title": "How it works",
+            "steps": [
+                "Click 'Load Tags' to fetch tags from Chatwoot",
+                "Associate each Chatwoot tag with a system category",
+                "Contacts from conversations with these tags will be imported",
+                "Existing contacts will be updated"
+            ]
+        },
+        "selection": "{{count}} tag(s) selected",
+        "syncButton": "Sync Contacts",
+        "syncing": "Syncing...",
+        "messages": {
+            "success": "Sync completed! {{imported}} imported, {{updated}} updated",
+            "selectTag": "Select at least one tag",
+            "configError": "Configure Chatwoot in Integrations page first"
+        }
+    },
+    "perfexImport": {
+        "title": "Import from Perfex CRM",
+        "subtitle": "Load and select leads to import",
+        "loadLeads": "Load Leads",
+        "updateLeads": "Update Leads",
+        "loading": "Loading...",
+        "stats": "{{filtered}} of {{total}} leads | {{selected}} selected",
+        "filters": {
+            "title": "Filters",
+            "clear": "Clear Filters",
+            "name": "Name...",
+            "email": "Email...",
+            "company": "Company...",
+            "status": "All Statuses",
+            "source": "All Sources",
+            "country": "All Countries",
+            "city": "All Cities",
+            "state": "All States"
+        },
+        "columns": {
+            "name": "Name",
+            "email": "Email",
+            "phone": "Phone",
+            "company": "Company",
+            "status": "Status",
+            "source": "Source"
+        },
+        "instructions": {
+            "title": "How it works",
+            "steps": [
+                "Click 'Load Leads' to fetch leads from Perfex CRM",
+                "Use filters to find specific leads",
+                "Select leads you want to import",
+                "Choose a category and click 'Import Contacts'"
+            ]
+        },
+        "targetCategory": "Target Category",
+        "selectCategory": "Select a category",
+        "buttons": {
+            "close": "Close",
+            "import": "Import {{count}} Contacts",
+            "importing": "Importing...",
+            "selectAll": "Select All ({{count}})",
+            "deselectAll": "Deselect All"
+        },
+        "messages": {
+            "success": "Import completed! {{imported}} imported, {{updated}} updated",
+            "noLeads": "No leads found in Perfex CRM",
+            "selectLead": "Select at least one lead",
+            "selectCategory": "Select a category for contacts",
+            "configError": "Configure Perfex CRM in Integrations page first"
+        }
+    },
+    "interactiveCampaigns": {
+        "title": "Interactive Campaigns",
+        "subtitle": "{{count}} campaigns registered",
+        "selectedSubtitle": "{{count}} campaign(s) selected",
+        "newCampaign": "New Campaign",
+        "newInteractiveCampaign": "New Interactive Campaign",
+        "flowBuilder": "Flow Editor",
+        "modal": {
+            "title": "New Interactive Campaign",
+            "campaignName": "Campaign Name",
+            "campaignNamePlaceholder": "Ex: Welcome Flow",
+            "helpText": "💡 You will configure WhatsApp connections and categories in the Trigger node after creating the campaign."
+        },
+        "searchPlaceholder": "Search campaigns by name...",
+        "statusFilter": {
+            "all": "All Statuses",
+            "draft": "Draft",
+            "scheduled": "Scheduled",
+            "started": "Started",
+            "paused": "Paused",
+            "completed": "Completed"
+        },
+        "clearFilters": "Clear Filters",
+        "selectAll": "Select All",
+        "deselectAll": "Deselect All",
+        "selectedCount": "{{count}} of {{total}} selected on this page",
+        "emptyState": {
+            "title": "No interactive campaigns",
+            "description": "Start by creating your first interactive campaign.",
+            "button": "New Campaign"
+        },
+        "table": {
+            "name": "Name",
+            "connections": "Connections",
+            "status": "Status",
+            "createdAt": "Created At",
+            "actions": "Actions",
+            "nodes": "{{count}} nodes",
+            "otherConnections": "+{{count}} other{{plural}}"
+        },
+        "actions": {
+            "publish": "Publish",
+            "pause": "Pause",
+            "resume": "Resume",
+            "complete": "Complete",
+            "edit": "Edit",
+            "viewReport": "View Report",
+            "duplicate": "Duplicate",
+            "delete": "Delete",
+            "deleteSelected": "Delete Selected ({{count}})",
+            "cancelSelection": "Cancel Selection",
+            "deleting": "Deleting...",
+            "preview": "Preview",
+            "simulate": "Simulate"
+        },
+        "messages": {
+            "createSuccess": "Campaign created successfully! Configure the Trigger to define connections and categories.",
+            "createError": "Error creating campaign",
+            "deleteConfirm": "Are you sure you want to delete the campaign \"{{name}}\"?",
+            "deleteSuccess": "Campaign deleted successfully!",
+            "deleteError": "Error deleting campaign",
+            "publishConfirm": "Do you want to publish the campaign \"{{name}}\"? It will start processing messages.",
+            "publishSuccess": "Campaign published!",
+            "publishError": "Error publishing campaign",
+            "pauseSuccess": "Campaign \"{{name}}\" paused!",
+            "pauseError": "Error pausing campaign",
+            "completeConfirm": "Are you sure you want to complete the campaign \"{{name}}\"? This action cannot be undone.",
+            "completeSuccess": "Campaign \"{{name}}\" completed!",
+            "completeError": "Error completing campaign",
+            "duplicateSuccess": "Campaign \"{{name}}\" duplicated successfully!",
+            "duplicateError": "Error duplicating campaign",
+            "bulkDeleteConfirm": "Are you sure you want to delete {{count}} selected campaign(s)?",
+            "bulkDeleteSuccess": "{{count}} campaign(s) deleted successfully!",
+            "bulkDeleteError": "Error deleting campaigns",
+            "reportLoadError": "Error loading report",
+            "reportRefreshSuccess": "Report updated!",
+            "reportRefreshError": "Error updating report",
+            "exportSuccess": "Report exported successfully!",
+            "exportError": "Error exporting"
+        },
+        "report": {
+            "title": "Interactive Campaign Report",
+            "refresh": "Refresh",
+            "refreshing": "Refreshing...",
+            "dashboard": "📊 Dashboard",
+            "details": "📋 Details",
+            "totalContacts": "Total Contacts",
+            "reachedContacts": "Contacts reached",
+            "activeSessions": "Active Sessions",
+            "ofTotal": "of total",
+            "completed": "Completed",
+            "completionRate": "completion rate",
+            "failed": "Failed",
+            "errorRate": "error rate",
+            "expired": "Expired",
+            "conversionFunnel": "Conversion Funnel by Step",
+            "statusSummary": "Session Status Summary",
+            "connection": "Connection",
+            "createdAt": "Created At",
+            "sessionStats": "Session Statistics",
+            "sessionDetails": "Session Details by Node",
+            "exportExcel": "Export Excel",
+            "table": {
+                "name": "Name",
+                "phone": "Phone",
+                "status": "Status",
+                "reason": "Reason"
+            },
+            "sessionStatus": {
+                "active": "Active",
+                "completed": "Completed",
+                "failed": "Failed",
+                "expired": "Expired",
+                "activeTooltip": "Session active",
+                "completedTooltip": "Flow completed",
+                "failedTooltip": "Sending failed",
+                "expiredTooltip": "Session expired"
+            }
+        },
+        "insights": {
+            "title": "Key Insights",
+            "generalPerformance": "General Performance",
+            "excellent": "✅ Excellent! ",
+            "reasonable": "⚠️ Reasonable. ",
+            "critical": "❌ Critical! ",
+            "completionMessage": "Completion rate of <strong>{{rate}}%</strong>",
+            "highestDropoff": "Highest Drop-off",
+            "dropoffMessage": "Step {{step}} ({{label}}) lost <strong>{{rate}}%</strong> of contacts",
+            "attention": "Attention Needed",
+            "failedMessage": "{{count}} session failed. Review settings.",
+            "failedMessage_plural": "{{count}} sessions failed. Review settings.",
+            "expiredTitle": "Expired Sessions",
+            "expiredMessage": "{{count}} session expired without interaction.",
+            "expiredMessage_plural": "{{count}} sessions expired without interaction.",
+            "successTitle": "Success Campaign!",
+            "successMessage": "Excellent performance with no errors. Keep it up!",
+            "conversionRate": "Conversion Rate",
+            "journeyCompletion": "Journey Completion",
+            "activeEngagement": "Active Engagement"
+        },
+        "nodes": {
+            "trigger": "Trigger",
+            "text": "Text",
+            "image": "Image",
+            "video": "Video",
+            "audio": "Audio",
+            "document": "Document",
+            "condition": "Condition",
+            "delay": "Delay",
+            "ai": "AI",
+            "httpRequest": "HTTP Request",
+            "integration": "Integration",
+            "stop": "Stop"
+        },
+        "status": {
+            "draft": "Draft",
+            "published": "Published",
+            "active": "Active",
+            "paused": "Paused",
+            "started": "Started",
+            "scheduled": "Scheduled",
+            "completed": "Completed"
+        }
+    },
+    "whatsapp": {
+        "title": "WhatsApp Connections",
+        "subtitle": "{{count}} active session(s)",
+        "newConnection": "+ New Connection",
+        "newSession": "+ New Session",
+        "newSessionTitle": "New WhatsApp Session",
+        "newSessionDescription": "Enter a name to identify this session",
+        "createSession": "Create Session",
+        "provider": "WhatsApp Provider",
+        "providerHelp": "Choose the provider to connect to WhatsApp",
+        "sessionName": "Session Name",
+        "sessionNameHelp": "Use a descriptive name for easy identification",
+        "interactiveCampaign": "Interactive Campaign",
+        "interactiveCampaignHelp": "Enable message reception for automated conversational flows",
+        "activeSessions": "Active Sessions",
+        "noSessions": "No WhatsApp sessions found. Create a new session to get started.",
+        "connectedAs": "Connected as",
+        "connect": "Connect",
+        "requesting": "Requesting...",
+        "viewQR": "View QR Code",
+        "restart": "Restart",
+        "remove": "Remove",
+        "scanQR": "Scan the QR Code with your WhatsApp",
+        "scanQRInstructions": "Open WhatsApp on your phone, go to Settings → Linked Devices → Link a Device and scan the code below",
+        "generatingQR": "Generating QR Code...",
+        "refreshQR": "Refresh QR",
+        "qrExpired": "QR Code expired",
+        "expiresIn": "Expires in {{seconds}}s",
+        "providers": {
+            "waha": "WAHA",
+            "evolution": "Evolution API",
+            "quepasa": "QuePasa"
+        },
+        "status": {
+            "connected": "Connected",
+            "disconnected": "Disconnected",
+            "connecting": "Connecting...",
+            "waitingQR": "Waiting for QR Code",
+            "stopped": "Stopped",
+            "error": "Error"
+        },
+        "actions": {
+            "connect": "Connect",
+            "disconnect": "Disconnect",
+            "restart": "Restart",
+            "delete": "Delete",
+            "scanQR": "Scan QR Code"
+        },
+        "form": {
+            "sessionName": "Session Name",
+            "sessionNamePlaceholder": "Ex: sales-main",
+            "displayName": "Display Name",
+            "provider": "Provider",
+            "selectProvider": "Select provider"
+        },
+        "messages": {
+            "created": "Connection created successfully!",
+            "deleted": "Connection deleted successfully!",
+            "connected": "Connected successfully!",
+            "disconnected": "Disconnected!",
+            "restarted": "Connection restarted!",
+            "deleteConfirm": "Are you sure you want to remove this session?",
+            "scanQRHelp": "Open WhatsApp on your phone and scan the QR Code"
+        },
+        "list": {
+            "noConnections": "No connections found",
+            "createFirst": "Create your first connection"
+        }
+    },
+    "campaigns": {
+        "validation": {
+            "checkCategory": "Select at least one contact category",
+            "checkConnection": "Select at least one WhatsApp connection",
+            "loadError": "Error loading campaigns",
+            "addMessageError": "Add at least one message to the campaign",
+            "loadReportError": "Error loading report",
+            "uploadError": "Error uploading file",
+            "downloadError": "Error downloading report"
+        },
+        "list": {
+            "title": "Campaigns",
+            "subtitle": "{{count}} active campaigns",
+            "newCampaign": "+ New Campaign",
+            "created": "Created Campaigns",
+            "empty": "No campaigns found. Create your first campaign to start.",
+            "stats": {
+                "contacts": "Contacts:",
+                "sent": "Sent:",
+                "sessions": "Sessions:"
+            },
+            "status": {
+                "pending": "Pending",
+                "running": "Running",
+                "completed": "Completed",
+                "paused": "Paused",
+                "failed": "Failed"
+            },
+            "actions": {
+                "viewReport": "View campaign report",
+                "pause": "Pause campaign",
+                "resume": "Resume campaign",
+                "delete": "Delete campaign"
+            }
+        },
+        "create": {
+            "title": "New Campaign",
+            "subtitle": "Configure your WhatsApp message campaign",
+            "sections": {
+                "basicInfo": "Basic Information",
+                "basicInfoDesc": "Configure the fundamental data of your campaign",
+                "messages": "💬 Campaign Messages",
+                "messagesDesc": "Configure the content to be sent to contacts"
+            },
+            "fields": {
+                "name": "Campaign Name *",
+                "namePlaceholder": "Ex: Black Friday Promotion 2024",
+                "targetTags": "Contact Categories *",
+                "targetTagsDesc": "Select which contact categories will receive the campaign",
+                "selectAll": "Select all",
+                "deselectAll": "Deselect all",
+                "noTags": "No categories available",
+                "selectedTags": "✅ {{count}} category(ies) selected",
+                "whatsappConnections": "WhatsApp Connections *",
+                "multiSessionTitle": "Multi-Session with Failover",
+                "multiSessionDesc": "Intelligent system that distributes sends across multiple connections with automatic redundancy.",
+                "noConnections": "No WhatsApp connections available",
+                "selectedConnections": "✅ {{count}} connection(s) selected",
+                "randomDelay": "Randomization Time (seconds)",
+                "randomDelayDesc": "⏱️ Random interval between sends (0-{{seconds}}s) to avoid bans",
+                "schedule": "When to Send",
+                "startImmediately": "🚀 Start immediately",
+                "startImmediatelyDesc": "The campaign will run as soon as it is created",
+                "scheduleFor": "📅 Schedule for:",
+                "scheduleForDesc": "Choose specific date and time"
+            }
+        },
+        "messages": {
+            "dynamicVariables": "💡 Dynamic Variables",
+            "dynamicVariablesDesc": "Personalize your messages with:",
+            "addMessage": "Message",
+            "addMessageHelp": "Add one or more messages to be sent in sequence",
+            "remove": "Remove",
+            "messageLabel": "Message {{index}}",
+            "type": {
+                "text": "💬 Text",
+                "image": "🖼️ Image",
+                "video": "🎬 Video",
+                "audio": "🎵 Audio",
+                "document": "📄 File",
+                "openai": "🤖 OpenAI",
+                "groq": "⚡ Groq AI",
+                "wait": "⏱️ Wait"
+            },
+            "text": {
+                "useVariations": "Use text variations",
+                "variationsLabel": "Text Variations",
+                "variationPlaceholder": "Variation {{index}}... Use variables like {{variables}}",
+                "newVariation": "New variation",
+                "textPlaceholder": "Type your message... Use variables like {{variables}}",
+                "availableVariables": "Available variables:"
+            },
+            "ai": {
+                "openaiTitle": "🤖 OpenAI",
+                "groqTitle": "⚡ Groq AI",
+                "openaiDesc": "Configure parameters to generate personalized messages using artificial intelligence",
+                "groqDesc": "Configure parameters to generate personalized messages using Groq AI with ultra-fast speed",
+                "model": "Model *",
+                "modelPlaceholder": "Enter model...",
+                "suggestedModels": "Suggested models:",
+                "systemPrompt": "System Prompt *",
+                "systemPromptPlaceholder": "Ex: You are a virtual assistant specialized in sales...",
+                "systemPromptDesc": "Defines how the AI should behave and respond",
+                "userPrompt": "User Prompt *",
+                "userPromptPlaceholder": "Ex: Create a personalized sales message for {{nome}}...",
+                "userPromptDesc": "The AI will use this prompt along with contact data to generate the message"
+            },
+            "file": {
+                "label": "File",
+                "useVariations": "Use Variations",
+                "main": "Main",
+                "variation": "Var. {{index}}",
+                "captionPlaceholder": "Caption...",
+                "captionPlaceholderWithVars": "Caption (optional) - Use variables like {{variables}}",
+                "uploading": "Uploading file...",
+                "uploadHelp": "Click to upload file",
+                "uploadedDefault": "File uploaded",
+                "fileNamePlaceholder": "File name (optional)",
+                "help": {
+                    "images": "Images: JPG, PNG, GIF, WebP",
+                    "videos": "Videos: MP4, AVI, MOV, WMV, MKV",
+                    "audios": "Audios: MP3, WAV, OGG, AAC, M4A",
+                    "documents": "Documents: PDF, DOC, XLS, TXT, ZIP"
+                }
+            },
+            "wait": {
+                "title": "Wait Time",
+                "desc": "Waits for a duration before sending the next message",
+                "help": "Minimum: 1 second | Maximum: 3600 seconds (1 hour)"
+            },
+            "empty": {
+                "title": "No messages in sequence",
+                "desc": "Click \"Add Message\" to start creating your campaign."
+            }
+        },
+        "report": {
+            "title": "Campaign Report",
+            "refresh": "Refresh report",
+            "loading": "Loading report...",
+            "fields": {
+                "status": "Status:",
+                "createdBy": "Created by:",
+                "createdAt": "Created At:",
+                "startedAt": "Started At:",
+                "completedAt": "Completed At:"
+            },
+            "stats": {
+                "title": "Sending Statistics",
+                "total": "Total Contacts",
+                "sent": "Messages Sent",
+                "failed": "Messages Failed",
+                "pending": "Messages Pending"
+            },
+            "sessionDistribution": "Session Distribution",
+            "table": {
+                "session": "Session",
+                "total": "Total",
+                "sent": "Sent",
+                "failed": "Failed",
+                "name": "Name",
+                "phone": "Phone",
+                "status": "Status",
+                "sentDate": "Sent Date",
+                "error": "Error"
+            },
+            "detailedMessages": "Detailed Messages",
+            "downloadCsv": "Download CSV",
+            "errorDetails": "Error Details:",
+            "noMessages": "No messages found"
+        }
+    },
+    "settings": {
+        "title": "Settings",
+        "subtitle": "Configure system preferences",
+        "configured": "Configured",
+        "notConfigured": "Not configured",
+        "configure": "Configure",
+        "aiIntegrations": "AI Integrations",
+        "aiIntegrationsDescription": "Configure API keys to use artificial intelligence in campaigns",
+        "chatwootIntegration": "Chatwoot Integration",
+        "chatwootDescription": "Configure Chatwoot integration to sync conversations",
+        "perfexIntegration": "Perfex CRM Integration",
+        "perfexDescription": "Configure Perfex CRM integration to sync clients and leads",
+        "tabs": {
+            "general": "General",
+            "whatsapp": "WhatsApp",
+            "integrations": "Integrations",
+            "ai": "Artificial Intelligence",
+            "appearance": "Appearance"
+        },
+        "general": {
+            "companyName": "Company Name",
+            "pageTitle": "Page Title",
+            "timezone": "Timezone"
+        },
+        "whatsapp": {
+            "wahaHost": "WAHA Host",
+            "wahaApiKey": "WAHA API Key",
+            "evolutionHost": "Evolution Host",
+            "evolutionApiKey": "Evolution API Key",
+            "quepasaHost": "QuePasa Host",
+            "quepasaToken": "QuePasa Token"
+        },
+        "integrations": {
+            "chatwootUrl": "Chatwoot URL",
+            "chatwootToken": "Chatwoot Token",
+            "perfexUrl": "Perfex CRM URL",
+            "perfexToken": "Perfex Token"
+        },
+        "ai": {
+            "openaiKey": "OpenAI Key",
+            "openaiDescription": "ChatGPT, GPT-4",
+            "groqKey": "Groq Key",
+            "groqDescription": "LLaMA, Mixtral (ultra-fast)",
+            "defaultModel": "Default Model"
+        },
+        "modals": {
+            "openai": {
+                "title": "Configure OpenAI",
+                "apiKeyLabel": "OpenAI API Key",
+                "description": "API Key for ChatGPT integration in campaigns"
+            },
+            "groq": {
+                "title": "Configure Groq",
+                "apiKeyLabel": "Groq API Key",
+                "description": "API Key for Groq AI integration in campaigns (fast and efficient models)"
+            },
+            "chatwoot": {
+                "title": "Configure Chatwoot",
+                "urlLabel": "Chatwoot URL",
+                "urlDescription": "Full URL of your Chatwoot instance",
+                "accountIdLabel": "Account ID",
+                "accountIdDescription": "Numeric ID of your Chatwoot account",
+                "apiTokenLabel": "API Token",
+                "apiTokenDescription": "Your profile API Token (found in Settings > Profile)"
+            }
+        },
+        "appearance": {
+            "logo": "Logo",
+            "icon": "Icon",
+            "primaryColor": "Primary Color",
+            "uploadLogo": "Upload logo",
+            "uploadIcon": "Upload icon"
+        },
+        "messages": {
+            "saved": "Settings saved successfully!",
+            "error": "Error saving settings",
+            "loadError": "Error loading settings",
+            "integrationRemoved": "Integration with {{name}} removed successfully",
+            "removeConfirm": "Are you sure you want to remove the integration with {{name}}?"
+        }
+    },
+    "superAdmin": {
+        "modals": {
+            "create": {
+                "title": "Create New Tenant"
+            },
+            "edit": {
+                "title": "Edit Tenant"
+            }
+        },
+        "form": {
+            "sections": {
+                "info": "Tenant Information",
+                "admin": "Admin User",
+                "quotas": "Quotas"
+            },
+            "fields": {
+                "slug": "Slug",
+                "name": "Name",
+                "domain": "Domain",
+                "adminName": "Name",
+                "email": "Email",
+                "password": "Password",
+                "passwordPlaceholder": "Minimum 8 characters"
+            }
+        },
+        "quotas": {
+            "users": "Users",
+            "contacts": "Contacts",
+            "campaigns": "Campaigns",
+            "connections": "Connections",
+            "maxUsers": "Max Users",
+            "maxContacts": "Max Contacts",
+            "maxCampaigns": "Max Campaigns",
+            "maxConnections": "Max Connections"
+        },
+        "messages": {
+            "loadError": "Error loading companies",
+            "createSuccess": "Tenant created successfully!",
+            "createError": "Error creating tenant",
+            "updateSuccess": "Tenant updated successfully!",
+            "updateError": "Error updating tenant",
+            "toggleStatusSuccess": "Tenant {{status}} successfully!",
+            "toggleStatusError": "Error changing tenant status",
+            "activated": "activated",
+            "deactivated": "deactivated",
+            "noTenants": "No tenants found",
+            "noUsers": "No users found"
+        },
+        "validation": {
+            "hostInvalid": "Host must be a valid URL or empty",
+            "apiKeyTooShort": "API Key must be at least 10 characters or empty",
+            "urlInvalid": "URL must be a valid URL or empty",
+            "companyNameLength": "Company name must be between 1 and 100 characters or empty",
+            "pageTitleLength": "Page title must be between 1 and 100 characters or empty"
+        },
+        "messages": {
+            "noTenants": "No tenants found",
+            "noUsers": "No users found"
+        },
+        "page": {
+            "title": "Super Admin",
+            "subtitle": "Complete system management"
+        },
+        "tenants": {
+            "listTitle": "Tenants",
+            "manage": "Manage Tenants",
+            "modal": {
+                "createTitle": "Create New Tenant",
+                "editTitle": "Edit Tenant",
+                "companyData": "Company Data",
+                "name": "Company Name",
+                "namePlaceholder": "Company name",
+                "slugHint": "Unique identifier will be generated automatically",
+                "adminUser": "Admin User",
+                "adminName": "Admin Name",
+                "adminNamePlaceholder": "Full name",
+                "adminEmail": "Admin Email",
+                "adminEmailPlaceholder": "admin@example.com",
+                "adminPassword": "Admin Password",
+                "adminPasswordPlaceholder": "Secure password",
+                "limits": "Limits & Quotas",
+                "maxUsers": "Max Users",
+                "maxConnections": "Max Connections",
+                "maxContacts": "Max Contacts",
+                "maxCampaigns": "Max Campaigns",
+                "providers": "WhatsApp Providers",
+                "providersHint": "Select which API providers the company can use",
+                "selectAll": "Select All",
+                "deselectAll": "Deselect All",
+                "selectOne": "Select at least one provider"
+            }
+        },
+        "users": {
+            "listTitle": "Users",
+            "manage": "Manage Users",
+            "description": "Global view and management of all system users",
+            "add": "Add User",
+            "table": {
+                "user": "User",
+                "tenant": "Tenant",
+                "role": "Role",
+                "status": "Status",
+                "lastLogin": "Last Login",
+                "created": "Created At",
+                "actions": "Actions",
+                "system": "System"
+            },
+            "roles": {
+                "superAdmin": "Super Admin",
+                "admin": "Admin",
+                "user": "User"
+            },
+            "status": {
+                "never": "Never"
+            },
+            "modal": {
+                "createTitle": "Create New User",
+                "editTitle": "Edit User",
+                "name": "Full Name",
+                "namePlaceholder": "User's full name",
+                "email": "E-mail",
+                "emailPlaceholder": "email@example.com",
+                "password": "Password",
+                "passwordPlaceholder": "Secure password",
+                "passwordHint": "Must contain at least 6 characters, one uppercase, one lowercase and one number",
+                "leaveEmpty": "leave empty to keep",
+                "role": "Access Level",
+                "superAdminHint": "Super Admin has access to ALL tenants automatically. You can optionally associate them with specific tenants.",
+                "userHint": "Define user access level in selected tenants",
+                "tenants": "Tenants",
+                "optional": "Optional",
+                "noTenantsAvailable": "No tenants available",
+                "search": "Search tenant...",
+                "globalAccess": "Leave empty for global access to all tenants",
+                "selectOne": "Select at least one tenant",
+                "selected": "selected",
+                "active": "User active"
+            }
+        },
+        "integrations": {
+            "subtitle": "External API configurations",
+            "status": {
+                "configured": "Configured",
+                "notConfigured": "Not Configured"
+            },
+            "waha": "WhatsApp HTTP API",
+            "evolution": "WhatsApp API Evolution",
+            "quepasa": "WhatsApp API Quepasa"
+        }
+    },
+    "flowBuilder": {
+        "nodes": {
+            "base": {
+                "deleteNode": "Delete node",
+                "configured": "Configured",
+                "clickToConfigure": "Click to configure"
+            },
+            "trigger": {
+                "label": "⚡ Trigger",
+                "description": "Start"
+            },
+            "text": {
+                "label": "📝 Text",
+                "description": "Message",
+                "configureMessage": "Configure the message",
+                "variation": "variation",
+                "variations": "variations"
+            },
+            "action": {
+                "label": "Action",
+                "selectAction": "Select an action",
+                "types": {
+                    "text": "📝 Text",
+                    "image": "🖼️ Image",
+                    "video": "🎬 Video",
+                    "audio": "🎵 Audio",
+                    "document": "📄 File",
+                    "openai": "🤖 OpenAI",
+                    "groq": "⚡ Groq AI"
+                }
+            },
+            "image": {
+                "label": "🖼️ Image",
+                "description": "Photo"
+            },
+            "video": {
+                "label": "🎬 Video",
+                "description": "Video"
+            },
+            "audio": {
+                "label": "🎵 Audio",
+                "description": "Audio"
+            },
+            "document": {
+                "label": "📄 File",
+                "description": "Doc"
+            },
+            "ai": {
+                "label": "🤖 AI",
+                "description": "AI"
+            },
+            "condition": {
+                "label": "❓ Condition",
+                "description": "Logic",
+                "switch": "Switch",
+                "configureCondition": "Configure the condition",
+                "default": "Default",
+                "defaultTooltip": "Default (no condition met)",
+                "true": "True",
+                "false": "False",
+                "types": {
+                    "contains": "Contains text",
+                    "equals": "Equals",
+                    "regex": "Regular expression",
+                    "variable": "Variable"
+                }
+            },
+            "delay": {
+                "label": "⏱️ Delay",
+                "description": "Wait"
+            },
+            "httprest": {
+                "label": "🌐 HTTP REST",
+                "description": "API"
+            },
+            "stop": {
+                "label": "🛑 Stop",
+                "description": "End"
+            },
+            "integration_perfex": {
+                "label": "🔧 Perfex CRM",
+                "description": "Integration"
+            },
+            "integration_chatwoot": {
+                "label": "💬 Chatwoot",
+                "description": "Integration"
+            }
+        },
+        "sidebar": {
+            "blocks": "📦 Blocks",
+            "integrations": "🔌 External Integrations",
+            "tips": {
+                "title": "💡 Tips",
+                "drag": "• Drag blocks to the canvas",
+                "connect": "• Connect blocks by dragging between them",
+                "click": "• Click a block to configure",
+                "scroll": "• Use scroll to zoom",
+                "save": "• Save before publishing"
+            },
+            "config": {
+                "addEmoji": "Add emoji",
+                "removeVariation": "Remove variation",
+                "remove": "Remove",
+                "removeFile": "Remove file",
+                "messagePlaceholder": "Type the message to send...",
+                "messagePlaceholderWithVars": "Type the message to send... Use {{ to see available variables",
+                "mediaCaptionPlaceholder": "Type a caption for the media...",
+                "aiPromptPlaceholder": "Type the prompt for AI to process...",
+                "compareValuePlaceholder": "Value to compare",
+                "noConditions": "No conditions added. Click \"Add\" to create.",
+                "statusIdPlaceholder": "Type the status ID (ex: 1, 2, 3...)",
+                "sourceIdPlaceholder": "Type the source ID (ex: 1, 2, 3...)",
+                "userIdPlaceholder": "Type the user ID (ex: 1, 2, 3...)",
+                "tagPlaceholder": "Type a tag and press Enter",
+                "variableUsage": "Use in next nodes as:",
+                "nodeTypes": {
+                    "action": "Action",
+                    "condition": "Condition"
+                },
+                "errors": {
+                    "uploadError": "Error uploading file",
+                    "curlParseError": "Could not parse cURL command. Check the format.",
+                    "perfexLoadError": "Error loading Perfex data"
+                }
+            }
+        },
+        "actions": {
+            "back": "Back",
+            "preview": "Preview",
+            "save": "Save",
+            "saving": "Saving...",
+            "publish": "Publish",
+            "deleteConnection": "Delete connection",
+            "editName": "Click to edit name"
+        },
+        "status": {
+            "draft": "📝 Draft",
+            "published": "✅ Published"
+        },
+        "messages": {
+            "loadError": "Error loading campaign",
+            "saveSuccess": "Flow saved successfully!",
+            "saveError": "Error saving",
+            "publishTriggerMissing": "Add a Trigger node before publishing",
+            "publishNoConnection": "Configure at least one WhatsApp connection in the Trigger",
+            "publishNoCategory": "Configure at least one contact category in the Trigger",
+            "publishScheduleMissing": "Please set the schedule date and time in the Trigger",
+            "publishConfirmDefault": "Do you want to publish the campaign \"{{name}}\"? It will start processing messages immediately.",
+            "publishConfirmScheduled": "Do you want to publish the campaign \"{{name}}\"? It will start on: {{date}}",
+            "publishSuccess": "Campaign published!",
+            "publishScheduledSuccess": "Campaign scheduled for {{date}}!",
+            "publishError": "Error publishing",
+            "nameUpdated": "Name updated successfully!",
+            "nameUpdateError": "Error updating name"
+        },
+        "preview": {
+            "title": "Bot Preview",
+            "subtitle": "Test the flow before publishing",
+            "starting": "Starting conversation...",
+            "noTrigger": "⚠️ No Trigger node found in the flow.",
+            "triggerNotConnected": "⚠️ Trigger is not connected to any node.",
+            "messageNotConfigured": "Message not configured",
+            "flowEnd": "✅ End of flow.",
+            "noActiveNode": "⚠️ No active node.",
+            "addEmoji": "Add emoji",
+            "messagePlaceholder": "Type your message...",
+            "pressEnter": "Press Enter to send"
+        }
+    },
+    "globalSettings": {
+        "title": "Global Settings",
+        "defaultProviders": "Default Providers",
+        "enabledProviders": "Enabled Providers"
+    },
+    "errors": {
+        "generic": "An error occurred. Please try again.",
+        "network": "Connection error. Check your internet.",
+        "unauthorized": "Not authorized. Please log in again.",
+        "forbidden": "You don't have permission for this action.",
+        "notFound": "Resource not found.",
+        "serverError": "Internal server error.",
+        "quotaExceeded": "Quota limit reached. Contact the administrator."
+    },
+    "language": {
+        "select": "Language",
+        "pt": "Português",
+        "en": "English",
+        "es": "Español"
+    },
+    "pagination": {
+        "page": "Page",
+        "of": "of",
+        "first": "First",
+        "last": "Last",
+        "previous": "Previous",
+        "next": "Next"
+    },
+    "users": {
+        "title": "Users",
+        "newUser": "New User",
+        "form": {
+            "title": {
+                "new": "New User",
+                "edit": "Edit User"
+            },
+            "name": "Name",
+            "email": "Email",
+            "password": "Password",
+            "newPassword": "New Password (leave blank to keep current)",
+            "passwordPlaceholder": "Min. 6 chars with uppercase, lowercase and number",
+            "passwordHint": "Password must have at least 6 characters including one uppercase letter, one lowercase letter and one number",
+            "role": "Role",
+            "active": "Active User",
+            "roles": {
+                "user": "User",
+                "admin": "Administrator"
+            },
+            "cancel": "Cancel",
+            "create": "Create",
+            "update": "Update",
+            "saving": "Saving..."
+        },
+        "list": {
+            "noUsers": "No users found",
+            "headers": {
+                "name": "Name",
+                "email": "Email",
+                "role": "Role",
+                "status": "Status",
+                "lastLogin": "Last Login",
+                "actions": "Actions"
+            },
+            "status": {
+                "active": "Active",
+                "inactive": "Inactive"
+            },
+            "roles": {
+                "user": "User",
+                "admin": "Administrator"
+            },
+            "never": "Never",
+            "edit": "Edit",
+            "delete": "Delete"
+        },
+        "validation": {
+            "nameMin": "Name must have at least 2 characters",
+            "emailInvalid": "Invalid email",
+            "passwordMin": "Password must have at least 6 characters",
+            "passwordRegex": "Password must contain at least one lowercase letter, one uppercase letter and one number"
+        },
+        "messages": {
+            "created": "User created successfully!",
+            "updated": "User updated successfully!",
+            "deleted": "User deleted successfully!",
+            "deleteConfirm": "Are you sure you want to delete this user?",
+            "deleteConfirmWithName": "Are you sure you want to delete the user {{name}}?",
+            "fillRequiredFields": "Fill in all required fields",
+            "createSuccess": "User created successfully!",
+            "updateSuccess": "User updated successfully!",
+            "activateSuccess": "User activated successfully!",
+            "deactivateSuccess": "User deactivated successfully!",
+            "deleteSuccess": "User deleted successfully!",
+            "userLimitReached": "User limit reached. Upgrade your plan to continue.",
+            "createError": "Error creating user",
+            "updateError": "Error updating user",
+            "statusChangeError": "Error changing user status",
+            "deleteError": "Error deleting user"
+        }
+    },
+    "perfexSync": {
+        "title": "Configure Perfex CRM",
+        "subtitle": "Configure integration with Perfex CRM",
+        "fields": {
+            "url": "Perfex CRM URL *",
+            "urlPlaceholder": "https://your-perfex.com",
+            "urlHint": "Full URL of your Perfex CRM instance",
+            "token": "API Token *",
+            "tokenPlaceholder": "••••••••••••••••",
+            "tokenHint": "Perfex CRM API Token (found in Settings > API)"
+        },
+        "instructions": {
+            "title": "How to get the token",
+            "steps": [
+                "Access your Perfex CRM",
+                "Go to Settings > API",
+                "Generate or copy your API token",
+                "Paste the token in the field above"
+            ]
+        },
+        "buttons": {
+            "cancel": "Cancel",
+            "save": "Save Configuration",
+            "saving": "Saving..."
+        }
+    },
+    "analytics": {
+        "title": {
+            "tenant": "Analytics - {{name}}",
+            "system": "System Analytics"
+        },
+        "period": "Period: {{period}}",
+        "systemSubtitle": "Overview of all companies",
+        "periods": {
+            "7d": "Last 7 days",
+            "30d": "Last 30 days",
+            "90d": "Last 90 days",
+            "12m": "Last 12 months"
+        },
+        "metrics": {
+            "totalContacts": "Total Contacts",
+            "totalCampaigns": "Total Campaigns",
+            "sentMessages": "Sent Messages",
+            "successRate": "Success Rate",
+            "activeTenants": "Active Companies",
+            "growthRate": "Growth Rate",
+            "thisMonth": "+{{val}} this month",
+            "avgPerCampaign": "Avg: {{val}} msg/campaign"
+        },
+        "topCampaigns": {
+            "title": "Top Performing Campaigns",
+            "headers": {
+                "campaign": "Campaign",
+                "messages": "Messages",
+                "rate": "Success Rate"
+            }
+        },
+        "tenantUsage": {
+            "title": "Usage by Tenant",
+            "headers": {
+                "tenant": "Tenant",
+                "contacts": "Contacts",
+                "campaigns": "Campaigns",
+                "messages": "Messages",
+                "usage": "% Usage"
+            }
+        },
+        "export": {
+            "title": "Export Data",
+            "contacts": "Export Contacts",
+            "campaigns": "Export Campaigns",
+            "analytics": "Export Analytics",
+            "exporting": "Exporting...",
+            "success": "Export of {{type}} completed",
+            "error": "Error exporting data"
+        },
+        "loading": "Loading analytics...",
+        "error": "Error loading analytics data"
+    },
+    "backup": {
+        "systemTitle": "System Backup",
+        "systemSubtitle": "Manage full system backups (database + files)",
+        "managementTitle": "Backup System",
+        "managementSubtitle": "Automatic backup management by tenant",
+        "stats": {
+            "companies": "Companies",
+            "totalBackups": "Total Backups",
+            "usedSpace": "Used Space",
+            "scheduledJobs": "Scheduled Jobs"
+        },
+        "actions": {
+            "configure": "Configure",
+            "restoreFile": "Restore from File",
+            "create": "Create Backup",
+            "creating": "Creating...",
+            "globalBackup": "Backup All Companies",
+            "backupNow": "Backup Now",
+            "download": "Download",
+            "restore": "Restore"
+        },
+        "status": {
+            "autoActive": "Automatic Backup: Active",
+            "autoDisabled": "Automatic Backup: Disabled",
+            "next": "Next backup: {{time}}",
+            "success": "Success",
+            "failed": "Failed",
+            "inProgress": "In Progress",
+            "never": "Never",
+            "active": "Active",
+            "inactive": "Inactive",
+            "modify": "Modify",
+            "activate": "Activate"
+        },
+        "list": {
+            "title": "Available Backups",
+            "found": "{{count}} backup(s) found",
+            "empty": "No backups found",
+            "start": "Click \"Create Backup\" to start",
+            "tenantTitle": "Backup by Company",
+            "headers": {
+                "tenant": "Tenant",
+                "backups": "Backups",
+                "size": "Total Size",
+                "lastBackup": "Last Backup",
+                "schedule": "Schedule",
+                "actions": "Actions"
+            }
+        },
+        "modals": {
+            "config": {
+                "title": "Configure Automatic Backup",
+                "enable": "Enable automatic backup",
+                "frequency": "Frequency",
+                "retention": "Keep backups for (days)",
+                "retentionHint": "Older backups will be automatically deleted",
+                "save": "Save",
+                "check": {
+                    "6h": "Every 6 hours",
+                    "12h": "Every 12 hours",
+                    "daily2h": "Daily at 2 AM",
+                    "weekly": "Weekly (Sunday at 2 AM)",
+                    "monthly": "Monthly (1st at 2 AM)"
+                }
+            },
+            "restore": {
+                "title": "⚠️ Restore Backup",
+                "warningTitle": "ATTENTION: Irreversible Action!",
+                "warningText": "This action will restore the ENTIRE system to the selected backup state. All current data (database and files) will be REPLACED.",
+                "selected": "Selected backup:",
+                "confirm": "Confirm Restore",
+                "restoring": "Restoring..."
+            },
+            "upload": {
+                "title": "📤 Restore from File",
+                "useFor": "⚠️ Use this function to:",
+                "useForPoints": [
+                    "Restore backup on a new server",
+                    "Migrate data from another environment",
+                    "Recover from an external backup"
+                ],
+                "warningTitle": "❌ ATTENTION:",
+                "warningText": "The uploaded backup will replace ALL current system data!",
+                "selectFile": "Select backup file (.tar.gz)",
+                "process": "Process:",
+                "processSteps": [
+                    "File will be uploaded to server",
+                    "Current database will be replaced",
+                    "Current files will be replaced",
+                    "System will be restored to backup state"
+                ],
+                "submit": "Upload and Restore",
+                "uploading": "Uploading and Restoring..."
+            }
+        },
+        "messages": {
+            "createSuccess": "Backup created successfully!",
+            "createError": "Error creating backup",
+            "saveConfigSuccess": "Configuration saved successfully!",
+            "saveConfigError": "Error saving configuration",
+            "restoreSuccess": "Backup restored successfully! Restarting system recommended.",
+            "restoreError": "Error restoring backup",
+            "downloadStart": "Download started successfully!",
+            "downloadError": "Error downloading backup",
+            "uploadSuccess": "Backup uploaded successfully! Wait for restore...",
+            "uploadRestoreSuccess": "System restored successfully! Recommend restarting services.",
+            "uploadError": "Error uploading backup file",
+            "selectFile": "Select a backup file",
+            "invalidFile": "File must be a valid backup (.tar.gz)",
+            "confirmRestore": "⚠️ ATTENTION: This action will restore the ENTIRE system to the selected backup state. All current data will be replaced. This action is IRREVERSIBLE. \n\nDo you want to continue?",
+            "confirmUpload": "⚠️ CRITICAL ATTENTION: This action will:\n\n1. Upload the backup file\n2. COMPLETELY REPLACE the current database\n3. COMPLETELY REPLACE all files\n4. DELETE all current data\n\nThis action is IRREVERSIBLE and CANNOT BE UNDONE!\n\nAre you ABSOLUTELY SURE you want to continue?"
+        }
+    },
+    "categories": {
+        "title": "Categories",
+        "new": "New Category",
+        "edit": "Edit Category",
+        "subtitle": {
+            "new": "Create a new category to organize your contacts",
+            "edit": "Update category information"
+        },
+        "form": {
+            "name": "Name",
+            "namePlaceholder": "Enter category name",
+            "color": "Color",
+            "customColor": "Custom color",
+            "customColorHint": "Click to choose a specific color",
+            "description": "Description",
+            "descriptionPlaceholder": "Enter category description (optional)",
+            "cancel": "Cancel",
+            "save": "Save Category",
+            "saving": "Saving..."
+        },
+        "validation": {
+            "nameRequired": "Name is required",
+            "colorRequired": "Color is required"
+        },
+        "messages": {
+            "createSuccess": "Category created successfully",
+            "updateSuccess": "Category updated successfully",
+            "error": "Error saving category"
+        }
+    }
+}

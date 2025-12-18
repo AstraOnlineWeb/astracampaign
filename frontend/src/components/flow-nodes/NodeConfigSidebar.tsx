@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Node, Edge } from 'reactflow';
+import { useTranslation } from 'react-i18next';
 import { Connection } from '../../services/interactiveCampaignApi';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 
@@ -19,6 +20,7 @@ interface NodeConfigSidebarProps {
 }
 
 export function NodeConfigSidebar({ node, nodes, edges, connections, categories = [], onClose, onSave }: NodeConfigSidebarProps) {
+  const { t } = useTranslation();
   const [config, setConfig] = useState<any>(() => {
     const nodeConfig = node?.data?.config || {};
     // Se for um nó de ação e não tem actionType definido, definir como 'text' por padrão
@@ -163,7 +165,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
       }
     } catch (error) {
       console.error('Erro ao fazer upload:', error);
-      alert(error instanceof Error ? error.message : 'Erro ao fazer upload do arquivo');
+      alert(error instanceof Error ? error.message : t('flowBuilder.sidebar.config.errors.uploadError'));
     } finally {
       setUploadingFiles(prev => ({ ...prev, [uploadKey]: false }));
     }
@@ -456,7 +458,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
                             setShowEmojiPicker(!showEmojiPicker || emojiPickerTarget !== index);
                           }}
                           className="absolute top-2 right-2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors text-sm"
-                          title="Adicionar emoji"
+                          title={t('flowBuilder.sidebar.config.addEmoji')}
                         >
                           😊
                         </button>
@@ -475,7 +477,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
                             setConfig({ ...config, textVariations: newVariations });
                           }}
                           className="px-2 py-1 text-red-600 hover:text-red-800"
-                          title="Remover variação"
+                          title={t('flowBuilder.sidebar.config.removeVariation')}
                         >
                           ✕
                         </button>
@@ -505,7 +507,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
                       ref={textareaRef}
                       value={config.content || ''}
                       onChange={(e) => setConfig({ ...config, content: e.target.value })}
-                      placeholder="Digite a mensagem a ser enviada..."
+                      placeholder={t('flowBuilder.sidebar.config.messagePlaceholder')}
                       rows={6}
                       className="w-full px-3 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
                     />
@@ -605,7 +607,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
                             type="button"
                             onClick={() => handleRemoveFile(varIndex)}
                             className="text-red-500 hover:text-red-700 text-xs p-0.5"
-                            title="Remover"
+                            title={t('flowBuilder.sidebar.config.remove')}
                           >
                             ✕
                           </button>
@@ -774,7 +776,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
                           type="button"
                           onClick={() => handleRemoveFile()}
                           className="text-red-600 hover:text-red-800 p-1"
-                          title="Remover arquivo"
+                          title={t('flowBuilder.sidebar.config.removeFile')}
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -994,7 +996,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
                   value={config.content || ''}
                   onChange={(e) => handleInputChange(e, 'content')}
                   onKeyDown={handleInputKeyDown}
-                  placeholder="Digite a mensagem a ser enviada... Use {{ para ver variáveis disponíveis"
+                  placeholder={t('flowBuilder.sidebar.config.messagePlaceholderWithVars')}
                   rows={6}
                   className="w-full px-3 py-2 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
                 />
@@ -1237,7 +1239,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
                           type="button"
                           onClick={() => handleRemoveFile()}
                           className="text-red-500 hover:text-red-700 p-2"
-                          title="Remover arquivo"
+                          title={t('flowBuilder.sidebar.config.removeFile')}
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1259,7 +1261,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
                     type="text"
                     value={config.caption || ''}
                     onChange={(e) => setConfig({ ...config, caption: e.target.value })}
-                    placeholder="Digite uma legenda para a mídia..."
+                    placeholder={t('flowBuilder.sidebar.config.mediaCaptionPlaceholder')}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary"
                   />
                 </div>
@@ -1301,7 +1303,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
           <textarea
             value={config.prompt || ''}
             onChange={(e) => setConfig({ ...config, prompt: e.target.value })}
-            placeholder="Digite o prompt para a IA processar..."
+            placeholder={t('flowBuilder.sidebar.config.aiPromptPlaceholder')}
             rows={6}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary resize-none"
           />
@@ -1467,7 +1469,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
                         type="text"
                         value={caseItem.value || ''}
                         onChange={(e) => updateCase(index, 'value', e.target.value)}
-                        placeholder="Valor a comparar"
+                        placeholder={t('flowBuilder.sidebar.config.compareValuePlaceholder')}
                         className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-brand-primary"
                       />
                     </div>
@@ -1476,7 +1478,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
 
                 {cases.length === 0 && (
                   <p className="text-sm text-gray-500 text-center py-4">
-                    Nenhuma condição adicionada. Click em "Adicionar" para criar.
+                    {t('flowBuilder.sidebar.config.noConditions')}
                   </p>
                 )}
               </div>
@@ -1603,7 +1605,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
       setShowCurlImport(false);
       setCurlCommand('');
     } else {
-      alert('Não foi possível parsear o comando cURL. Verifique o formato.');
+      alert(t('flowBuilder.sidebar.config.errors.curlParseError'));
     }
   };
 
@@ -2160,7 +2162,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary bg-white"
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                      Use nos próximos nós como: <code className="bg-gray-200 px-1 rounded">{'{{'}{mapping.variableName || 'nomeVariavel'}{'}}'}</code>
+                      {t('flowBuilder.sidebar.config.variableUsage')} <code className="bg-gray-200 px-1 rounded">{'{{'}{mapping.variableName || 'nomeVariavel'}{'}}'}</code>
                     </p>
                   </div>
                 </div>
@@ -2271,7 +2273,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
               type="text"
               value={config.value || ''}
               onChange={(e) => setConfig({ ...config, value: e.target.value })}
-              placeholder="Digite o ID do status (ex: 1, 2, 3...)"
+              placeholder={t('flowBuilder.sidebar.config.statusIdPlaceholder')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
             <p className="text-xs text-gray-500 mt-1">
@@ -2308,7 +2310,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
               type="text"
               value={config.value || ''}
               onChange={(e) => setConfig({ ...config, value: e.target.value })}
-              placeholder="Digite o ID da fonte (ex: 1, 2, 3...)"
+              placeholder={t('flowBuilder.sidebar.config.sourceIdPlaceholder')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
             <p className="text-xs text-gray-500 mt-1">
@@ -2345,7 +2347,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
               type="text"
               value={config.value || ''}
               onChange={(e) => setConfig({ ...config, value: e.target.value })}
-              placeholder="Digite o ID do usuário (ex: 1, 2, 3...)"
+              placeholder={t('flowBuilder.sidebar.config.userIdPlaceholder')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
             <p className="text-xs text-gray-500 mt-1">
@@ -2437,7 +2439,7 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
               value={newTag}
               onChange={(e) => setNewTag(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-              placeholder="Digite uma tag e pressione Enter"
+              placeholder={t('flowBuilder.sidebar.config.tagPlaceholder')}
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
@@ -2500,21 +2502,21 @@ export function NodeConfigSidebar({ node, nodes, edges, connections, categories 
   const getNodeLabel = () => {
     const labels: Record<string, string> = {
       trigger: 'Trigger',
-      text: 'Texto',
-      image: 'Imagem',
-      video: 'Vídeo',
-      audio: 'Áudio',
-      document: 'Arquivo',
-      ai: 'IA',
-      action: 'Ação',
-      condition: 'Condição',
-      delay: 'Delay',
-      httprest: 'HTTP REST',
-      stop: 'Stop',
-      integration_perfex: 'Perfex CRM',
-      integration_chatwoot: 'Chatwoot',
+      text: t('flowBuilder.nodes.text.label'),
+      image: t('flowBuilder.nodes.image.label'),
+      video: t('flowBuilder.nodes.video.label'),
+      audio: t('flowBuilder.nodes.audio.label'),
+      document: t('flowBuilder.nodes.document.label'),
+      ai: t('flowBuilder.nodes.ai.label'),
+      action: t('flowBuilder.sidebar.config.nodeTypes.action'),
+      condition: t('flowBuilder.sidebar.config.nodeTypes.condition'),
+      delay: t('flowBuilder.nodes.delay.label'),
+      httprest: t('flowBuilder.nodes.httprest.label'),
+      stop: t('flowBuilder.nodes.stop.label'),
+      integration_perfex: t('flowBuilder.nodes.integration_perfex.label'),
+      integration_chatwoot: t('flowBuilder.nodes.integration_chatwoot.label'),
     };
-    return labels[node.data.nodeType] || 'Node';
+    return labels[node.data.nodeType] || t('flowBuilder.nodes.base.deleteNode');
   };
 
   const renderConfig = () => {

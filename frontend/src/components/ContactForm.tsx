@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { ContactInput, Contact } from '../types';
 import { apiService } from '../services/api';
 import { validatePhone } from '../utils/phoneUtils';
@@ -12,17 +13,17 @@ interface Category {
   nome: string;
 }
 
-const contactSchema = z.object({
-  nome: z.string().min(1, 'Nome é obrigatório'),
-  telefone: z.string().min(1, 'Telefone é obrigatório').refine(validatePhone, {
-    message: 'Formato de telefone inválido',
+const createContactSchema = (t: any) => z.object({
+  nome: z.string().min(1, t('contacts.validation.nameRequired')),
+  telefone: z.string().min(1, t('contacts.validation.phoneRequired')).refine(validatePhone, {
+    message: t('contacts.validation.phoneInvalid'),
   }),
-  email: z.string().email('Email inválido').optional().or(z.literal('')),
+  email: z.string().email(t('contacts.validation.emailInvalid')).optional().or(z.literal('')),
   observacoes: z.string().optional(),
   categoriaId: z.string().optional(),
 });
 
-type ContactFormData = z.infer<typeof contactSchema>;
+type ContactFormData = z.infer<ReturnType<typeof createContactSchema>>;
 
 interface ContactFormProps {
   contact?: Contact;
@@ -31,8 +32,11 @@ interface ContactFormProps {
 }
 
 export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) {
+  const { t } = useTranslation();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
+
+  const contactSchema = createContactSchema(t);
 
   const {
     register,
@@ -95,6 +99,7 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
       }
     } catch (error) {
       console.error('Erro ao carregar categorias:', error);
+      toast.error(`${t('contacts.messages.errorLoadCategories')} ${error}`);
     } finally {
       setLoadingCategories(false);
     }
@@ -112,24 +117,24 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
 
       if (contact) {
         await apiService.updateContact(contact.id, contactInput);
-        toast.success('Contato atualizado com sucesso');
+        toast.success(t('contacts.messages.updateSuccess'));
       } else {
         await apiService.createContact(contactInput);
-        toast.success('Contato criado com sucesso');
+        toast.success(t('contacts.messages.createSuccess'));
       }
 
       onSuccess();
     } catch (err: any) {
       // Verificar se é erro de quota
       if (err?.isQuotaError || err?.upgradeRequired) {
-        toast.error(err.message || 'Limite de contatos atingido. Faça upgrade do seu plano para continuar.', {
+        toast.error(err.message || t('contacts.messages.limitReached'), {
           duration: 6000,
           icon: '⚠️'
         });
         return;
       }
 
-      const errorMessage = err instanceof Error ? err.message : 'Erro ao salvar contato';
+      const errorMessage = err instanceof Error ? err.message : t('contacts.messages.genericError');
       toast.error(errorMessage);
     }
   };
@@ -144,24 +149,24 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
             </svg>
           </div>
           <h2 id="form-title" className="text-xl sm:text-2xl font-bold text-gray-900">
-            {contact ? 'Editar Contato' : 'Novo Contato'}
+            {contact ? t('contacts.form.title.edit') : t('contacts.form.title.new')}
           </h2>
           <p className="text-sm sm:text-base text-gray-500 mt-1 sm:mt-2">
-            {contact ? 'Atualize as informações do contato' : 'Preencha os dados para criar um novo contato'}
+            {contact ? t('contacts.form.subtitle.edit') : t('contacts.form.subtitle.new')}
           </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5 md:space-y-6">
           <div>
             <label htmlFor="nome" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
-              Nome *
+              {t('contacts.form.name')} *
             </label>
             <input
               id="nome"
               type="text"
               {...register('nome')}
               className="input-field text-sm sm:text-base"
-              placeholder="Digite o nome completo"
+              placeholder={t('contacts.form.namePlaceholder')}
             />
             {errors.nome && (
               <p className="text-red-500 text-xs sm:text-sm mt-1">
@@ -172,13 +177,13 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
 
           <div>
             <label htmlFor="telefone" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
-              Telefone *
+              {t('contacts.form.phone')} *
             </label>
             <input
               id="telefone"
               type="tel"
               {...register('telefone')}
-              placeholder="+55 11 99999-9999"
+              placeholder={t('contacts.form.phonePlaceholder')}
               className="input-field text-sm sm:text-base"
             />
             {errors.telefone && (
@@ -190,14 +195,14 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
 
           <div>
             <label htmlFor="email" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
-              Email
+              {t('contacts.form.email')}
             </label>
             <input
               id="email"
               type="email"
               {...register('email')}
               className="input-field text-sm sm:text-base"
-              placeholder="Digite o email"
+              placeholder={t('contacts.form.emailPlaceholder')}
             />
             {errors.email && (
               <p className="text-red-500 text-xs sm:text-sm mt-1">
@@ -209,7 +214,7 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
 
           <div>
             <label htmlFor="categoriaId" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
-              Categoria
+              {t('contacts.form.category')}
             </label>
             <select
               id="categoriaId"
@@ -217,9 +222,9 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
               className="input-field text-sm sm:text-base"
               disabled={loadingCategories}
             >
-              <option value="">Selecione uma categoria</option>
+              <option value="">{t('contacts.form.selectCategory')}</option>
               {loadingCategories ? (
-                <option disabled>Carregando categorias...</option>
+                <option disabled>{t('contacts.form.loadingCategories')}</option>
               ) : (
                 categories.map((category) => (
                   <option key={category.id} value={category.id}>
@@ -232,14 +237,14 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
 
           <div>
             <label htmlFor="observacoes" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
-              Observações
+              {t('contacts.form.notes')}
             </label>
             <textarea
               id="observacoes"
               {...register('observacoes')}
               rows={3}
               className="input-field resize-none text-sm sm:text-base"
-              placeholder="Digite observações adicionais"
+              placeholder={t('contacts.form.notesPlaceholder')}
             />
           </div>
 
@@ -247,7 +252,7 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
           {contact?.perfexLeadId && (
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
               <label className="block text-xs sm:text-sm font-semibold text-purple-700 mb-1">
-                ID do Lead no Perfex CRM
+                {t('contacts.form.perfexId')}
               </label>
               <div className="flex items-center gap-2">
                 <svg className="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -256,7 +261,7 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
                 <span className="text-sm font-mono text-purple-800">{contact.perfexLeadId}</span>
               </div>
               <p className="text-xs text-purple-600 mt-1">
-                Este contato foi importado do Perfex CRM
+                {t('contacts.form.perfexImported')}
               </p>
             </div>
           )}
@@ -267,7 +272,7 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
               onClick={onCancel}
               className="w-full sm:flex-1 bg-gray-100 text-gray-700 py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl hover:bg-gray-200 font-medium transition-all duration-200 border border-gray-200 text-sm sm:text-base"
             >
-              Cancelar
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
@@ -280,10 +285,10 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Salvando...
+                  {t('contacts.form.saving')}
                 </>
               ) : (
-                'Salvar Contato'
+                t('contacts.form.save')
               )}
             </button>
           </div>

@@ -1,3 +1,4 @@
+import './i18n'; // Inicializar i18n antes de todo
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'

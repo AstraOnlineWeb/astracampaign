@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import { useSettings } from '../hooks/useSettings';
 import { useAuth } from '../contexts/AuthContext';
 import { TenantSelector } from './TenantSelector';
+import { LanguageSelector } from './LanguageSelector';
 
 interface HeaderProps {
   title: string;
@@ -9,17 +11,20 @@ interface HeaderProps {
 }
 
 export function Header({ title, subtitle, actions }: HeaderProps) {
+  const { t } = useTranslation();
   const { settings, loading } = useSettings();
   const { user } = useAuth();
 
   const getUserRoleText = (role: string) => {
     switch (role) {
       case 'ADMIN':
-        return 'Administrador';
+        return t('header.roles.admin');
       case 'USER':
-        return 'Usuário';
+        return t('header.roles.user');
+      case 'SUPERADMIN':
+        return t('header.roles.superadmin');
       default:
-        return 'Usuário';
+        return t('header.roles.user');
     }
   };
 
@@ -51,6 +56,9 @@ export function Header({ title, subtitle, actions }: HeaderProps) {
 
         {/* Ações da direita */}
         <div className="flex items-center space-x-4">
+          {/* Language Selector */}
+          <LanguageSelector variant="header" />
+
           {/* Tenant Selector */}
           <TenantSelector />
 
@@ -62,7 +70,7 @@ export function Header({ title, subtitle, actions }: HeaderProps) {
               </span>
             </div>
             <div className="hidden sm:block">
-              <p className="text-sm font-medium text-gray-900">{user?.nome || 'Usuário'}</p>
+              <p className="text-sm font-medium text-gray-900">{user?.nome || t('header.roles.user')}</p>
               <p className="text-xs text-gray-500">{getUserRoleText(user?.role || 'USER')}</p>
             </div>
           </div>

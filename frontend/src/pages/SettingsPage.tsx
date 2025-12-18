@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { Header } from '../components/Header';
 import { useAuth } from '../contexts/AuthContext';
@@ -31,6 +32,7 @@ const settingsSchema = z.object({
 type SettingsFormData = z.infer<typeof settingsSchema>;
 
 export function SettingsPage() {
+  const { t } = useTranslation();
   const [settings, setSettings] = useState<Settings | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeModal, setActiveModal] = useState<'openai' | 'groq' | 'chatwoot' | 'perfex' | null>(null);
@@ -62,9 +64,6 @@ export function SettingsPage() {
     formState: { errors, isSubmitting },
   } = useForm<SettingsFormData>({
     resolver: zodResolver(settingsSchema),
-    onErrors: (errors) => {
-      console.log('🔴 Erros de validação:', errors);
-    }
   });
 
   useEffect(() => {
@@ -106,7 +105,7 @@ export function SettingsPage() {
       }
     } catch (error) {
       console.error('Erro ao carregar configurações:', error);
-      toast.error('Erro ao carregar configurações');
+      toast.error(t('settings.messages.loadError'));
     } finally {
       setLoading(false);
     }
@@ -119,7 +118,7 @@ export function SettingsPage() {
       if (user?.role === 'SUPERADMIN') {
         const selectedTenantId = localStorage.getItem('superadmin_selected_tenant');
         if (selectedTenantId) {
-          requestData = { ...data, tenantId: selectedTenantId };
+          requestData = { ...data, tenantId: selectedTenantId } as any;
         }
       }
 
@@ -129,17 +128,17 @@ export function SettingsPage() {
       });
 
       if (response.ok) {
-        const responseData = await response.json();
-        toast.success('Configurações de integração salvas com sucesso');
+        await response.json();
+        toast.success(t('settings.messages.saved'));
         setActiveModal(null);
         await loadSettings();
       } else {
         const errorData = await response.json();
-        toast.error(errorData.error || 'Erro ao salvar configurações de integração');
+        toast.error(errorData.error || t('settings.messages.error'));
       }
     } catch (error) {
       console.error('Erro ao salvar configurações de integração:', error);
-      toast.error('Erro ao salvar configurações de integração');
+      toast.error(t('settings.messages.error'));
     }
   };
 
@@ -151,7 +150,7 @@ export function SettingsPage() {
       perfex: 'Perfex CRM'
     };
 
-    if (!confirm(`Tem certeza que deseja remover a integração com ${integrationNames[type]}?`)) {
+    if (!confirm(t('settings.messages.removeConfirm', { name: integrationNames[type] }))) {
       return;
     }
 
@@ -184,16 +183,16 @@ export function SettingsPage() {
       });
 
       if (response.ok) {
-        toast.success(`Integração com ${integrationNames[type]} removida com sucesso`);
+        toast.success(t('settings.messages.integrationRemoved', { name: integrationNames[type] }));
         setActiveModal(null);
         await loadSettings();
       } else {
         const errorData = await response.json();
-        toast.error(errorData.error || 'Erro ao remover integração');
+        toast.error(errorData.error || t('common.error'));
       }
     } catch (error) {
       console.error('Erro ao remover integração:', error);
-      toast.error('Erro ao remover integração');
+      toast.error(t('common.error'));
     }
   };
 
@@ -202,7 +201,7 @@ export function SettingsPage() {
     return (
       <div className="p-6">
         <div className="flex items-center justify-center h-64">
-          <div className="text-gray-500">Carregando configurações...</div>
+          <div className="text-gray-500">{t('common.loading')}...</div>
         </div>
       </div>
     );
@@ -211,18 +210,18 @@ export function SettingsPage() {
   return (
     <>
       <Header
-        title="Configurações"
-        subtitle="Configure as definições do sistema"
+        title={t('settings.title')}
+        subtitle={t('settings.subtitle')}
       />
 
       <div className="p-6">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold mb-6 text-gray-900">
-              🔗 Integrações de IA
+              🔗 {t('settings.aiIntegrations')}
             </h2>
             <p className="text-gray-600 mb-6">
-              Configure as chaves de API para usar inteligência artificial nas campanhas
+              {t('settings.aiIntegrationsDescription')}
             </p>
 
 
@@ -240,18 +239,17 @@ export function SettingsPage() {
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      settings?.openaiApiKey
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {settings?.openaiApiKey ? 'Configurado' : 'Não configurado'}
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${settings?.openaiApiKey
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-gray-100 text-gray-800'
+                      }`}>
+                      {settings?.openaiApiKey ? t('settings.configured') : t('settings.notConfigured')}
                     </span>
                     <button
                       onClick={() => setActiveModal('openai')}
                       className="px-3 py-1 bg-gray-800 text-white text-sm rounded hover:bg-gray-900"
                     >
-                      Configurar
+                      {t('settings.configure')}
                     </button>
                   </div>
                 </div>
@@ -270,18 +268,17 @@ export function SettingsPage() {
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      settings?.groqApiKey
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {settings?.groqApiKey ? 'Configurado' : 'Não configurado'}
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${settings?.groqApiKey
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-gray-100 text-gray-800'
+                      }`}>
+                      {settings?.groqApiKey ? t('settings.configured') : t('settings.notConfigured')}
                     </span>
                     <button
                       onClick={() => setActiveModal('groq')}
                       className="px-3 py-1 bg-orange-600 text-white text-sm rounded hover:bg-orange-700"
                     >
-                      Configurar
+                      {t('settings.configure')}
                     </button>
                   </div>
                 </div>
@@ -292,10 +289,10 @@ export function SettingsPage() {
           {/* Integração Chatwoot */}
           <div className="bg-white rounded-lg shadow p-6 mt-6">
             <h2 className="text-lg font-semibold mb-6 text-gray-900">
-              💬 Integração Chatwoot
+              💬 {t('settings.chatwootIntegration')}
             </h2>
             <p className="text-gray-600 mb-6">
-              Configure a integração com Chatwoot para sincronizar conversas
+              {t('settings.chatwootDescription')}
             </p>
 
             <div className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
@@ -306,22 +303,21 @@ export function SettingsPage() {
                   </div>
                   <div>
                     <h3 className="font-medium text-gray-900">Chatwoot</h3>
-                    <p className="text-sm text-gray-500">Plataforma de atendimento ao cliente</p>
+                    <p className="text-sm text-gray-500">{t('settings.modals.chatwoot.description')}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    settings?.chatwootUrl && settings?.chatwootAccountId && settings?.chatwootApiToken
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-800'
-                  }`}>
-                    {settings?.chatwootUrl && settings?.chatwootAccountId && settings?.chatwootApiToken ? 'Configurado' : 'Não configurado'}
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${settings?.chatwootUrl && settings?.chatwootAccountId && settings?.chatwootApiToken
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-gray-100 text-gray-800'
+                    }`}>
+                    {settings?.chatwootUrl && settings?.chatwootAccountId && settings?.chatwootApiToken ? t('settings.configured') : t('settings.notConfigured')}
                   </span>
                   <button
                     onClick={() => setActiveModal('chatwoot')}
                     className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
                   >
-                    Configurar
+                    {t('settings.configure')}
                   </button>
                 </div>
               </div>
@@ -331,10 +327,10 @@ export function SettingsPage() {
           {/* Integração Perfex CRM */}
           <div className="bg-white rounded-lg shadow p-6 mt-6">
             <h2 className="text-lg font-semibold mb-6 text-gray-900">
-              🔧 Integração Perfex CRM
+              🔧 {t('settings.perfexIntegration')}
             </h2>
             <p className="text-gray-600 mb-6">
-              Configure a integração com Perfex CRM para sincronizar clientes e leads
+              {t('settings.perfexDescription')}
             </p>
 
             <div className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
@@ -345,22 +341,21 @@ export function SettingsPage() {
                   </div>
                   <div>
                     <h3 className="font-medium text-gray-900">Perfex CRM</h3>
-                    <p className="text-sm text-gray-500">Sistema de gestão de clientes e projetos</p>
+                    <p className="text-sm text-gray-500">{t('settings.modals.perfex.description', { defaultValue: 'Sistema de gestão de clientes e projetos' })}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    settings?.perfexUrl && settings?.perfexToken
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-800'
-                  }`}>
-                    {settings?.perfexUrl && settings?.perfexToken ? 'Configurado' : 'Não configurado'}
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${settings?.perfexUrl && settings?.perfexToken
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-gray-100 text-gray-800'
+                    }`}>
+                    {settings?.perfexUrl && settings?.perfexToken ? t('settings.configured') : t('settings.notConfigured')}
                   </span>
                   <button
                     onClick={() => setActiveModal('perfex')}
                     className="px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700"
                   >
-                    Configurar
+                    {t('settings.configure')}
                   </button>
                 </div>
               </div>
@@ -378,7 +373,7 @@ export function SettingsPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">🤖 Configurar OpenAI</h3>
+              <h3 className="text-lg font-semibold text-gray-900">🤖 {t('settings.modals.openai.title')}</h3>
               <button
                 onClick={() => setActiveModal(null)}
                 className="text-gray-400 hover:text-gray-600"
@@ -390,7 +385,7 @@ export function SettingsPage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label htmlFor="openaiApiKey" className="block text-sm font-medium text-gray-700 mb-1">
-                  API Key OpenAI
+                  {t('settings.modals.openai.apiKeyLabel')}
                 </label>
                 <input
                   id="openaiApiKey"
@@ -405,7 +400,7 @@ export function SettingsPage() {
                   </p>
                 )}
                 <p className="text-xs text-gray-500 mt-1">
-                  Chave API para integração com ChatGPT nas campanhas
+                  {t('settings.modals.openai.description')}
                 </p>
               </div>
 
@@ -415,7 +410,7 @@ export function SettingsPage() {
                   onClick={() => setActiveModal(null)}
                   className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </button>
                 {settings?.openaiApiKey && (
                   <button
@@ -424,7 +419,7 @@ export function SettingsPage() {
                     disabled={isSubmitting}
                     className="flex-1 px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50"
                   >
-                    Remover
+                    {t('common.remove')}
                   </button>
                 )}
                 <button
@@ -432,7 +427,7 @@ export function SettingsPage() {
                   disabled={isSubmitting}
                   className="flex-1 px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Salvando...' : 'Salvar'}
+                  {isSubmitting ? t('common.saving') : t('common.save')}
                 </button>
               </div>
             </form>
@@ -445,7 +440,7 @@ export function SettingsPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">⚡ Configurar Groq</h3>
+              <h3 className="text-lg font-semibold text-gray-900">⚡ {t('settings.modals.groq.title')}</h3>
               <button
                 onClick={() => setActiveModal(null)}
                 className="text-gray-400 hover:text-gray-600"
@@ -457,7 +452,7 @@ export function SettingsPage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label htmlFor="groqApiKey" className="block text-sm font-medium text-gray-700 mb-1">
-                  API Key Groq
+                  {t('settings.modals.groq.apiKeyLabel')}
                 </label>
                 <input
                   id="groqApiKey"
@@ -472,7 +467,7 @@ export function SettingsPage() {
                   </p>
                 )}
                 <p className="text-xs text-gray-500 mt-1">
-                  Chave API para integração com Groq AI nas campanhas (modelos rápidos e eficientes)
+                  {t('settings.modals.groq.description')}
                 </p>
               </div>
 
@@ -482,7 +477,7 @@ export function SettingsPage() {
                   onClick={() => setActiveModal(null)}
                   className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </button>
                 {settings?.groqApiKey && (
                   <button
@@ -491,7 +486,7 @@ export function SettingsPage() {
                     disabled={isSubmitting}
                     className="flex-1 px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50"
                   >
-                    Remover
+                    {t('common.remove')}
                   </button>
                 )}
                 <button
@@ -499,7 +494,7 @@ export function SettingsPage() {
                   disabled={isSubmitting}
                   className="flex-1 px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Salvando...' : 'Salvar'}
+                  {isSubmitting ? t('common.saving') : t('common.save')}
                 </button>
               </div>
             </form>
@@ -512,7 +507,7 @@ export function SettingsPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">💬 Configurar Chatwoot</h3>
+              <h3 className="text-lg font-semibold text-gray-900">💬 {t('settings.modals.chatwoot.title')}</h3>
               <button
                 onClick={() => setActiveModal(null)}
                 className="text-gray-400 hover:text-gray-600"
@@ -524,7 +519,7 @@ export function SettingsPage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <label htmlFor="chatwootUrl" className="block text-sm font-medium text-gray-700 mb-1">
-                  URL do Chatwoot *
+                  {t('settings.modals.chatwoot.urlLabel')} *
                 </label>
                 <input
                   id="chatwootUrl"
@@ -539,13 +534,13 @@ export function SettingsPage() {
                   </p>
                 )}
                 <p className="text-xs text-gray-500 mt-1">
-                  URL completa da sua instância Chatwoot
+                  {t('settings.modals.chatwoot.urlDescription')}
                 </p>
               </div>
 
               <div>
                 <label htmlFor="chatwootAccountId" className="block text-sm font-medium text-gray-700 mb-1">
-                  ID da Conta *
+                  {t('settings.modals.chatwoot.accountIdLabel')} *
                 </label>
                 <input
                   id="chatwootAccountId"
@@ -560,13 +555,13 @@ export function SettingsPage() {
                   </p>
                 )}
                 <p className="text-xs text-gray-500 mt-1">
-                  ID numérico da sua conta no Chatwoot
+                  {t('settings.modals.chatwoot.accountIdDescription')}
                 </p>
               </div>
 
               <div>
                 <label htmlFor="chatwootApiToken" className="block text-sm font-medium text-gray-700 mb-1">
-                  Token de API *
+                  {t('settings.modals.chatwoot.apiTokenLabel')} *
                 </label>
                 <input
                   id="chatwootApiToken"
@@ -581,7 +576,7 @@ export function SettingsPage() {
                   </p>
                 )}
                 <p className="text-xs text-gray-500 mt-1">
-                  Token de API do seu perfil (encontrado em Configurações &gt; Perfil)
+                  {t('settings.modals.chatwoot.apiTokenDescription')}
                 </p>
               </div>
 
@@ -591,7 +586,7 @@ export function SettingsPage() {
                   onClick={() => setActiveModal(null)}
                   className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </button>
                 {settings?.chatwootUrl && settings?.chatwootAccountId && settings?.chatwootApiToken && (
                   <button
@@ -600,7 +595,7 @@ export function SettingsPage() {
                     disabled={isSubmitting}
                     className="flex-1 px-4 py-2 text-white bg-red-600 rounded-md hover:bg-red-700 disabled:opacity-50"
                   >
-                    Remover
+                    {t('common.remove')}
                   </button>
                 )}
                 <button
@@ -608,7 +603,7 @@ export function SettingsPage() {
                   disabled={isSubmitting}
                   className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Salvando...' : 'Salvar'}
+                  {isSubmitting ? t('common.saving') : t('common.save')}
                 </button>
               </div>
             </form>
@@ -642,15 +637,15 @@ export function SettingsPage() {
             });
 
             if (response.ok) {
-              toast.success('Integração com Perfex CRM configurada com sucesso');
+              toast.success(t('settings.messages.saved'));
               await loadSettings();
             } else {
               const errorData = await response.json();
-              toast.error(errorData.error || 'Erro ao configurar Perfex CRM');
+              toast.error(errorData.error || t('settings.messages.error'));
             }
           } catch (error) {
             console.error('Erro ao configurar Perfex CRM:', error);
-            toast.error('Erro ao configurar Perfex CRM');
+            toast.error(t('settings.messages.error'));
           }
         }}
       />

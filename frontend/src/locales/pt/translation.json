@@ -1,0 +1,1457 @@
+{
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "create": "Criar",
+    "creating": "Criando...",
+    "loading": "Carregando",
+    "error": "Erro",
+    "success": "Sucesso",
+    "menu": "Menu",
+    "confirm": "Confirmar",
+    "close": "Fechar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "clear": "Limpar",
+    "add": "Adicionar",
+    "remove": "Remover",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "yes": "Sim",
+    "no": "Não",
+    "all": "Todos",
+    "none": "Nenhum",
+    "actions": "Ações",
+    "status": "Status",
+    "name": "Nome",
+    "email": "E-mail",
+    "phone": "Telefone",
+    "date": "Data",
+    "description": "Descrição",
+    "type": "Tipo",
+    "category": "Categoria",
+    "options": "Opções",
+    "details": "Detalhes",
+    "settings": "Configurações",
+    "refresh": "Atualizar",
+    "retry": "Tentar novamente",
+    "selectAll": "Selecionar todos",
+    "deselectAll": "Desmarcar todos",
+    "selected": "{{count}} selecionado(s)",
+    "showing": "Mostrando {{count}} de {{total}}",
+    "noResults": "Nenhum resultado encontrado",
+    "required": "Obrigatório",
+    "optional": "Opcional",
+    "wait": "Aguarde um momento",
+    "loadingDots": "Carregando...",
+    "closeNotification": "Fechar notificação"
+  },
+  "auth": {
+    "login": {
+      "title": "Bem-vindo!",
+      "subtitle": "Faça login para acessar sua conta",
+      "email": "E-mail",
+      "emailPlaceholder": "seu@email.com",
+      "password": "Senha",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Entrar",
+      "submitting": "Entrando...",
+      "systemTitle": "Sistema de Gestão de Campanhas",
+      "systemDescription": "Gerencie seus contatos e campanhas de WhatsApp de forma eficiente e organizada."
+    },
+    "validation": {
+      "invalidEmail": "E-mail inválido",
+      "passwordMinLength": "Senha deve ter pelo menos 6 caracteres",
+      "invalidCredentials": "Credenciais inválidas",
+      "sessionExpired": "Sessão expirada. Faça login novamente."
+    },
+    "logout": "Sair"
+  },
+  "navigation": {
+    "connections": "Conexões",
+    "contacts": "Contatos",
+    "campaigns": "Campanhas",
+    "interactiveCampaign": "Campanha Interativa",
+    "users": "Usuários",
+    "settings": "Configurações",
+    "superAdmin": "Super Admin",
+    "logout": "Sair"
+  },
+  "header": {
+    "roles": {
+      "admin": "Administrador",
+      "user": "Usuário",
+      "superadmin": "Super Administrador"
+    }
+  },
+  "contacts": {
+    "title": "Contatos",
+    "subtitle": "{{count}} contatos cadastrados",
+    "newContact": "+ Novo Contato",
+    "editContact": "Editar Contato",
+    "deleteContact": "Excluir Contato",
+    "categories": "Categorias",
+    "importCSV": "Importar CSV",
+    "chatwoot": "Chatwoot",
+    "perfexCRM": "Perfex CRM",
+    "form": {
+      "title": {
+        "new": "Novo Contato",
+        "edit": "Editar Contato"
+      },
+      "subtitle": {
+        "new": "Preencha os dados para criar um novo contato",
+        "edit": "Atualize as informações do contato"
+      },
+      "namePlaceholder": "Digite o nome completo",
+      "phonePlaceholder": "+55 11 99999-9999",
+      "emailPlaceholder": "Digite o e-mail",
+      "selectCategory": "Selecione uma categoria",
+      "loadingCategories": "Carregando categorias...",
+      "notes": "Observações",
+      "notesPlaceholder": "Digite observações adicionais",
+      "perfexId": "ID do Lead no Perfex CRM",
+      "perfexImported": "Este contato foi importado do Perfex CRM",
+      "save": "Salvar Contato",
+      "saving": "Salvando...",
+      "saveContact": "Salvar Contato",
+      "updateContact": "Atualizar Contato"
+    },
+    "validation": {
+      "nameRequired": "Nome é obrigatório",
+      "phoneRequired": "Telefone é obrigatório",
+      "phoneInvalid": "Formato de telefone inválido",
+      "emailInvalid": "E-mail inválido"
+    },
+    "messages": {
+      "updateSuccess": "Contato atualizado com sucesso",
+      "createSuccess": "Contato criado com sucesso",
+      "errorLoadCategories": "Erro ao carregar categorias",
+      "limitReached": "Limite de contatos atingido. Faça upgrade do seu plano para continuar.",
+      "genericError": "Erro ao salvar contato",
+      "created": "Contato criado com sucesso!",
+      "updated": "Contato atualizado com sucesso!",
+      "deleted": "Contato excluído com sucesso!",
+      "deleteConfirm": "Tem certeza que deseja excluir este contato?",
+      "importSuccess": "{{count}} contatos importados com sucesso!",
+      "bulkEditSuccess": "{{count}} contatos atualizados com sucesso!"
+    },
+    "list": {
+      "loading": "Carregando contatos",
+      "noContacts": "Nenhum contato encontrado.",
+      "selectAll": "Selecionar todos os contatos",
+      "updatedAt": "Atualizado em",
+      "selectContact": "Selecionar contato {{name}}",
+      "editContact": "Editar contato {{name}}",
+      "confirmDelete": "Confirmar exclusão de {{name}}",
+      "deleteContact": "Excluir contato {{name}}",
+      "confirm": "Confirm?",
+      "addFirst": "Adicione seu primeiro contato"
+    },
+    "selectedCount": "{{count}} contato(s) selecionado(s)",
+    "editSelected": "Editar Selecionados ({{count}})",
+    "cancelSelection": "Cancelar Seleção",
+    "selectAllPage": "Selecionar todos",
+    "deselectAllPage": "Desmarcar todos",
+    "selectedOfPage": "{{selected}} de {{total}} selecionados nesta página",
+    "showingCount": "Mostrando {{showing}} de {{total}} contatos"
+  },
+  "categories": {
+    "title": "Gerenciar Categorias",
+    "subtitle": "Organize seus contatos em categorias",
+    "searchPlaceholder": "Buscar categorias...",
+    "clear": "Limpar",
+    "newCategory": "Nova Categoria",
+    "editCategory": "Editar Categoria",
+    "deleteCategory": "Excluir Categoria",
+    "form": {
+      "name": "Nome da Categoria",
+      "color": "Cor",
+      "description": "Descrição"
+    },
+    "messages": {
+      "created": "Categoria criada com sucesso!",
+      "updated": "Categoria atualizada com sucesso!",
+      "deleted": "Categoria excluída com sucesso!",
+      "deleteConfirm": "Tem certeza que deseja excluir esta categoria?"
+    },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Próxima",
+      "showing": "Mostrando {{count}} de {{total}} categorias (Página {{currentPage}} de {{totalPages}})"
+    }
+  },
+  "csvImport": {
+    "title": "Importar Contatos via CSV",
+    "subtitle": "Importe múltiplos contatos de uma só vez",
+    "selectFile": "Selecionar Arquivo CSV",
+    "dragDrop": "Arraste e solte o arquivo CSV aqui",
+    "clickToSelect": "Clique para selecionar",
+    "or": "ou",
+    "browse": "Procurar",
+    "format": "Formato: .csv",
+    "template": {
+      "title": "Template CSV",
+      "description": "Baixe o template com o formato correto",
+      "download": "Baixar",
+      "success": "Template baixado com sucesso!",
+      "error": "Erro ao baixar template CSV"
+    },
+    "instructions": {
+      "title": "Instruções",
+      "required": "Colunas obrigatórias: nome e telefone",
+      "optional": "Opcionais: email, observacoes, categoriaId",
+      "reference": "Use o template como referência"
+    },
+    "result": {
+      "title": "Resultado da Importação",
+      "total": "Total",
+      "success": "Sucessos",
+      "errors": "Erros",
+      "viewErrors": "Ver erros",
+      "successMessage": "Importação concluída! {{count}} contatos importados.",
+      "partialMessage": "Importação parcial: {{success}} sucessos, {{failed}} erros.",
+      "genericError": "Erro ao importar arquivo"
+    },
+    "buttons": {
+      "close": "Fechar",
+      "import": "Importar",
+      "importing": "Importando..."
+    },
+    "validation": {
+      "invalidFile": "Por favor, selecione um arquivo CSV válido",
+      "noFile": "Selecione um arquivo CSV"
+    }
+  },
+  "bulkEdit": {
+    "title": "Edição em Massa",
+    "subtitle": "Editando {{count}} contatos",
+    "actions": {
+      "label": "Ação",
+      "update": "Atualizar Categoria",
+      "delete": "Excluir Contatos"
+    },
+    "fields": {
+      "category": "Categoria"
+    },
+    "warning": "Atenção: Esta ação irá excluir permanentemente {{count}} contatos e não poderá ser desfeita.",
+    "buttons": {
+      "cancel": "Cancelar",
+      "update": "Atualizar",
+      "delete": "Excluir",
+      "processing": "Processando..."
+    },
+    "messages": {
+      "noSelection": "Nenhum contato selecionado",
+      "selectCategory": "Selecione uma categoria",
+      "updateSuccess": "{{count}} contato(s) atualizado(s) com sucesso!",
+      "deleteSuccess": "{{count}} contato(s) excluído(s) com sucesso!",
+      "error": "Erro na operação em massa"
+    }
+  },
+  "chatwootSync": {
+    "title": "Sincronizar com Chatwoot",
+    "subtitle": "Importe contatos por tags",
+    "loadTags": "Carregar Tags",
+    "loading": "Carregando...",
+    "updateTags": "Atualizar Tags",
+    "tagsFound": "{{count}} tags encontradas",
+    "noTags": "Nenhuma tag encontrada no Chatwoot",
+    "clickToLoad": "Clique para carregar as tags",
+    "columns": {
+      "tag": "Tag do Chatwoot",
+      "contacts": "Contatos",
+      "category": "Categoria de Destino"
+    },
+    "placeholders": {
+      "selectCategory": "Não importar",
+      "select": "Selecione categoria"
+    },
+    "instructions": {
+      "title": "Como funciona",
+      "steps": [
+        "Clique em 'Carregar Tags' para buscar as tags do Chatwoot",
+        "Associe cada tag do Chatwoot a uma categoria do sistema",
+        "Os contatos das conversas com essas tags serão importados",
+        "Contatos já existentes serão atualizados"
+      ]
+    },
+    "selection": "{{count}} tags selecionadas",
+    "syncButton": "Sincronizar Contatos",
+    "syncing": "Sincronizando...",
+    "messages": {
+      "success": "Sincronização concluída! {{imported}} importados, {{updated}} atualizados",
+      "selectTag": "Selecione pelo menos uma tag para sincronizar",
+      "configError": "Configure o Chatwoot na página de Integrações primeiro"
+    }
+  },
+  "perfexImport": {
+    "title": "Importar Leads do Perfex CRM",
+    "subtitle": "Carregue e selecione leads para importar",
+    "loadLeads": "Carregar Leads",
+    "updateLeads": "Atualizar Leads",
+    "loading": "Carregando...",
+    "stats": "{{filtered}} de {{total}} leads | {{selected}} selecionados",
+    "filters": {
+      "title": "Filtros",
+      "clear": "Limpar Filtros",
+      "name": "Nome...",
+      "email": "Email...",
+      "company": "Empresa...",
+      "status": "Todos os Status",
+      "source": "Todas as Fontes",
+      "country": "Todos os Países",
+      "city": "Todas as Cidades",
+      "state": "Todos os Estados"
+    },
+    "columns": {
+      "name": "Nome",
+      "email": "Email",
+      "phone": "Telefone",
+      "company": "Empresa",
+      "status": "Status",
+      "source": "Fonte"
+    },
+    "instructions": {
+      "title": "Como funciona",
+      "steps": [
+        "Clique em 'Carregar Leads' para buscar os leads do Perfex CRM",
+        "Use os filtros para encontrar leads específicos",
+        "Selecione os leads que deseja importar",
+        "Escolha uma categoria e clique em 'Importar Contatos'"
+      ]
+    },
+    "targetCategory": "Categoria de Destino",
+    "selectCategory": "Selecione uma categoria",
+    "buttons": {
+      "close": "Fechar",
+      "import": "Importar {{count}} Contatos",
+      "importing": "Importando...",
+      "selectAll": "Selecionar Todos ({{count}})",
+      "deselectAll": "Desmarcar Todos"
+    },
+    "messages": {
+      "success": "Importação concluída! {{imported}} contatos importados, {{updated}} atualizados",
+      "noLeads": "Nenhum lead encontrado no Perfex CRM",
+      "selectLead": "Selecione pelo menos um lead para importar",
+      "selectCategory": "Selecione uma categoria para os contatos",
+      "configError": "Configure o Perfex CRM na página de Integrações primeiro"
+    }
+  },
+  "interactiveCampaigns": {
+    "title": "Campanhas Interativas",
+    "subtitle": "{{count}} campanhas cadastradas",
+    "selectedSubtitle": "{{count}} campanha(s) selecionada(s)",
+    "newCampaign": "Nova Campanha",
+    "newInteractiveCampaign": "Nova Campanha Interativa",
+    "flowBuilder": "Editor de Fluxo",
+    "modal": {
+      "title": "Nova Campanha Interativa",
+      "campaignName": "Nome da Campanha",
+      "campaignNamePlaceholder": "Ex: Fluxo de Boas-vindas",
+      "helpText": "💡 Você configurará as conexões WhatsApp e categorias no nó Trigger após criar a campanha."
+    },
+    "searchPlaceholder": "Buscar campanhas por nome...",
+    "statusFilter": {
+      "all": "Todos os Status",
+      "draft": "Rascunho",
+      "scheduled": "Agendada",
+      "started": "Iniciada",
+      "paused": "Pausada",
+      "completed": "Finalizada"
+    },
+    "clearFilters": "Limpar Filtros",
+    "selectAll": "Selecionar todas",
+    "deselectAll": "Desmarcar todas",
+    "selectedCount": "{{count}} de {{total}} selecionadas nesta página",
+    "emptyState": {
+      "title": "Nenhuma campanha interativa",
+      "description": "Comece criando sua primeira campanha interativa.",
+      "button": "Nova Campanha"
+    },
+    "table": {
+      "name": "Nome",
+      "connections": "Conexões",
+      "status": "Status",
+      "createdAt": "Criada em",
+      "actions": "Ações",
+      "nodes": "{{count}} nós",
+      "otherConnections": "+{{count}} outra{{plural}}"
+    },
+    "actions": {
+      "publish": "Publicar",
+      "pause": "Pausar",
+      "resume": "Retomar",
+      "complete": "Finalizar",
+      "edit": "Editar",
+      "viewReport": "Ver Relatório",
+      "duplicate": "Duplicar",
+      "delete": "Excluir",
+      "deleteSelected": "Excluir Selecionadas ({{count}})",
+      "cancelSelection": "Cancelar Seleção",
+      "deleting": "Excluindo...",
+      "preview": "Pré-visualizar",
+      "simulate": "Simular"
+    },
+    "messages": {
+      "createSuccess": "Campanha criada com sucesso! Configure o Trigger para definir conexões e categorias.",
+      "createError": "Erro ao criar campanha",
+      "deleteConfirm": "Tem certeza que deseja excluir a campanha \"{{name}}\"?",
+      "deleteSuccess": "Campanha excluída com sucesso!",
+      "deleteError": "Erro ao excluir campanha",
+      "publishConfirm": "Deseja publicar a campanha \"{{name}}\"? Ela começará a processar mensagens.",
+      "publishSuccess": "Campanha publicada!",
+      "publishError": "Erro ao publicar campanha",
+      "pauseSuccess": "Campanha \"{{name}}\" pausada!",
+      "pauseError": "Erro ao pausar campanha",
+      "completeConfirm": "Tem certeza que deseja finalizar a campanha \"{{name}}\"? Esta ação não pode ser desfeita.",
+      "completeSuccess": "Campanha \"{{name}}\" finalizada!",
+      "completeError": "Erro ao finalizar campanha",
+      "duplicateSuccess": "Campanha \"{{name}}\" duplicada com sucesso!",
+      "duplicateError": "Erro ao duplicar campanha",
+      "bulkDeleteConfirm": "Tem certeza que deseja excluir {{count}} campanha(s) selecionada(s)?",
+      "bulkDeleteSuccess": "{{count}} campanha(s) excluída(s) com sucesso!",
+      "bulkDeleteError": "Erro ao excluir campanhas",
+      "reportLoadError": "Erro ao carregar relatório",
+      "reportRefreshSuccess": "Relatório atualizado!",
+      "reportRefreshError": "Erro ao atualizar relatório",
+      "exportSuccess": "Relatório exportado com sucesso!",
+      "exportError": "Erro ao exportar"
+    },
+    "report": {
+      "title": "Relatório da Campanha Interativa",
+      "refresh": "Atualizar",
+      "refreshing": "Atualizando...",
+      "dashboard": "📊 Dashboard",
+      "details": "📋 Detalhes",
+      "reached": "alcançados",
+      "sent": "enviados",
+      "successRate": "Taxa de sucesso",
+      "failures": "falhas",
+      "totalContacts": "Total de Contatos",
+      "reachedContacts": "Contatos alcançados",
+      "activeSessions": "Sessões Ativas",
+      "ofTotal": "do total",
+      "completed": "Concluídas",
+      "completionRate": "taxa de conclusão",
+      "failed": "Falhadas",
+      "errorRate": "taxa de erro",
+      "expired": "Expiradas",
+      "conversionFunnel": "Funil de Conversão por Etapa",
+      "statusSummary": "Resumo de Status das Sessões",
+      "connection": "Conexão",
+      "createdAt": "Data de Criação",
+      "sessionStats": "Estatísticas de Sessões",
+      "sessionDetails": "Detalhes das Sessões por Nó",
+      "exportExcel": "Exportar Excel",
+      "table": {
+        "name": "Nome",
+        "phone": "Telefone",
+        "status": "Status",
+        "reason": "Motivo"
+      },
+      "sessionStatus": {
+        "active": "Ativa",
+        "completed": "Concluída",
+        "failed": "Falhada",
+        "expired": "Expirada",
+        "activeTooltip": "Sessão ativa",
+        "completedTooltip": "Fluxo concluído",
+        "failedTooltip": "Falha no envio",
+        "expiredTooltip": "Sessão expirada"
+      }
+    },
+    "insights": {
+      "title": "Principais Insights",
+      "generalPerformance": "Performance Geral",
+      "excellent": "✅ Excelente! ",
+      "reasonable": "⚠️ Razoável. ",
+      "critical": "❌ Crítico! ",
+      "completionMessage": "Taxa de conclusão de <strong>{{rate}}%</strong>",
+      "highestDropoff": "Maior Abandono",
+      "dropoffMessage": "Etapa {{step}} ({{label}}) perdeu <strong>{{rate}}%</strong> dos contatos",
+      "attention": "Atenção Necessária",
+      "failedMessage": "{{count}} sessão falhou. Revise configurações.",
+      "failedMessage_plural": "{{count}} sessões falharam. Revise configurações.",
+      "expiredTitle": "Sessões Expiradas",
+      "expiredMessage": "{{count}} sessão expirou sem interação.",
+      "expiredMessage_plural": "{{count}} sessões expiraram sem interação.",
+      "successTitle": "Campanha de Sucesso!",
+      "successMessage": "Excelente performance sem erros. Continue assim!",
+      "conversionRate": "Taxa de Conversão",
+      "journeyCompletion": "Conclusão da Jornada",
+      "activeEngagement": "Engajamento Ativo"
+    },
+    "nodes": {
+      "trigger": "Gatilho",
+      "text": "Texto",
+      "image": "Imagem",
+      "video": "Vídeo",
+      "audio": "Áudio",
+      "document": "Documento",
+      "condition": "Condição",
+      "delay": "Atraso",
+      "ai": "IA",
+      "httpRequest": "Requisição HTTP",
+      "integration": "Integração",
+      "stop": "Parar"
+    },
+    "status": {
+      "draft": "Rascunho",
+      "published": "Publicada",
+      "active": "Ativa",
+      "paused": "Pausada",
+      "started": "Iniciada",
+      "scheduled": "Agendada",
+      "completed": "Finalizada"
+    }
+  },
+  "whatsapp": {
+    "title": "Conexões WhatsApp",
+    "subtitle": "{{count}} sessão(ões) ativa(s)",
+    "newConnection": "+ Nova Conexão",
+    "newSession": "+ Nova Sessão",
+    "newSessionTitle": "Nova Sessão WhatsApp",
+    "newSessionDescription": "Digite um nome para identificar esta sessão",
+    "createSession": "Criar Sessão",
+    "provider": "Provedor WhatsApp",
+    "providerHelp": "Escolha o provedor para conectar ao WhatsApp",
+    "sessionName": "Nome da Sessão",
+    "sessionNameHelp": "Use um nome descritivo para facilitar a identificação",
+    "interactiveCampaign": "Campanha Interativa",
+    "interactiveCampaignHelp": "Habilita recebimento de mensagens para fluxos conversacionais automatizados",
+    "activeSessions": "Sessões Ativas",
+    "noSessions": "Nenhuma sessão WhatsApp encontrada. Crie uma nova sessão para começar.",
+    "connectedAs": "Conectado como",
+    "connect": "Conectar",
+    "requesting": "Solicitando...",
+    "viewQR": "Ver QR Code",
+    "restart": "Reiniciar",
+    "remove": "Remover",
+    "scanQR": "Escaneie o QR Code com seu WhatsApp",
+    "scanQRInstructions": "Abra o WhatsApp no seu celular, vá em Configurações → Aparelhos conectados → Conectar aparelho e escaneie o código abaixo",
+    "generatingQR": "Gerando QR Code...",
+    "refreshQR": "Atualizar QR",
+    "qrExpired": "QR Code expirado",
+    "expiresIn": "Expira em {{seconds}}s",
+    "providers": {
+      "waha": "WAHA",
+      "evolution": "Evolution API",
+      "quepasa": "QuePasa"
+    },
+    "status": {
+      "connected": "Conectado",
+      "disconnected": "Desconectado",
+      "connecting": "Conectando...",
+      "waitingQR": "Aguardando QR Code",
+      "stopped": "Parado",
+      "error": "Erro"
+    },
+    "actions": {
+      "connect": "Conectar",
+      "disconnect": "Desconectar",
+      "restart": "Reiniciar",
+      "delete": "Excluir",
+      "scanQR": "Escanear QR Code"
+    },
+    "form": {
+      "sessionName": "Nome da Sessão",
+      "sessionNamePlaceholder": "Ex: vendas-principal",
+      "displayName": "Nome de Exibição",
+      "provider": "Provedor",
+      "selectProvider": "Selecione o provedor"
+    },
+    "messages": {
+      "created": "Conexão criada com sucesso!",
+      "deleted": "Conexão excluída com sucesso!",
+      "connected": "Conectado com sucesso!",
+      "disconnected": "Desconectado!",
+      "restarted": "Conexão reiniciada!",
+      "deleteConfirm": "Tem certeza que deseja remover esta sessão?",
+      "scanQRHelp": "Abra o WhatsApp no seu celular e escaneie o QR Code"
+    },
+    "list": {
+      "noConnections": "Nenhuma conexão encontrada",
+      "createFirst": "Crie sua primeira conexão"
+    }
+  },
+  "campaigns": {
+    "validation": {
+      "checkCategory": "Selecione pelo menos uma categoria de contatos",
+      "checkConnection": "Selecione pelo menos uma conexão WhatsApp",
+      "loadError": "Erro ao carregar campanhas",
+      "addMessageError": "Adicione pelo menos uma mensagem à campanha",
+      "loadReportError": "Erro ao carregar relatório",
+      "uploadError": "Erro ao fazer upload do arquivo",
+      "downloadError": "Erro ao baixar relatório"
+    },
+    "list": {
+      "title": "Campanhas",
+      "subtitle": "{{count}} campanhas ativas",
+      "newCampaign": "+ Nova Campanha",
+      "created": "Campanhas Criadas",
+      "empty": "Nenhuma campanha encontrada. Crie sua primeira campanha para começar.",
+      "stats": {
+        "contacts": "Contatos:",
+        "sent": "Enviados:",
+        "sessions": "Sessões:"
+      },
+      "status": {
+        "pending": "Aguardando",
+        "running": "Executando",
+        "completed": "Concluída",
+        "paused": "Pausada",
+        "failed": "Falha"
+      },
+      "actions": {
+        "viewReport": "Ver relatório da campanha",
+        "pause": "Pausar campanha",
+        "resume": "Retomar campanha",
+        "delete": "Excluir campanha"
+      }
+    },
+    "create": {
+      "title": "Nova Campanha",
+      "subtitle": "Configure sua campanha de mensagens WhatsApp",
+      "sections": {
+        "basicInfo": "Informações Básicas",
+        "basicInfoDesc": "Configure os dados fundamentais da sua campanha",
+        "messages": "💬 Mensagens da Campanha",
+        "messagesDesc": "Configure o conteúdo que será enviado aos contatos"
+      },
+      "fields": {
+        "name": "Nome da Campanha *",
+        "namePlaceholder": "Ex: Promoção Black Friday 2024",
+        "targetTags": "Categorias de Contatos *",
+        "targetTagsDesc": "Selecione quais categorias de contatos receberão a campanha",
+        "selectAll": "Selecionar todas",
+        "deselectAll": "Desmarcar todas",
+        "noTags": "Nenhuma categoria disponível",
+        "selectedTags": "✅ {{count}} categoria(s) selecionada(s)",
+        "whatsappConnections": "Conexões WhatsApp *",
+        "multiSessionTitle": "Multi-Sessão com Failover",
+        "multiSessionDesc": "Sistema inteligente que distribui envios entre múltiplas conexões com redundância automática.",
+        "noConnections": "Nenhuma conexão WhatsApp disponível",
+        "selectedConnections": "✅ {{count}} conexão(ões) selecionada(s)",
+        "randomDelay": "Tempo de Randomização (segundos)",
+        "randomDelayDesc": "⏱️ Intervalo aleatório entre envios (0-{{seconds}}s) para evitar bloqueios",
+        "schedule": "Quando Enviar",
+        "startImmediately": "🚀 Iniciar imediatamente",
+        "startImmediatelyDesc": "A campanha será executada assim que for criada",
+        "scheduleFor": "📅 Agendar para:",
+        "scheduleForDesc": "Escolha data e hora específicas"
+      }
+    },
+    "messages": {
+      "dynamicVariables": "💡 Variáveis Dinâmicas",
+      "dynamicVariablesDesc": "Personalize suas mensagens com:",
+      "addMessage": "Mensagem",
+      "addMessageHelp": "Adicione uma ou mais mensagens para serem enviadas em sequência",
+      "remove": "Remover",
+      "messageLabel": "Mensagem {{index}}",
+      "type": {
+        "text": "💬 Texto",
+        "image": "🖼️ Imagem",
+        "video": "🎬 Vídeo",
+        "audio": "🎵 Áudio",
+        "document": "📄 Arquivo",
+        "openai": "🤖 OpenAI",
+        "groq": "⚡ Groq AI",
+        "wait": "⏱️ Espera"
+      },
+      "text": {
+        "useVariations": "Usar variações de texto",
+        "variationsLabel": "Variações de texto",
+        "variationPlaceholder": "Variação {{index}}... Use variáveis como {{variables}}",
+        "newVariation": "Nova variação",
+        "textPlaceholder": "Digite sua mensagem... Use variáveis como {{variables}}",
+        "availableVariables": "Variáveis disponíveis:"
+      },
+      "ai": {
+        "openaiTitle": "🤖 OpenAI",
+        "groqTitle": "⚡ Groq AI",
+        "openaiDesc": "Configure os parâmetros para gerar mensagens personalizadas usando inteligência artificial",
+        "groqDesc": "Configure os parâmetros para gerar mensagens personalizadas usando Groq AI com velocidade ultra-rápida",
+        "model": "Modelo *",
+        "modelPlaceholder": "Digite o modelo...",
+        "suggestedModels": "Modelos sugeridos:",
+        "systemPrompt": "Prompt do Sistema *",
+        "systemPromptPlaceholder": "Ex: Você é um assistente virtual especializado em vendas. Responda de forma profissional e persuasiva...",
+        "systemPromptDesc": "Define como a IA deve se comportar e responder",
+        "userPrompt": "Prompt do Usuário *",
+        "userPromptPlaceholder": "Ex: Crie uma mensagem de vendas personalizada para {{nome}}, que tem interesse em {{categoria}}...",
+        "userPromptDesc": "A IA usará este prompt junto com os dados do contato para gerar a mensagem"
+      },
+      "file": {
+        "label": "Arquivo",
+        "useVariations": "Usar Variações",
+        "main": "Principal",
+        "variation": "Var. {{index}}",
+        "captionPlaceholder": "Legenda...",
+        "captionPlaceholderWithVars": "Legenda (opcional) - Use variáveis como {{variables}}",
+        "uploading": "Enviando arquivo...",
+        "uploadHelp": "Clique para fazer upload do arquivo",
+        "uploadedDefault": "Arquivo carregado",
+        "fileNamePlaceholder": "Nome do arquivo (opcional)",
+        "help": {
+          "images": "Imagens: JPG, PNG, GIF, WebP",
+          "videos": "Vídeos: MP4, AVI, MOV, WMV, MKV",
+          "audios": "Áudios: MP3, WAV, OGG, AAC, M4A",
+          "documents": "Documentos: PDF, DOC, XLS, TXT, ZIP"
+        }
+      },
+      "wait": {
+        "title": "Tempo de Espera",
+        "desc": "Aguarda um tempo antes de enviar a próxima mensagem",
+        "help": "Mínimo: 1 segundo | Máximo: 3600 segundos (1 hora)"
+      },
+      "empty": {
+        "title": "Nenhuma mensagem na sequência",
+        "desc": "Clique em \"Adicionar Mensagem\" para começar a criar sua campanha."
+      }
+    },
+    "report": {
+      "title": "Relatório da Campanha",
+      "refresh": "Atualizar relatório",
+      "loading": "Carregando relatório...",
+      "fields": {
+        "status": "Status:",
+        "createdBy": "Criado por:",
+        "createdAt": "Data de Criação:",
+        "startedAt": "Data de Início:",
+        "completedAt": "Data de Conclusão:"
+      },
+      "stats": {
+        "title": "Estatísticas de Envio",
+        "total": "Total de Contatos",
+        "sent": "Mensagens Enviados",
+        "failed": "Mensagens Falharam",
+        "pending": "Mensagens Pendientes"
+      },
+      "sessionDistribution": "Distribuição por Sessão",
+      "table": {
+        "session": "Sessão",
+        "total": "Total",
+        "sent": "Enviadas",
+        "failed": "Falharam",
+        "name": "Nome",
+        "phone": "Telefone",
+        "status": "Status",
+        "sentDate": "Data de Envio",
+        "error": "Erro"
+      },
+      "detailedMessages": "Detalhes das Mensagens",
+      "downloadCsv": "Download CSV",
+      "errorDetails": "Detalhes do Erro:",
+      "noMessages": "Nenhuma mensagem encontrada"
+    }
+  },
+  "settings": {
+    "title": "Configurações",
+    "subtitle": "Configure as definições do sistema",
+    "configured": "Configurado",
+    "notConfigured": "Não configurado",
+    "configure": "Configurar",
+    "aiIntegrations": "Integrações de IA",
+    "aiIntegrationsDescription": "Configure as chaves de API para usar inteligência artificial nas campanhas",
+    "chatwootIntegration": "Integração Chatwoot",
+    "chatwootDescription": "Configure a integração com Chatwoot para sincronizar conversas",
+    "perfexIntegration": "Integração Perfex CRM",
+    "perfexDescription": "Configure a integração com Perfex CRM para sincronizar clientes e leads",
+    "tabs": {
+      "general": "Geral",
+      "whatsapp": "WhatsApp",
+      "integrations": "Integrações",
+      "ai": "Inteligência Artificial",
+      "appearance": "Aparência"
+    },
+    "general": {
+      "companyName": "Nome da Empresa",
+      "pageTitle": "Título da Página",
+      "timezone": "Fuso Horário"
+    },
+    "whatsapp": {
+      "wahaHost": "Host WAHA",
+      "wahaApiKey": "API Key WAHA",
+      "evolutionHost": "Host Evolution",
+      "evolutionApiKey": "API Key Evolution",
+      "quepasaHost": "Host QuePasa",
+      "quepasaToken": "Token QuePasa"
+    },
+    "integrations": {
+      "chatwootUrl": "URL do Chatwoot",
+      "chatwootToken": "Token do Chatwoot",
+      "perfexUrl": "URL do Perfex CRM",
+      "perfexToken": "Token do Perfex"
+    },
+    "ai": {
+      "openaiKey": "Chave OpenAI",
+      "openaiDescription": "ChatGPT, GPT-4",
+      "groqKey": "Chave Groq",
+      "groqDescription": "LLaMA, Mixtral (ultra-rápido)",
+      "defaultModel": "Modelo Padrão"
+    },
+    "appearance": {
+      "logo": "Logo",
+      "icon": "Ícone",
+      "primaryColor": "Cor Primária",
+      "uploadLogo": "Fazer upload do logo",
+      "uploadIcon": "Fazer upload do ícone"
+    },
+    "modals": {
+      "openai": {
+        "title": "Configurar OpenAI",
+        "apiKeyLabel": "API Key OpenAI",
+        "description": "Chave API para integração com ChatGPT nas campanhas"
+      },
+      "groq": {
+        "title": "Configurar Groq",
+        "apiKeyLabel": "API Key Groq",
+        "description": "Chave API para integração com Groq AI nas campanhas (modelos rápidos e eficientes)"
+      },
+      "chatwoot": {
+        "title": "Configurar Chatwoot",
+        "urlLabel": "URL do Chatwoot",
+        "urlDescription": "URL completa da sua instância Chatwoot",
+        "accountIdLabel": "ID da Conta",
+        "accountIdDescription": "ID numérico da sua conta no Chatwoot",
+        "apiTokenLabel": "Token de API",
+        "apiTokenDescription": "Token de API do seu perfil (encontrado em Configurações > Perfil)"
+      }
+    },
+    "messages": {
+      "saved": "Configurações salvas com sucesso!",
+      "error": "Erro ao salvar configurações",
+      "loadError": "Erro ao carregar configurações",
+      "integrationRemoved": "Integração com {{name}} removida com sucesso",
+      "removeConfirm": "Tem certeza que deseja remover a integração com {{name}}?"
+    }
+  },
+  "superAdmin": {
+    "page": {
+      "title": "Super Admin",
+      "subtitle": "Gerenciamento completo do sistema",
+      "tenantsTitle": "Gerenciamento de Empresas",
+      "tenantsSubtitle": "Gerencie todas as empresas do sistema"
+    },
+    "stats": {
+      "total": "Total Empresas",
+      "active": "Ativos",
+      "inactive": "Inativos",
+      "users": "Total Usuários"
+    },
+    "tenants": {
+      "listTitle": "Empresas",
+      "slug": "Slug",
+      "domain": "Domínio",
+      "manage": "Gerenciar Empresas",
+      "modal": {
+        "createTitle": "Criar Nova Empresa",
+        "editTitle": "Editar Empresa",
+        "companyData": "Dados da Empresa",
+        "name": "Nome da Empresa",
+        "namePlaceholder": "Nome da empresa",
+        "slugHint": "O identificador único será gerado automaticamente",
+        "adminUser": "Usuário Administrador",
+        "adminName": "Nome do Admin",
+        "adminNamePlaceholder": "Nome completo",
+        "adminEmail": "E-mail do Admin",
+        "adminEmailPlaceholder": "admin@exemplo.com",
+        "adminPassword": "Senha do Admin",
+        "adminPasswordPlaceholder": "Senha segura",
+        "limits": "Limites e Cotas",
+        "maxUsers": "Máx. Usuários",
+        "maxConnections": "Máx. Conexões",
+        "maxContacts": "Máx. Contatos",
+        "maxCampaigns": "Máx. Campanhas",
+        "providers": "Provedores WhatsApp",
+        "providersHint": "Selecione quais provedores de API a empresa poderá utilizar",
+        "selectAll": "Selecionar Todos",
+        "deselectAll": "Desmarcar Todos",
+        "selectOne": "Selecione pelo menos um provedor"
+      }
+    },
+    "status": {
+      "active": "Ativo",
+      "inactive": "Inativo"
+    },
+    "actions": {
+      "new": "Nova Empresa",
+      "create": "Criar Tenant",
+      "edit": "Editar",
+      "deactivate": "Desativar",
+      "activate": "Ativar"
+    },
+    "modals": {
+      "create": {
+        "title": "Criar Novo Tenant"
+      },
+      "edit": {
+        "title": "Editar Tenant"
+      }
+    },
+    "form": {
+      "sections": {
+        "info": "Informações do Tenant",
+        "admin": "Usuário Administrador",
+        "quotas": "Quotas"
+      },
+      "fields": {
+        "slug": "Slug",
+        "name": "Nome",
+        "domain": "Domínio",
+        "adminName": "Nome",
+        "email": "Email",
+        "password": "Senha",
+        "passwordPlaceholder": "Mínimo 8 caracteres"
+      }
+    },
+    "quotas": {
+      "users": "Usuários",
+      "contacts": "Contatos",
+      "campaigns": "Campanhas",
+      "connections": "Conexões",
+      "maxUsers": "Max Usuários",
+      "maxContacts": "Max Contatos",
+      "maxCampaigns": "Max Campanhas",
+      "maxConnections": "Max Conexões"
+    },
+    "messages": {
+      "loadError": "Erro ao carregar empresas",
+      "createSuccess": "Tenant criado com sucesso!",
+      "createError": "Erro ao criar tenant",
+      "updateSuccess": "Tenant atualizado com sucesso!",
+      "updateError": "Erro ao atualizar tenant",
+      "toggleStatusSuccess": "Tenant {{status}} com sucesso!",
+      "toggleStatusError": "Erro ao alterar status do tenant",
+      "activated": "ativado",
+      "deactivated": "desativado",
+      "noTenants": "Nenhuma empresa encontrada",
+      "noUsers": "Nenhum usuário encontrado"
+    },
+    "validation": {
+      "hostInvalid": "O host deve ser uma URL válida ou estar vazio",
+      "apiKeyTooShort": "A chave da API deve ter pelo menos 10 caracteres ou estar vazia",
+      "urlInvalid": "A URL deve ser válida ou estar vazia",
+      "companyNameLength": "O nome da empresa deve ter entre 1 e 100 caracteres ou estar vazio",
+      "pageTitleLength": "O título da página deve ter entre 1 e 100 caracteres ou estar vazio"
+    },
+    "users": {
+      "listTitle": "Usuários",
+      "manage": "Gerenciar Usuários",
+      "description": "Visualização e gerenciamento global de todos os usuários do sistema",
+      "add": "Adicionar Usuário",
+      "table": {
+        "user": "Usuário",
+        "tenant": "Empresa",
+        "role": "Função",
+        "status": "Status",
+        "lastLogin": "Último Login",
+        "created": "Criado em",
+        "actions": "Ações",
+        "system": "Sistema"
+      },
+      "roles": {
+        "superAdmin": "Super Admin",
+        "admin": "Admin",
+        "user": "Usuário"
+      },
+      "status": {
+        "never": "Nunca"
+      },
+      "modal": {
+        "createTitle": "Criar Novo Usuário",
+        "editTitle": "Editar Usuário",
+        "name": "Nome Completo",
+        "namePlaceholder": "Nome completo do usuário",
+        "email": "E-mail",
+        "emailPlaceholder": "email@exemplo.com",
+        "password": "Senha",
+        "passwordPlaceholder": "Senha segura",
+        "passwordHint": "Deve conter pelo menos 6 caracteres, uma maiúscula, uma minúscula e um número",
+        "leaveEmpty": "deixar vazio para manter",
+        "role": "Nível de Acesso",
+        "superAdminHint": "Super Admin tem acesso a TODAS as empresas automaticamente. Você pode opcionalmente associá-lo a empresas específicas.",
+        "userHint": "Defina o nível de acesso do usuário nas empresas selecionadas",
+        "tenants": "Empresas",
+        "optional": "Opcional",
+        "noTenantsAvailable": "Nenhuma empresa disponível",
+        "search": "Buscar empresa...",
+        "globalAccess": "Deixe vazio para acesso global a todas as empresas",
+        "selectOne": "Selecione pelo menos uma empresa",
+        "selected": "selecionada(s)",
+        "active": "Usuário ativo"
+      }
+    },
+    "integrations": {
+      "subtitle": "Configurações das APIs externas",
+      "status": {
+        "configured": "Configurado",
+        "notConfigured": "Não Configurado"
+      },
+      "waha": "WhatsApp HTTP API",
+      "evolution": "WhatsApp API Evolution",
+      "quepasa": "WhatsApp API Quepasa"
+    }
+  },
+  "flowBuilder": {
+    "nodes": {
+      "base": {
+        "deleteNode": "Deletar node",
+        "configured": "Configurado",
+        "clickToConfigure": "Click para configurar"
+      },
+      "trigger": {
+        "label": "⚡ Gatilho",
+        "description": "Início"
+      },
+      "text": {
+        "label": "📝 Texto",
+        "description": "Mensagem",
+        "configureMessage": "Configure a mensagem",
+        "variation": "variação",
+        "variations": "variações",
+        "variationCount": "{{count}} {{count, plural, one {variação} other {variações}}}"
+      },
+      "action": {
+        "label": "Ação",
+        "selectAction": "Selecione uma ação",
+        "types": {
+          "text": "📝 Texto",
+          "image": "🖼️ Imagem",
+          "video": "🎬 Vídeo",
+          "audio": "🎵 Áudio",
+          "document": "📄 Arquivo",
+          "openai": "🤖 OpenAI",
+          "groq": "⚡ Groq AI"
+        }
+      },
+      "condition": {
+        "label": "Condição",
+        "switch": "Switch",
+        "configureCondition": "Configure a condição",
+        "conditionCount": "{{count}} condição(ões)",
+        "default": "Padrão",
+        "defaultTooltip": "Padrão (nenhuma condição atendida)",
+        "true": "Verdadeiro",
+        "false": "Falso",
+        "types": {
+          "contains": "Contém texto",
+          "equals": "Igual a",
+          "regex": "Expressão regular",
+          "variable": "Variável"
+        }
+      },
+      "image": {
+        "label": "🖼️ Imagem",
+        "description": "Foto"
+      },
+      "video": {
+        "label": "🎬 Vídeo",
+        "description": "Vídeo"
+      },
+      "audio": {
+        "label": "🎵 Áudio",
+        "description": "Áudio"
+      },
+      "document": {
+        "label": "📄 Arquivo",
+        "description": "Doc"
+      },
+      "ai": {
+        "label": "🤖 IA",
+        "description": "IA"
+      },
+      "delay": {
+        "label": "⏱️ Delay",
+        "description": "Espera"
+      },
+      "httprest": {
+        "label": "🌐 HTTP REST",
+        "description": "API"
+      },
+      "stop": {
+        "label": "🛑 Parar",
+        "description": "Fim"
+      },
+      "integration_perfex": {
+        "label": "🔧 Perfex CRM",
+        "description": "Integração"
+      },
+      "integration_chatwoot": {
+        "label": "💬 Chatwoot",
+        "description": "Integração"
+      }
+    },
+    "sidebar": {
+      "blocks": "📦 Blocos",
+      "integrations": "🔌 Integrações Externas",
+      "tips": {
+        "title": "💡 Dicas",
+        "drag": "• Arraste blocos para o canvas",
+        "connect": "• Conecte blocos arrastando entre eles",
+        "click": "• Clique em um bloco para configurar",
+        "scroll": "• Use o scroll para zoom",
+        "save": "• Salve antes de publicar"
+      },
+      "config": {
+        "addEmoji": "Adicionar emoji",
+        "removeVariation": "Remover variação",
+        "remove": "Remover",
+        "removeFile": "Remover arquivo",
+        "messagePlaceholder": "Digite a mensagem a ser enviada...",
+        "messagePlaceholderWithVars": "Digite a mensagem a ser enviada... Use {{ para ver variáveis disponíveis",
+        "mediaCaptionPlaceholder": "Digite uma legenda para a mídia...",
+        "aiPromptPlaceholder": "Digite o prompt para a IA processar...",
+        "compareValuePlaceholder": "Valor a comparar",
+        "noConditions": "Nenhuma condição adicionada. Click em \"Adicionar\" para criar.",
+        "statusIdPlaceholder": "Digite o ID do status (ex: 1, 2, 3...)",
+        "sourceIdPlaceholder": "Digite o ID da fonte (ex: 1, 2, 3...)",
+        "userIdPlaceholder": "Digite o ID do usuário (ex: 1, 2, 3...)",
+        "tagPlaceholder": "Digite uma tag e pressione Enter",
+                "variableUsage": "Use nos próximos nós como:",
+                "nodeTypes": {
+                    "action": "Ação",
+                    "condition": "Condição"
+                },
+                "errors": {
+                    "uploadError": "Erro ao fazer upload do arquivo",
+                    "curlParseError": "Não foi possível parsear o comando cURL. Verifique o formato.",
+                    "perfexLoadError": "Erro ao carregar dados do Perfex"
+                }
+            }
+        },
+    "actions": {
+      "back": "Voltar",
+      "preview": "Preview",
+      "save": "Salvar",
+      "saving": "Salvando...",
+      "publish": "Publicar",
+      "deleteConnection": "Deletar conexão",
+      "editName": "Clique para editar nome"
+    },
+    "status": {
+      "draft": "📝 Rascunho",
+      "published": "✅ Publicada"
+    },
+    "messages": {
+      "loadError": "Erro ao carregar campanha",
+      "saveSuccess": "Fluxo salvo com sucesso!",
+      "saveError": "Erro ao salvar",
+      "publishTriggerMissing": "Adicione um nó Gatilho antes de publicar",
+      "publishNoConnection": "Configure pelo menos uma conexão WhatsApp no Gatilho",
+      "publishNoCategory": "Configure pelo menos uma categoria de contatos no Gatilho",
+      "publishScheduleMissing": "Por favor defina a data e hora do agendamento no Gatilho",
+      "publishConfirmDefault": "Deseja publicar a campanha \"{{name}}\"? Ela começará a processar mensagens imediatamente.",
+      "publishConfirmScheduled": "Deseja publicar a campanha \"{{name}}\"? Ela começará em: {{date}}",
+      "publishSuccess": "Campanha publicada!",
+      "publishScheduledSuccess": "Campanha agendada para {{date}}!",
+      "publishError": "Erro ao publicar",
+      "nameUpdated": "Nome atualizado com sucesso!",
+      "nameUpdateError": "Erro ao atualizar nome"
+    },
+    "preview": {
+      "title": "Preview do Bot",
+      "subtitle": "Teste o fluxo antes de publicar",
+      "starting": "Iniciando conversa...",
+      "noTrigger": "⚠️ Nenhum nó Trigger encontrado no fluxo.",
+      "triggerNotConnected": "⚠️ Trigger não está conectado a nenhum nó.",
+      "messageNotConfigured": "Mensagem não configurada",
+      "flowEnd": "✅ Fim do fluxo.",
+      "noActiveNode": "⚠️ Nenhum nó ativo.",
+      "addEmoji": "Adicionar emoji",
+      "messagePlaceholder": "Digite sua mensagem...",
+      "pressEnter": "Pressione Enter para enviar"
+    }
+  },
+  "errors": {
+    "generic": "Ocorreu um erro. Tente novamente.",
+    "network": "Erro de conexão. Verifique sua internet.",
+    "unauthorized": "Não autorizado. Faça login novamente.",
+    "forbidden": "Você não tem permissão para esta ação.",
+    "notFound": "Recurso não encontrado.",
+    "serverError": "Erro interno do servidor.",
+    "quotaExceeded": "Limite de quota atingido. Entre em contato com o administrador."
+  },
+  "language": {
+    "select": "Idioma",
+    "pt": "Português",
+    "en": "English",
+    "es": "Español"
+  },
+  "pagination": {
+    "page": "Página",
+    "of": "de",
+    "first": "Primeira",
+    "last": "Última",
+    "previous": "Anterior",
+    "next": "Próxima"
+  },
+  "users": {
+    "title": "Usuários",
+    "newUser": "Novo Usuário",
+    "form": {
+      "title": {
+        "new": "Novo Usuário",
+        "edit": "Editar Usuário"
+      },
+      "name": "Nome",
+      "email": "E-mail",
+      "password": "Senha",
+      "newPassword": "Nova Senha (deixe em branco para manter)",
+      "passwordPlaceholder": "Mín. 6 caracteres com maiúscula, minúscula e número",
+      "passwordHint": "A senha deve ter pelo menos 6 caracteres incluindo uma letra maiúscula, uma minúscula e um número",
+      "role": "Papel",
+      "active": "Usuário ativo",
+      "roles": {
+        "user": "Usuário",
+        "admin": "Administrador"
+      },
+      "cancel": "Cancelar",
+      "create": "Criar",
+      "update": "Atualizar",
+      "saving": "Salvando..."
+    },
+    "list": {
+      "noUsers": "Nenhum usuário encontrado",
+      "headers": {
+        "name": "Nome",
+        "email": "E-mail",
+        "role": "Papel",
+        "status": "Status",
+        "lastLogin": "Último Login",
+        "actions": "Ações"
+      },
+      "status": {
+        "active": "Ativo",
+        "inactive": "Inactivo"
+      },
+      "roles": {
+        "user": "Usuário",
+        "admin": "Administrador"
+      },
+      "never": "Nunca",
+      "edit": "Editar",
+      "delete": "Excluir"
+    },
+    "validation": {
+      "nameMin": "Nome deve ter pelo menos 2 caracteres",
+      "emailInvalid": "E-mail inválido",
+      "passwordMin": "Senha deve ter pelo menos 6 caracteres",
+      "passwordRegex": "Senha deve conter pelo menos uma letra minúscula, uma maiúscula e um número"
+    },
+    "messages": {
+      "created": "Usuário criado com sucesso!",
+      "updated": "Usuário atualizado com sucesso!",
+      "deleted": "Usuário excluído com sucesso!",
+      "deleteConfirm": "Tem certeza que deseja excluir este usuário?",
+      "deleteConfirmWithName": "Tem certeza que deseja excluir o usuário {{name}}?",
+      "fillRequiredFields": "Preencha todos os campos obrigatórios",
+      "createSuccess": "Usuário criado com sucesso!",
+      "updateSuccess": "Usuário atualizado com sucesso!",
+      "activateSuccess": "Usuário ativado com sucesso!",
+      "deactivateSuccess": "Usuário desativado com sucesso!",
+      "deleteSuccess": "Usuário excluído com sucesso!",
+      "userLimitReached": "Limite de usuários atingido. Faça upgrade do plano para continuar.",
+      "createError": "Erro ao criar usuário",
+      "updateError": "Erro ao atualizar usuário",
+      "statusChangeError": "Erro ao alterar status do usuário",
+      "deleteError": "Erro ao excluir usuário"
+    }
+  },
+  "perfexSync": {
+    "title": "Configurar Perfex CRM",
+    "subtitle": "Configure a integração com Perfex CRM",
+    "fields": {
+      "url": "URL do Perfex CRM *",
+      "urlPlaceholder": "https://seu-perfex.com",
+      "urlHint": "URL completa da sua instância Perfex CRM",
+      "token": "Token de API *",
+      "tokenPlaceholder": "••••••••••••••••",
+      "tokenHint": "Token de API do Perfex CRM (encontrado em Configurações > API)"
+    },
+    "instructions": {
+      "title": "Como obter o token",
+      "steps": [
+        "Acesse seu Perfex CRM",
+        "Vá em Configurações > API",
+        "Gere ou copie seu token de API",
+        "Cole o token no campo acima"
+      ]
+    },
+    "buttons": {
+      "cancel": "Cancelar",
+      "save": "Salvar Configuração",
+      "saving": "Salvando..."
+    }
+  },
+  "analytics": {
+    "title": {
+      "tenant": "Analytics - {{name}}",
+      "system": "Analytics do Sistema"
+    },
+    "period": "Período: {{period}}",
+    "systemSubtitle": "Visão geral de todas as empresas",
+    "periods": {
+      "7d": "Últimos 7 dias",
+      "30d": "Últimos 30 dias",
+      "90d": "Últimos 90 dias",
+      "12m": "Últimos 12 meses"
+    },
+    "metrics": {
+      "totalContacts": "Contatos Totais",
+      "totalCampaigns": "Campanhas Totais",
+      "sentMessages": "Mensagens Enviadas",
+      "successRate": "Taxa de Sucesso",
+      "activeTenants": "Empresas Ativas",
+      "growthRate": "Taxa Crescimento",
+      "thisMonth": "+{{count}} este mês",
+      "avgPerCampaign": "Média: {{count}} msg/campanha"
+    },
+    "topCampaigns": {
+      "title": "Campanhas com Melhor Performance",
+      "headers": {
+        "campaign": "Campanha",
+        "messages": "Mensagens",
+        "rate": "Taxa Entrega"
+      }
+    },
+    "tenantUsage": {
+      "title": "Uso por Tenant",
+      "headers": {
+        "tenant": "Tenant",
+        "contacts": "Contatos",
+        "campaigns": "Campanhas",
+        "messages": "Mensagens",
+        "usage": "% Uso"
+      }
+    },
+    "export": {
+      "title": "Exportar Dados",
+      "contacts": "Exportar Contatos",
+      "campaigns": "Exportar Campanhas",
+      "analytics": "Exportar Analytics",
+      "exporting": "Exportando...",
+      "success": "Exportação de {{type}} concluída",
+      "error": "Erro ao exportar dados"
+    },
+    "loading": "Carregando analytics...",
+    "error": "Erro ao carregar dados de analytics"
+  },
+  "backup": {
+    "systemTitle": "Backup do Sistema",
+    "systemSubtitle": "Gerencie backups completos do sistema (banco de dados + arquivos)",
+    "managementTitle": "Sistema de Backup",
+    "managementSubtitle": "Gerenciamento de backups automáticos por tenant",
+    "stats": {
+      "companies": "Empresas",
+      "totalBackups": "Total Backups",
+      "usedSpace": "Espaço Usado",
+      "scheduledJobs": "Jobs Agendados"
+    },
+    "actions": {
+      "configure": "Configurar",
+      "restoreFile": "Restaurar de Arquivo",
+      "create": "Criar Backup",
+      "creating": "Criando...",
+      "globalBackup": "Backup de Todas as Empresas",
+      "backupNow": "Backup Agora",
+      "download": "Download",
+      "restore": "Restaurar"
+    },
+    "status": {
+      "autoActive": "Backup Automático: Ativo",
+      "autoDisabled": "Backup Automático: Desativado",
+      "next": "Próximo backup: {{time}}",
+      "success": "Sucesso",
+      "failed": "Falha",
+      "inProgress": "Em Progresso",
+      "never": "Nunca",
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "modify": "Modificar",
+      "activate": "Ativar"
+    },
+    "list": {
+      "title": "Backups Disponíveis",
+      "found": "{{count}} backup(s) encontrado(s)",
+      "empty": "Nenhum backup encontrado",
+      "start": "Clique em \"Criar Backup\" para começar",
+      "tenantTitle": "Backup por Empresa",
+      "headers": {
+        "tenant": "Tenant",
+        "backups": "Backups",
+        "size": "Tamanho Total",
+        "lastBackup": "Último Backup",
+        "schedule": "Agendamento",
+        "actions": "Ações"
+      }
+    },
+    "modals": {
+      "config": {
+        "title": "Configurar Backup Automático",
+        "enable": "Ativar backup automático",
+        "frequency": "Frequência",
+        "retention": "Manter backups por (dias)",
+        "retentionHint": "Backups mais antigos serão automaticamente excluídos",
+        "save": "Salvar",
+        "check": {
+          "6h": "A cada 6 horas",
+          "12h": "A cada 12 horas",
+          "daily2h": "Diariamente às 2h",
+          "weekly": "Semanalmente (Domingo às 2h)",
+          "monthly": "Mensalmente (Dia 1 às 2h)"
+        }
+      },
+      "restore": {
+        "title": "⚠️ Restaurar Backup",
+        "warningTitle": "ATENÇÃO: Ação Irreversível!",
+        "warningText": "Esta ação irá restaurar TODO o sistema para o estado do backup selecionado. Todos os dados atuais (banco de dados e arquivos) serão SUBSTITUÍDOS.",
+        "selected": "Backup selecionado:",
+        "confirm": "Confirmar Restauração",
+        "restoring": "Restaurando..."
+      },
+      "upload": {
+        "title": "📤 Restaurar de Arquivo",
+        "useFor": "⚠️ Use esta função para:",
+        "useForPoints": [
+          "Restaurar backup em um novo servidor",
+          "Migrar dados de outro ambiente",
+          "Recuperar de um backup externo"
+        ],
+        "warningTitle": "❌ ATENÇÃO:",
+        "warningText": "O backup enviado substituirá TODOS os dados atuais do sistema!",
+        "selectFile": "Selecione o arquivo de backup (.tar.gz)",
+        "process": "Processo:",
+        "processSteps": [
+          "O arquivo será enviado ao servidor",
+          "O banco de dados atual será substituído",
+          "Os arquivos atuais serão substituídos",
+          "O sistema será restaurado para o estado do backup"
+        ],
+        "submit": "Enviar e Restaurar",
+        "uploading": "Enviando e Restaurando..."
+      }
+    },
+    "messages": {
+      "createSuccess": "Backup criado com sucesso!",
+      "createError": "Erro ao criar backup",
+      "saveConfigSuccess": "Configuração salva com sucesso!",
+      "saveConfigError": "Erro ao salvar configuração",
+      "restoreSuccess": "Backup restaurado com sucesso! Recomenda-se reiniciar o sistema.",
+      "restoreError": "Erro ao restaurar backup",
+      "downloadStart": "Download iniciado com sucesso!",
+      "downloadError": "Erro ao fazer download do backup",
+      "uploadSuccess": "Backup enviado com sucesso! Aguarde a restauração...",
+      "uploadRestoreSuccess": "Sistema restaurado com sucesso! Recomenda-se reiniciar os serviços.",
+      "uploadError": "Erro ao enviar arquivo de backup",
+      "selectFile": "Selecione um arquivo de backup",
+      "invalidFile": "Arquivo deve ser um backup válido (.tar.gz)",
+      "confirmRestore": "⚠️ ATENÇÃO: Esta ação irá restaurar TODO o sistema para o estado do backup selecionado. Todos os dados atuais serão substituídos. Esta ação é IRREVERSÍVEL. \n\nDeseja continuar?",
+      "confirmUpload": "⚠️ ATENÇÃO CRÍTICA: Esta ação irá:\n\n1. Fazer upload do arquivo de backup\n2. SUBSTITUIR COMPLETAMENTE o banco de dados atual\n3. SUBSTITUIR COMPLETAMENTE todos os arquivos\n4. EXCLUIR todos os dados atuais\n\nEsta ação é IRREVERSÍVEL e NÃO PODE SER DESFEITA!\n\nTem CERTEZA ABSOLUTA que deseja continuar?"
+    }
+  }
+}

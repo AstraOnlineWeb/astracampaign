@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { User } from '../types';
 
 interface UserListProps {
@@ -8,6 +9,8 @@ interface UserListProps {
 }
 
 export function UserList({ users, loading, onEdit, onDelete }: UserListProps) {
+  const { t } = useTranslation();
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -19,7 +22,7 @@ export function UserList({ users, loading, onEdit, onDelete }: UserListProps) {
   if (users.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">Nenhum usuário encontrado</p>
+        <p className="text-gray-500">{t('users.list.noUsers')}</p>
       </div>
     );
   }
@@ -30,22 +33,22 @@ export function UserList({ users, loading, onEdit, onDelete }: UserListProps) {
         <thead className="bg-gray-50">
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Nome
+              {t('users.list.headers.name')}
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              E-mail
+              {t('users.list.headers.email')}
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Papel
+              {t('users.list.headers.role')}
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Status
+              {t('users.list.headers.status')}
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Último Login
+              {t('users.list.headers.lastLogin')}
             </th>
             <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Ações
+              {t('users.list.headers.actions')}
             </th>
           </tr>
         </thead>
@@ -59,27 +62,25 @@ export function UserList({ users, loading, onEdit, onDelete }: UserListProps) {
                 <div className="text-sm text-gray-900">{user.email}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                  user.role === 'ADMIN'
+                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.role === 'ADMIN'
                     ? 'bg-purple-100 text-purple-800'
                     : 'bg-blue-100 text-blue-800'
-                }`}>
-                  {user.role === 'ADMIN' ? 'Administrador' : 'Usuário'}
+                  }`}>
+                  {user.role === 'ADMIN' ? t('users.list.roles.admin') : t('users.list.roles.user')}
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                  user.ativo
+                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.ativo
                     ? 'bg-green-100 text-green-800'
                     : 'bg-red-100 text-red-800'
-                }`}>
-                  {user.ativo ? 'Ativo' : 'Inativo'}
+                  }`}>
+                  {user.ativo ? t('users.list.status.active') : t('users.list.status.inactive')}
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {user.ultimoLogin
                   ? new Date(user.ultimoLogin).toLocaleString('pt-BR')
-                  : 'Nunca'
+                  : t('users.list.never')
                 }
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -87,13 +88,13 @@ export function UserList({ users, loading, onEdit, onDelete }: UserListProps) {
                   onClick={() => onEdit(user)}
                   className="text-blue-600 hover:text-blue-900 mr-3"
                 >
-                  Editar
+                  {t('users.list.edit')}
                 </button>
                 <button
                   onClick={() => onDelete(user.id)}
                   className="text-red-600 hover:text-red-900"
                 >
-                  Excluir
+                  {t('users.list.delete')}
                 </button>
               </td>
             </tr>

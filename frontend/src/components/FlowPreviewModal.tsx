@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Node, Edge } from 'reactflow';
+import { useTranslation } from 'react-i18next';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 
 interface FlowPreviewModalProps {
@@ -16,6 +17,7 @@ interface Message {
 }
 
 export function FlowPreviewModal({ nodes, edges, onClose }: FlowPreviewModalProps) {
+  const { t } = useTranslation();
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState('');
   const [currentNodeId, setCurrentNodeId] = useState<string | null>(null);
@@ -58,14 +60,14 @@ export function FlowPreviewModal({ nodes, edges, onClose }: FlowPreviewModalProp
     // Encontrar nó trigger
     const triggerNode = nodes.find(n => n.data?.nodeType === 'trigger');
     if (!triggerNode) {
-      addMessage('bot', '⚠️ Nenhum nó Trigger encontrado no fluxo.');
+      addMessage('bot', t('flowBuilder.preview.noTrigger'));
       return;
     }
 
     // Encontrar próximo nó após o trigger
     const nextEdge = edges.find(e => e.source === triggerNode.id);
     if (!nextEdge) {
-      addMessage('bot', '⚠️ Trigger não está conectado a nenhum nó.');
+      addMessage('bot', t('flowBuilder.preview.triggerNotConnected'));
       return;
     }
 
@@ -80,7 +82,7 @@ export function FlowPreviewModal({ nodes, edges, onClose }: FlowPreviewModalProp
 
     if (node.data?.nodeType === 'action') {
       // Enviar mensagem do bot
-      const content = node.data.config?.content || node.data.config?.message || 'Mensagem não configurada';
+      const content = node.data.config?.content || node.data.config?.message || t('flowBuilder.preview.messageNotConfigured');
       addMessage('bot', content);
 
       // Verificar próximo nó
@@ -97,7 +99,7 @@ export function FlowPreviewModal({ nodes, edges, onClose }: FlowPreviewModalProp
       } else {
         // Fim do fluxo
         setTimeout(() => {
-          addMessage('bot', '✅ Fim do fluxo.');
+          addMessage('bot', t('flowBuilder.preview.flowEnd'));
         }, 500);
       }
     } else if (node.data?.nodeType === 'condition') {
@@ -135,7 +137,7 @@ export function FlowPreviewModal({ nodes, edges, onClose }: FlowPreviewModalProp
 
   const processUserResponse = (input: string) => {
     if (!currentNodeId) {
-      addMessage('bot', '⚠️ Nenhum nó ativo.');
+      addMessage('bot', t('flowBuilder.preview.noActiveNode'));
       return;
     }
 
@@ -143,7 +145,7 @@ export function FlowPreviewModal({ nodes, edges, onClose }: FlowPreviewModalProp
     const nextEdges = edges.filter(e => e.source === currentNodeId);
 
     if (nextEdges.length === 0) {
-      addMessage('bot', '✅ Fim do fluxo.');
+      addMessage('bot', t('flowBuilder.preview.flowEnd'));
       return;
     }
 
@@ -216,7 +218,7 @@ export function FlowPreviewModal({ nodes, edges, onClose }: FlowPreviewModalProp
       }
     }
 
-    addMessage('bot', '✅ Fim do fluxo.');
+    addMessage('bot', t('flowBuilder.preview.flowEnd'));
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -240,8 +242,8 @@ export function FlowPreviewModal({ nodes, edges, onClose }: FlowPreviewModalProp
             <span className="text-2xl">🤖</span>
           </div>
           <div>
-            <h2 className="text-lg font-bold text-white">Preview do Bot</h2>
-            <p className="text-xs text-purple-100">Teste o fluxo antes de publicar</p>
+            <h2 className="text-lg font-bold text-white">{t('flowBuilder.preview.title')}</h2>
+            <p className="text-xs text-purple-100">{t('flowBuilder.preview.subtitle')}</p>
           </div>
         </div>
         <button
@@ -258,7 +260,7 @@ export function FlowPreviewModal({ nodes, edges, onClose }: FlowPreviewModalProp
       <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
         {messages.length === 0 && (
           <div className="text-center text-gray-400 mt-10">
-            <p className="text-sm">Iniciando conversa...</p>
+            <p className="text-sm">{t('flowBuilder.preview.starting')}</p>
           </div>
         )}
 
@@ -297,7 +299,7 @@ export function FlowPreviewModal({ nodes, edges, onClose }: FlowPreviewModalProp
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className="px-3 py-3 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition-colors"
-            title="Adicionar emoji"
+            title={t('flowBuilder.preview.addEmoji')}
           >
             <span className="text-xl">😀</span>
           </button>
@@ -306,7 +308,7 @@ export function FlowPreviewModal({ nodes, edges, onClose }: FlowPreviewModalProp
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Digite sua mensagem..."
+            placeholder={t('flowBuilder.preview.messagePlaceholder')}
             disabled={isProcessing}
             className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:bg-gray-100 text-sm"
           />
@@ -321,7 +323,7 @@ export function FlowPreviewModal({ nodes, edges, onClose }: FlowPreviewModalProp
           </button>
         </div>
         <p className="text-xs text-gray-500 mt-2 text-center">
-          Pressione Enter para enviar
+          {t('flowBuilder.preview.pressEnter')}
         </p>
       </div>
     </aside>

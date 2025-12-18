@@ -1,5 +1,6 @@
 import { memo, useState, useRef, useEffect } from 'react';
 import { Handle, Position, NodeProps, useReactFlow } from 'reactflow';
+import { useTranslation } from 'react-i18next';
 
 interface BaseNodeProps extends NodeProps {
   icon: string;
@@ -12,6 +13,7 @@ interface BaseNodeProps extends NodeProps {
 }
 
 export const BaseNode = memo(({ id, data, icon, label, color, description, preview, onClick, onDelete }: BaseNodeProps & { id: string; data: any }) => {
+  const { t } = useTranslation();
   const isConfigured = data.config && Object.keys(data.config).length > 0;
   const [isEditing, setIsEditing] = useState(false);
   const [customLabel, setCustomLabel] = useState(data.customLabel || '');
@@ -73,7 +75,7 @@ export const BaseNode = memo(({ id, data, icon, label, color, description, previ
             onDelete();
           }}
           className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-600 z-10"
-          title="Deletar node"
+          title={t('flowBuilder.nodes.base.deleteNode')}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -128,13 +130,13 @@ export const BaseNode = memo(({ id, data, icon, label, color, description, previ
 
         {isConfigured && (
           <div className="mt-2 px-2 py-1 bg-green-50 border border-green-200 rounded text-xs text-green-700 font-medium">
-            ✓ Configurado
+            ✓ {t('flowBuilder.nodes.base.configured')}
           </div>
         )}
 
         {!isConfigured && (
           <div className="mt-2 px-2 py-1 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-700 font-medium">
-            ! Click para configurar
+            ! {t('flowBuilder.nodes.base.clickToConfigure')}
           </div>
         )}
       </div>

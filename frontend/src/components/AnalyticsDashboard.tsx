@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 interface TenantMetrics {
   totalContacts: number;
@@ -54,6 +55,7 @@ interface Props {
 }
 
 export function AnalyticsDashboard({ isSystemView = false }: Props) {
+  const { t } = useTranslation();
   const [analytics, setAnalytics] = useState<TenantAnalytics | SystemAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedPeriod, setSelectedPeriod] = useState<'7d' | '30d' | '90d' | '12m'>('30d');
@@ -103,11 +105,11 @@ export function AnalyticsDashboard({ isSystemView = false }: Props) {
         const data = await response.json();
         setAnalytics(data.data);
       } else {
-        toast.error('Erro ao carregar analytics');
+        toast.error(t('analytics.error'));
       }
     } catch (error) {
       console.error('Erro ao carregar analytics:', error);
-      toast.error('Erro ao carregar dados');
+      toast.error(t('analytics.error'));
     } finally {
       setLoading(false);
     }
@@ -132,13 +134,13 @@ export function AnalyticsDashboard({ isSystemView = false }: Props) {
         a.remove();
         window.URL.revokeObjectURL(url);
 
-        toast.success(`Exportação de ${type} concluída`);
+        toast.success(t('analytics.export.success', { type }));
       } else {
-        toast.error('Erro ao exportar dados');
+        toast.error(t('analytics.export.error'));
       }
     } catch (error) {
       console.error('Erro ao exportar:', error);
-      toast.error('Erro ao exportar dados');
+      toast.error(t('analytics.export.error'));
     } finally {
       setExportLoading(null);
     }
@@ -177,7 +179,7 @@ export function AnalyticsDashboard({ isSystemView = false }: Props) {
     return (
       <div className="bg-white rounded-lg shadow p-6">
         <div className="text-center text-gray-500">
-          Erro ao carregar dados de analytics
+          {t('analytics.error')}
         </div>
       </div>
     );
@@ -190,8 +192,12 @@ export function AnalyticsDashboard({ isSystemView = false }: Props) {
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">Analytics - {data.tenantName}</h2>
-              <p className="text-sm text-gray-600 mt-1">Período: {data.period}</p>
+              <h2 className="text-lg font-semibold text-gray-900">
+                {t('analytics.title.tenant', { name: data.tenantName })}
+              </h2>
+              <p className="text-sm text-gray-600 mt-1">
+                {t('analytics.period', { period: data.period })}
+              </p>
             </div>
             <div className="mt-3 sm:mt-0 flex space-x-2">
               <select
@@ -199,10 +205,10 @@ export function AnalyticsDashboard({ isSystemView = false }: Props) {
                 onChange={(e) => setSelectedPeriod(e.target.value as any)}
                 className="px-3 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="7d">Últimos 7 dias</option>
-                <option value="30d">Últimos 30 dias</option>
-                <option value="90d">Últimos 90 dias</option>
-                <option value="12m">Últimos 12 meses</option>
+                <option value="7d">{t('analytics.periods.7d')}</option>
+                <option value="30d">{t('analytics.periods.30d')}</option>
+                <option value="90d">{t('analytics.periods.90d')}</option>
+                <option value="12m">{t('analytics.periods.12m')}</option>
               </select>
             </div>
           </div>
@@ -213,30 +219,30 @@ export function AnalyticsDashboard({ isSystemView = false }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div className="bg-blue-50 rounded-lg p-4">
               <div className="text-2xl font-bold text-blue-600">{formatNumber(data.metrics.totalContacts)}</div>
-              <div className="text-sm text-blue-800">Contatos Totais</div>
+              <div className="text-sm text-blue-800">{t('analytics.metrics.totalContacts')}</div>
               <div className="text-xs text-blue-600 mt-1">
-                +{data.metrics.contactsThisMonth} este mês
+                {t('analytics.metrics.thisMonth', { val: data.metrics.contactsThisMonth })}
               </div>
             </div>
             <div className="bg-green-50 rounded-lg p-4">
               <div className="text-2xl font-bold text-green-600">{formatNumber(data.metrics.totalCampaigns)}</div>
-              <div className="text-sm text-green-800">Campanhas Totais</div>
+              <div className="text-sm text-green-800">{t('analytics.metrics.totalCampaigns')}</div>
               <div className="text-xs text-green-600 mt-1">
-                +{data.metrics.campaignsThisMonth} este mês
+                {t('analytics.metrics.thisMonth', { val: data.metrics.campaignsThisMonth })}
               </div>
             </div>
             <div className="bg-purple-50 rounded-lg p-4">
               <div className="text-2xl font-bold text-purple-600">{formatNumber(data.metrics.totalMessages)}</div>
-              <div className="text-sm text-purple-800">Mensagens Enviadas</div>
+              <div className="text-sm text-purple-800">{t('analytics.metrics.sentMessages')}</div>
               <div className="text-xs text-purple-600 mt-1">
-                +{data.metrics.messagesThisMonth} este mês
+                {t('analytics.metrics.thisMonth', { val: data.metrics.messagesThisMonth })}
               </div>
             </div>
             <div className="bg-orange-50 rounded-lg p-4">
               <div className="text-2xl font-bold text-orange-600">{data.metrics.campaignSuccessRate}%</div>
-              <div className="text-sm text-orange-800">Taxa de Sucesso</div>
+              <div className="text-sm text-orange-800">{t('analytics.metrics.successRate')}</div>
               <div className="text-xs text-orange-600 mt-1">
-                Média: {data.metrics.averageMessagesPerCampaign.toFixed(1)} msg/campanha
+                {t('analytics.metrics.avgPerCampaign', { val: data.metrics.averageMessagesPerCampaign.toFixed(1) })}
               </div>
             </div>
           </div>
@@ -244,14 +250,20 @@ export function AnalyticsDashboard({ isSystemView = false }: Props) {
           {/* Top Campanhas */}
           {data.metrics.topPerformingCampaigns.length > 0 && (
             <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-4">Campanhas com Melhor Performance</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('analytics.topCampaigns.title')}</h3>
               <div className="bg-gray-50 rounded-lg overflow-hidden">
                 <table className="min-w-full">
                   <thead className="bg-gray-100">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Campanha</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Mensagens</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Taxa Entrega</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t('analytics.topCampaigns.headers.campaign')}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t('analytics.topCampaigns.headers.messages')}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t('analytics.topCampaigns.headers.rate')}
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -260,11 +272,10 @@ export function AnalyticsDashboard({ isSystemView = false }: Props) {
                         <td className="px-4 py-3 text-sm text-gray-900">{campaign.name}</td>
                         <td className="px-4 py-3 text-sm text-gray-600">{formatNumber(campaign.messagesSent)}</td>
                         <td className="px-4 py-3 text-sm">
-                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                            campaign.successRate >= 90 ? 'bg-green-100 text-green-800' :
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${campaign.successRate >= 90 ? 'bg-green-100 text-green-800' :
                             campaign.successRate >= 70 ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-red-100 text-red-800'
-                          }`}>
+                              'bg-red-100 text-red-800'
+                            }`}>
                             {campaign.successRate.toFixed(1)}%
                           </span>
                         </td>
@@ -278,7 +289,7 @@ export function AnalyticsDashboard({ isSystemView = false }: Props) {
 
           {/* Botões de Exportação */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Exportar Dados</h3>
+            <h3 className="text-lg font-semibold mb-4">{t('analytics.export.title')}</h3>
             <div className="flex flex-wrap gap-3">
               {['contacts', 'campaigns', 'analytics'].map((type) => (
                 <button
@@ -293,10 +304,10 @@ export function AnalyticsDashboard({ isSystemView = false }: Props) {
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Exportando...
+                      {t('analytics.export.exporting')}
                     </>
                   ) : (
-                    `Exportar ${type === 'contacts' ? 'Contatos' : type === 'campaigns' ? 'Campanhas' : 'Analytics'}`
+                    t(`analytics.export.${type}`)
                   )}
                 </button>
               ))}
@@ -314,8 +325,8 @@ export function AnalyticsDashboard({ isSystemView = false }: Props) {
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">Analytics do Sistema</h2>
-              <p className="text-sm text-gray-600 mt-1">Visão geral de todas as empresas</p>
+              <h2 className="text-lg font-semibold text-gray-900">{t('analytics.title.system')}</h2>
+              <p className="text-sm text-gray-600 mt-1">{t('analytics.systemSubtitle')}</p>
             </div>
             <div className="mt-3 sm:mt-0">
               <select
@@ -323,10 +334,10 @@ export function AnalyticsDashboard({ isSystemView = false }: Props) {
                 onChange={(e) => setSelectedPeriod(e.target.value as any)}
                 className="px-3 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="7d">Últimos 7 dias</option>
-                <option value="30d">Últimos 30 dias</option>
-                <option value="90d">Últimos 90 dias</option>
-                <option value="12m">Últimos 12 meses</option>
+                <option value="7d">{t('analytics.periods.7d')}</option>
+                <option value="30d">{t('analytics.periods.30d')}</option>
+                <option value="90d">{t('analytics.periods.90d')}</option>
+                <option value="12m">{t('analytics.periods.12m')}</option>
               </select>
             </div>
           </div>
@@ -337,35 +348,45 @@ export function AnalyticsDashboard({ isSystemView = false }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div className="bg-blue-50 rounded-lg p-4">
               <div className="text-2xl font-bold text-blue-600">{data.totalTenants}</div>
-              <div className="text-sm text-blue-800">Empresas Ativas</div>
+              <div className="text-sm text-blue-800">{t('analytics.metrics.activeTenants')}</div>
             </div>
             <div className="bg-green-50 rounded-lg p-4">
               <div className="text-2xl font-bold text-green-600">{formatNumber(data.totalSystemContacts)}</div>
-              <div className="text-sm text-green-800">Contatos Total</div>
+              <div className="text-sm text-green-800">{t('analytics.metrics.totalContacts')}</div>
             </div>
             <div className="bg-purple-50 rounded-lg p-4">
               <div className="text-2xl font-bold text-purple-600">{formatNumber(data.totalSystemCampaigns)}</div>
-              <div className="text-sm text-purple-800">Campanhas Total</div>
+              <div className="text-sm text-purple-800">{t('analytics.metrics.totalCampaigns')}</div>
             </div>
             <div className="bg-orange-50 rounded-lg p-4">
               <div className="text-2xl font-bold text-orange-600">{data.systemGrowthRate > 0 ? '+' : ''}{data.systemGrowthRate}%</div>
-              <div className="text-sm text-orange-800">Taxa Crescimento</div>
+              <div className="text-sm text-orange-800">{t('analytics.metrics.growthRate')}</div>
             </div>
           </div>
 
           {/* Distribuição de Uso por Tenant */}
           {data.tenantUsageDistribution.length > 0 && (
             <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-4">Uso por Tenant</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('analytics.tenantUsage.title')}</h3>
               <div className="bg-gray-50 rounded-lg overflow-hidden">
                 <table className="min-w-full">
                   <thead className="bg-gray-100">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tenant</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contatos</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Campanhas</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Mensagens</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">% Uso</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t('analytics.tenantUsage.headers.tenant')}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t('analytics.tenantUsage.headers.contacts')}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t('analytics.tenantUsage.headers.campaigns')}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t('analytics.tenantUsage.headers.messages')}
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t('analytics.tenantUsage.headers.usage')}
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useContacts } from '../hooks/useContacts';
 import { ContactList } from '../components/ContactList';
 import { ContactForm } from '../components/ContactForm';
@@ -13,6 +14,7 @@ import { Header } from '../components/Header';
 import { Contact } from '../types';
 
 export function ContactsPage() {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -131,13 +133,13 @@ export function ContactsPage() {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Erro</h1>
+          <h1 className="text-2xl font-bold text-red-600 mb-4">{t('common.error')}</h1>
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={refresh}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            Tentar novamente
+            {t('common.retry')}
           </button>
         </div>
       </div>
@@ -147,11 +149,11 @@ export function ContactsPage() {
   return (
     <>
       <Header
-        title="Contatos"
+        title={t('contacts.title')}
         subtitle={
           selectedContactIds.length > 0
-            ? `${selectedContactIds.length} contato(s) selecionado(s)`
-            : `${total} contatos cadastrados`
+            ? t('contacts.selectedCount', { count: selectedContactIds.length })
+            : t('contacts.subtitle', { count: total })
         }
         actions={
           <div className="flex gap-3">
@@ -160,16 +162,16 @@ export function ContactsPage() {
                 <button
                   onClick={handleOpenBulkEdit}
                   className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-medium transition-colors"
-                  aria-label="Editar contatos selecionados"
+                  aria-label={t('contacts.editSelected', { count: selectedContactIds.length })}
                 >
-                  Editar Selecionados ({selectedContactIds.length})
+                  {t('contacts.editSelected', { count: selectedContactIds.length })}
                 </button>
                 <button
                   onClick={() => setSelectedContactIds([])}
                   className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm font-medium transition-colors"
-                  aria-label="Cancelar seleção"
+                  aria-label={t('contacts.cancelSelection')}
                 >
-                  Cancelar Seleção
+                  {t('contacts.cancelSelection')}
                 </button>
               </>
             ) : (
@@ -177,22 +179,22 @@ export function ContactsPage() {
                 <button
                   onClick={handleOpenCategoryModal}
                   className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm font-medium transition-colors"
-                  aria-label="Gerenciar categorias"
+                  aria-label={t('contacts.categories')}
                 >
-                  Categorias
+                  {t('contacts.categories')}
                 </button>
                 <button
                   onClick={handleNewContact}
                   className="btn-primary"
-                  aria-label="Criar novo contato"
+                  aria-label={t('contacts.newContact')}
                 >
-                  + Novo Contato
+                  {t('contacts.newContact')}
                 </button>
                 <div className="relative">
                   <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     className="px-4 py-2 text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 text-xl font-bold transition-colors"
-                    aria-label="Menu de opções"
+                    aria-label={t('common.menu')}
                   >
                     ⋮
                   </button>
@@ -211,7 +213,7 @@ export function ContactsPage() {
                           className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-2"
                         >
                           <span>📄</span>
-                          <span>Importar CSV</span>
+                          <span>{t('contacts.importCSV')}</span>
                         </button>
                         <button
                           onClick={() => {
@@ -221,7 +223,7 @@ export function ContactsPage() {
                           className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-2"
                         >
                           <span>💬</span>
-                          <span>Chatwoot</span>
+                          <span>{t('contacts.chatwoot')}</span>
                         </button>
                         <button
                           onClick={() => {
@@ -231,7 +233,7 @@ export function ContactsPage() {
                           className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-2"
                         >
                           <span>🔧</span>
-                          <span>Perfex CRM</span>
+                          <span>{t('contacts.perfexCRM')}</span>
                         </button>
                       </div>
                     </>
@@ -259,11 +261,11 @@ export function ContactsPage() {
               onClick={handleSelectAllContacts}
               className="text-sm text-blue-600 hover:text-blue-700 font-medium underline"
             >
-              {selectedContactIds.length === contacts.length ? 'Desmarcar todos' : 'Selecionar todos'}
+              {selectedContactIds.length === contacts.length ? t('contacts.deselectAllPage') : t('contacts.selectAllPage')}
             </button>
             {selectedContactIds.length > 0 && (
               <span className="text-sm text-gray-600">
-                {selectedContactIds.length} de {contacts.length} selecionados nesta página
+                {t('contacts.selectedOfPage', { selected: selectedContactIds.length, total: contacts.length })}
               </span>
             )}
           </div>
@@ -293,7 +295,7 @@ export function ContactsPage() {
         )}
 
         <div className="text-center text-sm text-gray-500">
-          Mostrando {contacts.length} de {total} contatos
+          {t('contacts.showingCount', { showing: contacts.length, total: total })}
         </div>
       </div>
 

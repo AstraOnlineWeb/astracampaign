@@ -7,9 +7,12 @@ export default defineConfig({
   server: {
     port: 3006,
     host: true,
+    watch: {
+      usePolling: true,
+    },
     proxy: {
       '/api': {
-        target: 'http://localhost:3003',
+        target: process.env.DOCKER === 'true' ? 'http://backend:3003' : (process.env.VITE_API_URL || 'http://localhost:3003'),
         changeOrigin: true,
         secure: false,
       }

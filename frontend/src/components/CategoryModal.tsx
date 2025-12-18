@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Category } from '../types';
 import { CategoryList } from './CategoryList';
 import { CategoryForm } from './CategoryForm';
@@ -10,6 +11,7 @@ interface CategoryModalProps {
 }
 
 export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -77,20 +79,20 @@ export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-red-600 mb-4">Erro ao Carregar</h2>
+            <h2 className="text-2xl font-bold text-red-600 mb-4">{t('common.error')}</h2>
             <p className="text-gray-600 mb-4">{error}</p>
             <div className="flex gap-3">
               <button
                 onClick={refresh}
                 className="btn-primary py-3 px-6"
               >
-                Tentar novamente
+                {t('common.retry')}
               </button>
               <button
                 onClick={onClose}
                 className="bg-gray-100 text-gray-700 py-3 px-6 rounded-xl hover:bg-gray-200 font-medium transition-all duration-200 border border-gray-200"
               >
-                Fechar
+                {t('common.close')}
               </button>
             </div>
           </div>
@@ -113,8 +115,8 @@ export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Gerenciar Categorias</h2>
-                  <p className="text-gray-600">Organize seus contatos em categorias</p>
+                  <h2 className="text-2xl font-bold text-gray-900">{t('categories.title')}</h2>
+                  <p className="text-gray-600">{t('categories.subtitle')}</p>
                 </div>
               </div>
             </div>
@@ -123,13 +125,13 @@ export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
                 onClick={handleNewCategory}
                 className="bg-green-600 text-white py-2.5 px-5 rounded-xl hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
               >
-                + Nova Categoria
+                + {t('categories.newCategory')}
               </button>
               <button
                 onClick={onClose}
                 className="bg-gray-100 text-gray-700 py-2.5 px-5 rounded-xl hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 font-medium transition-all duration-200 border border-gray-200"
               >
-                Fechar
+                {t('common.close')}
               </button>
             </div>
           </div>
@@ -146,7 +148,7 @@ export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
               </div>
               <input
                 type="text"
-                placeholder="Buscar categorias..."
+                placeholder={t('categories.searchPlaceholder')}
                 value={search}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 className="input-field pl-10"
@@ -157,7 +159,7 @@ export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
                 onClick={handleClearFilters}
                 className="ml-4 px-4 py-2 text-gray-600 hover:text-gray-800 focus:outline-none bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               >
-                Limpar
+                {t('common.clear')}
               </button>
             )}
           </div>
@@ -183,18 +185,17 @@ export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
                   disabled={currentPage === 1}
                   className="px-4 py-2 border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 font-medium transition-colors"
                 >
-                  Anterior
+                  {t('categories.pagination.previous')}
                 </button>
 
                 {Array.from({ length: Math.ceil(total / pageSize) }, (_, i) => i + 1).map((page) => (
                   <button
                     key={page}
                     onClick={() => handlePageChange(page)}
-                    className={`px-4 py-2 border rounded-lg font-medium transition-colors ${
-                      currentPage === page
+                    className={`px-4 py-2 border rounded-lg font-medium transition-colors ${currentPage === page
                         ? 'bg-blue-600 text-white border-blue-600 shadow-md'
                         : 'border-gray-200 hover:bg-gray-50'
-                    }`}
+                      }`}
                     style={currentPage === page ? { backgroundColor: 'var(--astra-dark-blue)', borderColor: 'var(--astra-dark-blue)' } : undefined}
                   >
                     {page}
@@ -206,12 +207,12 @@ export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
                   disabled={currentPage >= Math.ceil(total / pageSize)}
                   className="px-4 py-2 border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 font-medium transition-colors"
                 >
-                  Próxima
+                  {t('categories.pagination.next')}
                 </button>
               </div>
             </div>
             <div className="text-center text-sm text-gray-500 mt-3">
-              Mostrando {categories.length} de {total} categorias (Página {currentPage} de {Math.ceil(total / pageSize)})
+              {t('categories.pagination.showing', { count: categories.length, total: total, currentPage: currentPage, totalPages: Math.ceil(total / pageSize) })}
             </div>
           </div>
         )}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface PerfexSyncModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface PerfexSyncModalProps {
 }
 
 export function PerfexSyncModal({ isOpen, onClose, perfexUrl = '', perfexToken = '', onSave }: PerfexSyncModalProps) {
+  const { t } = useTranslation();
   const [url, setUrl] = useState(perfexUrl);
   const [token, setToken] = useState(perfexToken);
   const [isSaving, setIsSaving] = useState(false);
@@ -41,16 +43,16 @@ export function PerfexSyncModal({ isOpen, onClose, perfexUrl = '', perfexToken =
           <div className="flex justify-between items-start mb-6">
             <div>
               <h2 id="perfex-sync-title" className="text-xl font-bold text-gray-900">
-                Configurar Perfex CRM
+                {t('perfexSync.title')}
               </h2>
               <p className="text-sm text-gray-500 mt-1">
-                Configure a integração com Perfex CRM
+                {t('perfexSync.subtitle')}
               </p>
             </div>
             <button
               onClick={handleClose}
               className="text-gray-400 hover:text-gray-600 transition-colors"
-              aria-label="Fechar"
+              aria-label={t('common.close')}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -62,49 +64,48 @@ export function PerfexSyncModal({ isOpen, onClose, perfexUrl = '', perfexToken =
             {/* Perfex URL */}
             <div>
               <label htmlFor="perfexUrl" className="block text-sm font-medium text-gray-700 mb-1">
-                URL do Perfex CRM *
+                {t('perfexSync.fields.url')}
               </label>
               <input
                 id="perfexUrl"
                 type="url"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://seu-perfex.com"
+                placeholder={t('perfexSync.fields.urlPlaceholder')}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
               <p className="text-xs text-gray-500 mt-1">
-                URL completa da sua instância Perfex CRM
+                {t('perfexSync.fields.urlHint')}
               </p>
             </div>
 
             {/* Perfex Token */}
             <div>
               <label htmlFor="perfexToken" className="block text-sm font-medium text-gray-700 mb-1">
-                Token de API *
+                {t('perfexSync.fields.token')}
               </label>
               <input
                 id="perfexToken"
                 type="password"
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
-                placeholder="••••••••••••••••"
+                placeholder={t('perfexSync.fields.tokenPlaceholder')}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
               <p className="text-xs text-gray-500 mt-1">
-                Token de API do Perfex CRM (encontrado em Configurações &gt; API)
+                {t('perfexSync.fields.tokenHint')}
               </p>
             </div>
 
             {/* Instructions */}
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <h3 className="font-medium text-purple-900 text-sm mb-2">ℹ️ Como obter o token</h3>
+              <h3 className="font-medium text-purple-900 text-sm mb-2">ℹ️ {t('perfexSync.instructions.title')}</h3>
               <ul className="text-xs text-purple-700 space-y-1">
-                <li>• Acesse seu Perfex CRM</li>
-                <li>• Vá em Configurações &gt; API</li>
-                <li>• Gere ou copie seu token de API</li>
-                <li>• Cole o token no campo acima</li>
+                {(t('perfexSync.instructions.steps', { returnObjects: true }) as string[]).map((step, index) => (
+                  <li key={index}>• {step}</li>
+                ))}
               </ul>
             </div>
 
@@ -115,7 +116,7 @@ export function PerfexSyncModal({ isOpen, onClose, perfexUrl = '', perfexToken =
                 onClick={handleClose}
                 className="flex-1 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 font-medium transition-colors text-sm"
               >
-                Cancelar
+                {t('perfexSync.buttons.cancel')}
               </button>
               <button
                 type="submit"
@@ -128,14 +129,14 @@ export function PerfexSyncModal({ isOpen, onClose, perfexUrl = '', perfexToken =
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Salvando...
+                    {t('perfexSync.buttons.saving')}
                   </>
                 ) : (
                   <>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Salvar Configuração
+                    {t('perfexSync.buttons.save')}
                   </>
                 )}
               </button>

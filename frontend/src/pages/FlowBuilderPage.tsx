@@ -1,5 +1,6 @@
 import { useCallback, useState, useEffect, DragEvent, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -74,6 +75,7 @@ function CustomEdge({
   markerEnd,
   data,
 }: EdgeProps) {
+  const { t } = useTranslation();
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -105,7 +107,7 @@ function CustomEdge({
           <button
             className="w-5 h-5 bg-white hover:bg-gray-50 border border-gray-300 hover:border-red-400 text-gray-400 hover:text-red-500 rounded-full flex items-center justify-center text-sm shadow-sm transition-all hover:scale-110"
             onClick={onEdgeClick}
-            title="Deletar conexão"
+            title={t('flowBuilder.actions.deleteConnection')}
           >
             ×
           </button>
@@ -116,6 +118,7 @@ function CustomEdge({
 }
 
 function FlowBuilderPageInner() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -210,7 +213,7 @@ function FlowBuilderPageInner() {
         setEdges(edgesWithDelete);
       }
     } catch (error: any) {
-      toast.error(`Erro ao carregar campanha: ${error.message}`);
+      toast.error(t('flowBuilder.messages.loadError'));
       navigate('/campanhas/interativa');
     } finally {
       setLoading(false);
@@ -299,9 +302,9 @@ function FlowBuilderPageInner() {
         scheduledDate: scheduledDateTime || undefined,
       });
 
-      toast.success('Fluxo salvo com sucesso!');
+      toast.success(t('flowBuilder.messages.saveSuccess'));
     } catch (error: any) {
-      toast.error(`Erro ao salvar: ${error.message}`);
+      toast.error(`${t('flowBuilder.messages.saveError')}: ${error.message}`);
     } finally {
       setSaving(false);
     }
@@ -313,7 +316,7 @@ function FlowBuilderPageInner() {
     // Validar se há pelo menos um nó trigger
     const triggerNode = nodes.find(n => n.data.nodeType === 'trigger');
     if (!triggerNode) {
-      toast.error('Adicione um nó Trigger ao fluxo antes de publicar');
+      toast.error(t('flowBuilder.messages.publishTriggerMissing'));
       return;
     }
 
@@ -321,12 +324,12 @@ function FlowBuilderPageInner() {
 
     // Validar configurações do trigger
     if (!triggerConfig?.connections?.length) {
-      toast.error('Configure pelo menos uma conexão WhatsApp no Trigger');
+      toast.error(t('flowBuilder.messages.publishNoConnection'));
       return;
     }
 
     if (!triggerConfig?.categories?.length) {
-      toast.error('Configure pelo menos uma categoria de contatos no Trigger');
+      toast.error(t('flowBuilder.messages.publishNoCategory'));
       return;
     }
 
@@ -334,15 +337,15 @@ function FlowBuilderPageInner() {
     let scheduledDateTime = null;
     if (triggerConfig?.scheduleType === 'scheduled') {
       if (!triggerConfig?.scheduledDate || !triggerConfig?.scheduledTime) {
-        toast.error('Por favor, defina a data e hora do agendamento no Trigger');
+        toast.error(t('flowBuilder.messages.publishScheduleMissing'));
         return;
       }
       scheduledDateTime = new Date(`${triggerConfig.scheduledDate}T${triggerConfig.scheduledTime}:00`);
     }
 
     const message = scheduledDateTime
-      ? `Deseja publicar a campanha "${campaign.name}"?\nEla será iniciada em: ${scheduledDateTime.toLocaleString('pt-BR')}`
-      : `Deseja publicar a campanha "${campaign.name}"? Ela começará a processar mensagens imediatamente.`;
+      ? t('flowBuilder.messages.publishConfirmScheduled', { name: campaign.name, date: scheduledDateTime.toLocaleString() })
+      : t('flowBuilder.messages.publishConfirmDefault', { name: campaign.name });
 
     if (!confirm(message)) {
       return;
@@ -355,15 +358,15 @@ function FlowBuilderPageInner() {
       await interactiveCampaignApi.publishCampaign(campaign.id, scheduledDateTime || undefined);
 
       if (scheduledDateTime) {
-        toast.success(`Campanha agendada para ${scheduledDateTime.toLocaleString('pt-BR')}!`);
+        toast.success(t('flowBuilder.messages.publishScheduledSuccess', { date: scheduledDateTime.toLocaleString() }));
       } else {
-        toast.success('Campanha publicada!');
+        toast.success(t('flowBuilder.messages.publishSuccess'));
       }
 
       // Recarregar
       await loadCampaign(campaign.id);
     } catch (error: any) {
-      toast.error(`Erro ao publicar: ${error.message}`);
+      toast.error(`${t('flowBuilder.messages.publishError')}: ${error.message}`);
     }
   };
 
@@ -400,14 +403,14 @@ function FlowBuilderPageInner() {
 
       // Buscar configuração do nó (pode estar em NODE_TYPES_CONFIG ou INTEGRATION_NODES_CONFIG)
       const nodeConfig = NODE_TYPES_CONFIG[type as keyof typeof NODE_TYPES_CONFIG] ||
-                         INTEGRATION_NODES_CONFIG[type as keyof typeof INTEGRATION_NODES_CONFIG];
+        INTEGRATION_NODES_CONFIG[type as keyof typeof INTEGRATION_NODES_CONFIG];
 
       const newNode: Node = {
         id: nodeId,
         type: type, // Use o tipo customizado
         position,
         data: {
-          label: nodeConfig?.label || type,
+          label: type.startsWith('integration_') ? t(`flowBuilder.nodes.${type}.label`) : t(`flowBuilder.nodes.${type}.label`),
           nodeType: type,
           config: {}, // Configuração vazia inicialmente
           onDelete: () => handleDeleteNode(nodeId),
@@ -463,10 +466,12 @@ function FlowBuilderPageInner() {
     try {
       await interactiveCampaignApi.updateCampaign(id, { name: editedName.trim() });
       setCampaign({ ...campaign, name: editedName.trim() });
+      await interactiveCampaignApi.updateCampaign(id, { name: editedName.trim() });
+      setCampaign({ ...campaign, name: editedName.trim() });
       setIsEditingName(false);
-      toast.success('Nome atualizado com sucesso!');
+      toast.success(t('flowBuilder.messages.nameUpdated'));
     } catch (error: any) {
-      toast.error(`Erro ao atualizar nome: ${error.message}`);
+      toast.error(`${t('flowBuilder.messages.nameUpdateError')}: ${error.message}`);
     }
   };
 
@@ -517,7 +522,7 @@ function FlowBuilderPageInner() {
             <div
               onClick={handleNameClick}
               className="cursor-pointer hover:text-brand-primary transition-colors flex items-center gap-2 group"
-              title="Clique para editar o nome"
+              title={t('flowBuilder.actions.editName')}
             >
               <span>{campaign.name}</span>
               <svg
@@ -541,17 +546,17 @@ function FlowBuilderPageInner() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
-              <span>Voltar</span>
+              <span>{t('flowBuilder.actions.back')}</span>
             </button>
 
             {campaign.status === 'DRAFT' && (
               <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">
-                📝 Rascunho
+                {t('flowBuilder.status.draft')}
               </span>
             )}
             {campaign.status === 'PUBLISHED' && (
               <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-                ✅ Publicada
+                {t('flowBuilder.status.published')}
               </span>
             )}
 
@@ -563,7 +568,7 @@ function FlowBuilderPageInner() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
-              <span>Preview</span>
+              <span>{t('flowBuilder.actions.preview')}</span>
             </button>
 
             <button
@@ -574,14 +579,14 @@ function FlowBuilderPageInner() {
               {saving ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-brand-primary"></div>
-                  <span>Salvando...</span>
+                  <span>{t('flowBuilder.actions.saving')}</span>
                 </>
               ) : (
                 <>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                   </svg>
-                  <span>Salvar</span>
+                  <span>{t('flowBuilder.actions.save')}</span>
                 </>
               )}
             </button>
@@ -594,7 +599,7 @@ function FlowBuilderPageInner() {
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Publicar</span>
+                <span>{t('flowBuilder.actions.publish')}</span>
               </button>
             )}
           </div>
@@ -605,7 +610,7 @@ function FlowBuilderPageInner() {
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar - Palette */}
         <aside className="w-64 bg-white border-r border-ui-border p-4 shadow-sm overflow-y-auto">
-          <h2 className="text-lg font-semibold text-ui-text mb-4">📦 Blocos</h2>
+          <h2 className="text-lg font-semibold text-ui-text mb-4">{t('flowBuilder.sidebar.blocks')}</h2>
 
           <div className="grid grid-cols-2 gap-2">
             {Object.entries(NODE_TYPES_CONFIG).map(([nodeType, config]) => (
@@ -616,8 +621,8 @@ function FlowBuilderPageInner() {
                 className="h-14 px-2 py-2 bg-ui-bg rounded-lg border-2 border-ui-border text-ui-text hover:border-brand-secondary hover:bg-brand-secondary/5 transition-all cursor-grab active:cursor-grabbing flex flex-col justify-center"
                 style={{ borderLeft: `4px solid ${config.color}` }}
               >
-                <div className="font-medium text-xs truncate">{config.label}</div>
-                <div className="text-xs text-ui-sub truncate">{config.description}</div>
+                <div className="font-medium text-xs truncate">{t(`flowBuilder.nodes.${nodeType}.label`)}</div>
+                <div className="text-xs text-ui-sub truncate">{t(`flowBuilder.nodes.${nodeType}.description`)}</div>
               </div>
             ))}
           </div>
@@ -627,7 +632,7 @@ function FlowBuilderPageInner() {
             <>
               <div className="mt-6 mb-3">
                 <h3 className="text-sm font-semibold text-ui-text flex items-center gap-2">
-                  🔌 Integrações Externas
+                  {t('flowBuilder.sidebar.integrations')}
                 </h3>
                 <div className="h-px bg-ui-border mt-2"></div>
               </div>
@@ -641,8 +646,8 @@ function FlowBuilderPageInner() {
                     className="h-14 px-2 py-2 bg-ui-bg rounded-lg border-2 border-ui-border text-ui-text hover:border-brand-secondary hover:bg-brand-secondary/5 transition-all cursor-grab active:cursor-grabbing flex flex-col justify-center"
                     style={{ borderLeft: `4px solid ${INTEGRATION_NODES_CONFIG.integration_perfex.color}` }}
                   >
-                    <div className="font-medium text-xs truncate">{INTEGRATION_NODES_CONFIG.integration_perfex.label}</div>
-                    <div className="text-xs text-ui-sub truncate">{INTEGRATION_NODES_CONFIG.integration_perfex.description}</div>
+                    <div className="font-medium text-xs truncate">{t('flowBuilder.nodes.integration_perfex.label')}</div>
+                    <div className="text-xs text-ui-sub truncate">{t('flowBuilder.nodes.integration_perfex.description')}</div>
                   </div>
                 )}
                 {integrationSettings.hasChatwoot && (
@@ -653,8 +658,8 @@ function FlowBuilderPageInner() {
                     className="h-14 px-2 py-2 bg-ui-bg rounded-lg border-2 border-ui-border text-ui-text hover:border-brand-secondary hover:bg-brand-secondary/5 transition-all cursor-grab active:cursor-grabbing flex flex-col justify-center"
                     style={{ borderLeft: `4px solid ${INTEGRATION_NODES_CONFIG.integration_chatwoot.color}` }}
                   >
-                    <div className="font-medium text-xs truncate">{INTEGRATION_NODES_CONFIG.integration_chatwoot.label}</div>
-                    <div className="text-xs text-ui-sub truncate">{INTEGRATION_NODES_CONFIG.integration_chatwoot.description}</div>
+                    <div className="font-medium text-xs truncate">{t('flowBuilder.nodes.integration_chatwoot.label')}</div>
+                    <div className="text-xs text-ui-sub truncate">{t('flowBuilder.nodes.integration_chatwoot.description')}</div>
                   </div>
                 )}
               </div>

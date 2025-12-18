@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { TenantProvider } from './contexts/TenantContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -22,6 +23,7 @@ import './styles/globals.css';
 function AppContent() {
   const { isAuthenticated, isLoading } = useAuth();
   const { settings } = useGlobalSettings();
+  const { t } = useTranslation();
 
   // Aplicar meta tags dinâmicas (título e favicon)
   useEffect(() => {
@@ -81,7 +83,7 @@ function AppContent() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Carregando...</p>
+          <p className="text-gray-600">{t('common.loadingDots')}</p>
         </div>
       </div>
     );
@@ -281,7 +283,7 @@ function App() {
                   <button
                     onClick={() => toast.dismiss(t.id)}
                     className="absolute right-2 top-1/2 -translate-y-1/2 hover:bg-white/20 rounded-full p-1 transition-colors"
-                    aria-label="Fechar notificação"
+                    aria-label={t('common.closeNotification')}
                     type="button"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

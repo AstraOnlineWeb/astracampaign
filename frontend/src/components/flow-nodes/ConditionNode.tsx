@@ -1,26 +1,29 @@
 import { memo } from 'react';
 import { NodeProps, Handle, Position } from 'reactflow';
+import { useTranslation } from 'react-i18next';
 
 export const ConditionNode = memo((props: NodeProps) => {
+  const { t } = useTranslation();
+  
   const getDescription = () => {
     const mode = props.data.config?.mode || 'simple';
 
     if (mode === 'switch') {
       const cases = props.data.config?.cases || [];
-      return `${cases.length} condição(ões)`;
+      return t('flowBuilder.nodes.condition.conditionCount', { count: cases.length });
     }
 
     const type = props.data.config?.conditionType;
-    if (!type) return 'Configure a condição';
+    if (!type) return t('flowBuilder.nodes.condition.configureCondition');
 
-    const labels: Record<string, string> = {
-      contains: 'Contém texto',
-      equals: 'Igual a',
-      regex: 'Expressão regular',
-      variable: 'Variável',
+    const conditionTypes: Record<string, string> = {
+      contains: t('flowBuilder.nodes.condition.types.contains'),
+      equals: t('flowBuilder.nodes.condition.types.equals'),
+      regex: t('flowBuilder.nodes.condition.types.regex'),
+      variable: t('flowBuilder.nodes.condition.types.variable'),
     };
 
-    return labels[type] || type;
+    return conditionTypes[type] || type;
   };
 
   const isConfigured = props.data.config && Object.keys(props.data.config).length > 0;
@@ -47,7 +50,7 @@ export const ConditionNode = memo((props: NodeProps) => {
             props.data.onDelete();
           }}
           className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-600 z-10"
-          title="Deletar node"
+          title={t('flowBuilder.nodes.base.deleteNode')}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -67,7 +70,7 @@ export const ConditionNode = memo((props: NodeProps) => {
         <div className="flex items-center space-x-2 mb-1">
           <span className="text-xl">❓</span>
           <span className="font-semibold text-gray-900">
-            {mode === 'switch' ? 'Switch' : 'Condição'}
+            {mode === 'switch' ? t('flowBuilder.nodes.condition.switch') : t('flowBuilder.nodes.condition.label')}
           </span>
         </div>
 
@@ -75,13 +78,13 @@ export const ConditionNode = memo((props: NodeProps) => {
 
         {isConfigured && (
           <div className="mt-2 px-2 py-1 bg-green-50 border border-green-200 rounded text-xs text-green-700 font-medium">
-            ✓ Configurado
+            ✓ {t('flowBuilder.nodes.base.configured')}
           </div>
         )}
 
         {!isConfigured && (
           <div className="mt-2 px-2 py-1 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-700 font-medium">
-            ! Click para configurar
+            ! {t('flowBuilder.nodes.base.clickToConfigure')}
           </div>
         )}
 
@@ -96,7 +99,7 @@ export const ConditionNode = memo((props: NodeProps) => {
             ))}
             <div className="text-xs text-gray-600 flex items-center space-x-1">
               <span className="w-2 h-2 rounded-full bg-gray-400"></span>
-              <span>Padrão</span>
+              <span>{t('flowBuilder.nodes.condition.default')}</span>
             </div>
           </div>
         )}
@@ -129,7 +132,7 @@ export const ConditionNode = memo((props: NodeProps) => {
             style={{
               top: `${((cases.length + 1) * 100) / (handleCount + 1)}%`,
             }}
-            title="Padrão (nenhuma condição atendida)"
+            title={t('flowBuilder.nodes.condition.defaultTooltip')}
           />
         </>
       ) : (
@@ -141,7 +144,7 @@ export const ConditionNode = memo((props: NodeProps) => {
             id="true"
             className="w-3 h-3 !bg-green-500 !border-2 !border-white"
             style={{ top: '40%' }}
-            title="Verdadeiro"
+            title={t('flowBuilder.nodes.condition.true')}
           />
           <Handle
             type="source"
@@ -149,7 +152,7 @@ export const ConditionNode = memo((props: NodeProps) => {
             id="false"
             className="w-3 h-3 !bg-red-500 !border-2 !border-white"
             style={{ top: '60%' }}
-            title="Falso"
+            title={t('flowBuilder.nodes.condition.false')}
           />
         </>
       )}

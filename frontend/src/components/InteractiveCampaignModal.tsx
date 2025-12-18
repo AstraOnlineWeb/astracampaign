@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Portal } from './Portal';
 
 interface InteractiveCampaignModalProps {
@@ -14,9 +15,11 @@ export function InteractiveCampaignModal({
   onClose,
   onSave,
   initialName = '',
-  title = 'Nova Campanha Interativa',
+  title,
 }: InteractiveCampaignModalProps) {
+  const { t } = useTranslation();
   const [name, setName] = useState(initialName);
+  const modalTitle = title || t('interactiveCampaigns.modal.title');
 
   useEffect(() => {
     if (isOpen) {
@@ -54,25 +57,25 @@ export function InteractiveCampaignModal({
 
           {/* Modal */}
           <div className="relative bg-white rounded-2xl shadow-card max-w-md w-full p-6 z-10">
-            <h2 className="text-xl font-semibold text-ui-text mb-4">{title}</h2>
+            <h2 className="text-xl font-semibold text-ui-text mb-4">{modalTitle}</h2>
 
             <form onSubmit={handleSubmit}>
               {/* Nome */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-ui-text mb-2">
-                  Nome da Campanha
+                  {t('interactiveCampaigns.modal.campaignName')}
                 </label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Ex: Fluxo de Boas-vindas"
+                  placeholder={t('interactiveCampaigns.modal.campaignNamePlaceholder')}
                   className="w-full px-4 py-2 border border-ui-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-secondary"
                   required
                   autoFocus
                 />
                 <p className="mt-2 text-xs text-ui-sub">
-                  💡 Você configurará as conexões WhatsApp e categorias no nó Trigger após criar a campanha.
+                  {t('interactiveCampaigns.modal.helpText')}
                 </p>
               </div>
 
@@ -83,13 +86,13 @@ export function InteractiveCampaignModal({
                   onClick={handleClose}
                   className="px-4 py-2 text-ui-sub hover:text-ui-text transition-colors"
                 >
-                  Cancelar
+                  {t('common.cancel')}
                 </button>
                 <button
                   type="submit"
                   className="px-6 py-2 bg-brand-primary text-white rounded-xl hover:opacity-90 transition-opacity"
                 >
-                  Salvar
+                  {t('common.save')}
                 </button>
               </div>
             </form>

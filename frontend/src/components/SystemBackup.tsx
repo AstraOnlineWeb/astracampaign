@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 interface BackupFile {
   fileName: string;
@@ -16,15 +17,17 @@ interface BackupConfig {
   storageType: 'local' | 's3';
 }
 
-const SCHEDULE_OPTIONS = [
-  { value: '0 */6 * * *', label: 'A cada 6 horas' },
-  { value: '0 */12 * * *', label: 'A cada 12 horas' },
-  { value: '0 2 * * *', label: 'Diariamente às 2h' },
-  { value: '0 2 * * 0', label: 'Semanalmente (Domingo às 2h)' },
-  { value: '0 2 1 * *', label: 'Mensalmente (Dia 1 às 2h)' }
-];
-
 export function SystemBackup() {
+  const { t } = useTranslation();
+
+  const SCHEDULE_OPTIONS = [
+    { value: '0 */6 * * *', label: t('backup.modals.config.check.6h') },
+    { value: '0 */12 * * *', label: t('backup.modals.config.check.12h') },
+    { value: '0 2 * * *', label: t('backup.modals.config.check.daily2h') },
+    { value: '0 2 * * 0', label: t('backup.modals.config.check.weekly') },
+    { value: '0 2 1 * *', label: t('backup.modals.config.check.monthly') }
+  ];
+
   const [backups, setBackups] = useState<BackupFile[]>([]);
   const [config, setConfig] = useState<BackupConfig>({
     enabled: false,
@@ -70,7 +73,7 @@ export function SystemBackup() {
       }
     } catch (error) {
       console.error('Erro ao carregar backups:', error);
-      toast.error('Erro ao carregar lista de backups');
+      toast.error(t('backup.messages.listError'));
     } finally {
       setLoading(false);
     }
@@ -98,7 +101,7 @@ export function SystemBackup() {
       });
 
       if (response.ok) {
-        toast.success('Backup criado com sucesso!');
+        toast.success(t('backup.messages.createSuccess'));
         await loadBackups();
       } else {
         const error = await response.json();
@@ -106,7 +109,7 @@ export function SystemBackup() {
       }
     } catch (error: any) {
       console.error('Erro ao criar backup:', error);
-      toast.error(error.message || 'Erro ao criar backup');
+      toast.error(error.message || t('backup.messages.createError'));
     } finally {
       setCreating(false);
     }
@@ -120,7 +123,7 @@ export function SystemBackup() {
       });
 
       if (response.ok) {
-        toast.success('Configuração salva com sucesso!');
+        toast.success(t('backup.messages.saveConfigSuccess'));
         setShowConfigModal(false);
         await loadConfig();
       } else {
@@ -129,7 +132,7 @@ export function SystemBackup() {
       }
     } catch (error: any) {
       console.error('Erro ao salvar configuração:', error);
-      toast.error(error.message || 'Erro ao salvar configuração');
+      toast.error(error.message || t('backup.messages.saveConfigError'));
     }
   };
 
@@ -138,11 +141,7 @@ export function SystemBackup() {
 
     setRestoring(true);
     try {
-      const confirmed = window.confirm(
-        '⚠️ ATENÇÃO: Esta ação irá restaurar TODO o sistema para o estado do backup selecionado. ' +
-        'Todos os dados atuais serão substituídos. Esta ação é IRREVERSÍVEL. ' +
-        '\n\nDeseja continuar?'
-      );
+      const confirmed = window.confirm(t('backup.messages.confirmRestore'));
 
       if (!confirmed) {
         setRestoring(false);
@@ -155,7 +154,7 @@ export function SystemBackup() {
       });
 
       if (response.ok) {
-        toast.success('Backup restaurado com sucesso! Recomenda-se reiniciar o sistema.');
+        toast.success(t('backup.messages.restoreSuccess'));
         setShowRestoreModal(false);
         setSelectedBackup(null);
       } else {
@@ -164,7 +163,7 @@ export function SystemBackup() {
       }
     } catch (error: any) {
       console.error('Erro ao restaurar backup:', error);
-      toast.error(error.message || 'Erro ao restaurar backup');
+      toast.error(error.message || t('backup.messages.restoreError'));
     } finally {
       setRestoring(false);
     }
@@ -195,34 +194,26 @@ export function SystemBackup() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
-      toast.success('Download iniciado com sucesso!');
+      toast.success(t('backup.messages.downloadStart'));
     } catch (error: any) {
       console.error('Erro ao fazer download:', error);
-      toast.error(error.message || 'Erro ao fazer download do backup');
+      toast.error(error.message || t('backup.messages.downloadError'));
     }
   };
 
   const handleUploadAndRestore = async () => {
     if (!uploadFile) {
-      toast.error('Selecione um arquivo de backup');
+      toast.error(t('backup.messages.selectFile'));
       return;
     }
 
     // Validar extensão do arquivo
     if (!uploadFile.name.endsWith('.tar.gz')) {
-      toast.error('Arquivo deve ser um backup válido (.tar.gz)');
+      toast.error(t('backup.messages.invalidFile'));
       return;
     }
 
-    const confirmed = window.confirm(
-      '⚠️ ATENÇÃO CRÍTICA: Esta ação irá:\n\n' +
-      '1. Fazer upload do arquivo de backup\n' +
-      '2. SUBSTITUIR COMPLETAMENTE o banco de dados atual\n' +
-      '3. SUBSTITUIR COMPLETAMENTE todos os arquivos\n' +
-      '4. EXCLUIR todos os dados atuais\n\n' +
-      'Esta ação é IRREVERSÍVEL e NÃO PODE SER DESFEITA!\n\n' +
-      'Tem CERTEZA ABSOLUTA que deseja continuar?'
-    );
+    const confirmed = window.confirm(t('backup.messages.confirmUpload'));
 
     if (!confirmed) {
       return;
@@ -244,7 +235,7 @@ export function SystemBackup() {
 
       if (response.ok) {
         const data = await response.json();
-        toast.success('Backup enviado com sucesso! Aguarde a restauração...');
+        toast.success(t('backup.messages.uploadSuccess'));
 
         // Agora restaurar o backup que acabou de fazer upload
         const restoreResponse = await authenticatedFetch('/api/backup/system/restore', {
@@ -253,7 +244,7 @@ export function SystemBackup() {
         });
 
         if (restoreResponse.ok) {
-          toast.success('Sistema restaurado com sucesso! Recomenda-se reiniciar os serviços.');
+          toast.success(t('backup.messages.uploadRestoreSuccess'));
           setShowUploadModal(false);
           setUploadFile(null);
           await loadBackups();
@@ -267,7 +258,7 @@ export function SystemBackup() {
       }
     } catch (error: any) {
       console.error('Erro ao fazer upload e restaurar:', error);
-      toast.error(error.message || 'Erro ao fazer upload e restaurar backup');
+      toast.error(error.message || t('backup.messages.uploadError'));
     } finally {
       setUploading(false);
     }
@@ -282,7 +273,7 @@ export function SystemBackup() {
   };
 
   const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleString('pt-BR');
+    return new Date(dateString).toLocaleString();
   };
 
   if (loading) {
@@ -299,9 +290,9 @@ export function SystemBackup() {
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex justify-between items-start mb-6">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">Backup do Sistema</h2>
+            <h2 className="text-xl font-semibold text-gray-900">{t('backup.systemTitle')}</h2>
             <p className="text-sm text-gray-600 mt-1">
-              Gerencie backups completos do sistema (banco de dados + arquivos)
+              {t('backup.systemSubtitle')}
             </p>
           </div>
           <div className="flex gap-3">
@@ -313,7 +304,7 @@ export function SystemBackup() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              Configurar
+              {t('backup.actions.configure')}
             </button>
             <button
               onClick={() => setShowUploadModal(true)}
@@ -322,7 +313,7 @@ export function SystemBackup() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
-              Restaurar de Arquivo
+              {t('backup.actions.restoreFile')}
             </button>
             <button
               onClick={handleCreateBackup}
@@ -332,7 +323,7 @@ export function SystemBackup() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
               </svg>
-              {creating ? 'Criando...' : 'Criar Backup'}
+              {creating ? t('backup.actions.creating') : t('backup.actions.create')}
             </button>
           </div>
         </div>
@@ -344,11 +335,11 @@ export function SystemBackup() {
               <div className={`w-3 h-3 rounded-full ${config.enabled ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
               <div>
                 <p className="text-sm font-medium text-gray-900">
-                  Backup Automático: {config.enabled ? 'Ativo' : 'Desativado'}
+                  {config.enabled ? t('backup.status.autoActive') : t('backup.status.autoDisabled')}
                 </p>
                 {config.enabled && (
                   <p className="text-xs text-gray-600 mt-1">
-                    Próximo backup: {SCHEDULE_OPTIONS.find(opt => opt.value === config.schedule)?.label || config.schedule}
+                    {t('backup.status.next', { time: SCHEDULE_OPTIONS.find(opt => opt.value === config.schedule)?.label || config.schedule })}
                   </p>
                 )}
               </div>
@@ -357,7 +348,7 @@ export function SystemBackup() {
               onClick={() => setShowConfigModal(true)}
               className="text-sm text-blue-600 hover:text-blue-700 font-medium"
             >
-              {config.enabled ? 'Modificar' : 'Ativar'}
+              {config.enabled ? t('backup.status.modify') : t('backup.status.activate')}
             </button>
           </div>
         </div>
@@ -366,8 +357,8 @@ export function SystemBackup() {
       {/* Lista de Backups */}
       <div className="bg-white rounded-lg shadow">
         <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">Backups Disponíveis</h3>
-          <p className="text-sm text-gray-600 mt-1">{backups.length} backup(s) encontrado(s)</p>
+          <h3 className="text-lg font-semibold text-gray-900">{t('backup.list.title')}</h3>
+          <p className="text-sm text-gray-600 mt-1">{t('backup.list.found', { count: backups.length })}</p>
         </div>
 
         {backups.length === 0 ? (
@@ -375,8 +366,8 @@ export function SystemBackup() {
             <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
             </svg>
-            <p className="mt-4 text-sm text-gray-500">Nenhum backup encontrado</p>
-            <p className="text-xs text-gray-400 mt-1">Clique em "Criar Backup" para começar</p>
+            <p className="mt-4 text-sm text-gray-500">{t('backup.list.empty')}</p>
+            <p className="text-xs text-gray-400 mt-1">{t('backup.list.start')}</p>
           </div>
         ) : (
           <div className="divide-y divide-gray-200">
@@ -393,13 +384,12 @@ export function SystemBackup() {
                         <div className="flex items-center gap-4 mt-1">
                           <span className="text-xs text-gray-500">{formatFileSize(backup.size)}</span>
                           <span className="text-xs text-gray-500">{formatDate(backup.createdAt)}</span>
-                          <span className={`text-xs px-2 py-0.5 rounded-full ${
-                            backup.status === 'success' ? 'bg-green-100 text-green-800' :
-                            backup.status === 'failed' ? 'bg-red-100 text-red-800' :
-                            'bg-yellow-100 text-yellow-800'
-                          }`}>
-                            {backup.status === 'success' ? 'Sucesso' :
-                             backup.status === 'failed' ? 'Falhou' : 'Em progresso'}
+                          <span className={`text-xs px-2 py-0.5 rounded-full ${backup.status === 'success' ? 'bg-green-100 text-green-800' :
+                              backup.status === 'failed' ? 'bg-red-100 text-red-800' :
+                                'bg-yellow-100 text-yellow-800'
+                            }`}>
+                            {backup.status === 'success' ? t('backup.status.success') :
+                              backup.status === 'failed' ? t('backup.status.failed') : t('backup.status.inProgress')}
                           </span>
                         </div>
                       </div>
@@ -414,7 +404,7 @@ export function SystemBackup() {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                       </svg>
-                      Download
+                      {t('backup.actions.download')}
                     </button>
                     <button
                       onClick={() => {
@@ -426,7 +416,7 @@ export function SystemBackup() {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                       </svg>
-                      Restaurar
+                      {t('backup.actions.restore')}
                     </button>
                   </div>
                 </div>
@@ -441,7 +431,7 @@ export function SystemBackup() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
             <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Configurar Backup Automático</h3>
+              <h3 className="text-lg font-semibold text-gray-900">{t('backup.modals.config.title')}</h3>
             </div>
 
             <div className="p-6 space-y-4">
@@ -454,7 +444,7 @@ export function SystemBackup() {
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
                 <label htmlFor="enabled" className="ml-2 block text-sm text-gray-900">
-                  Ativar backup automático
+                  {t('backup.modals.config.enable')}
                 </label>
               </div>
 
@@ -462,7 +452,7 @@ export function SystemBackup() {
                 <>
                   <div>
                     <label htmlFor="schedule" className="block text-sm font-medium text-gray-700 mb-2">
-                      Frequência
+                      {t('backup.modals.config.frequency')}
                     </label>
                     <select
                       id="schedule"
@@ -480,7 +470,7 @@ export function SystemBackup() {
 
                   <div>
                     <label htmlFor="retention" className="block text-sm font-medium text-gray-700 mb-2">
-                      Manter backups por (dias)
+                      {t('backup.modals.config.retention')}
                     </label>
                     <input
                       type="number"
@@ -492,7 +482,7 @@ export function SystemBackup() {
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                      Backups mais antigos serão automaticamente excluídos
+                      {t('backup.modals.config.retentionHint')}
                     </p>
                   </div>
                 </>
@@ -504,13 +494,13 @@ export function SystemBackup() {
                 onClick={() => setShowConfigModal(false)}
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
               >
-                Cancelar
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleSaveConfig}
                 className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
               >
-                Salvar
+                {t('backup.modals.config.save')}
               </button>
             </div>
           </div>
@@ -522,20 +512,19 @@ export function SystemBackup() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
             <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-red-900">⚠️ Restaurar Backup</h3>
+              <h3 className="text-lg font-semibold text-red-900">{t('backup.modals.restore.title')}</h3>
             </div>
 
             <div className="p-6">
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                <p className="text-sm text-red-800 font-medium">ATENÇÃO: Ação Irreversível!</p>
+                <p className="text-sm text-red-800 font-medium">{t('backup.modals.restore.warningTitle')}</p>
                 <p className="text-xs text-red-700 mt-2">
-                  Esta ação irá restaurar TODO o sistema para o estado do backup selecionado.
-                  Todos os dados atuais (banco de dados e arquivos) serão SUBSTITUÍDOS.
+                  {t('backup.modals.restore.warningText')}
                 </p>
               </div>
 
               <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-sm font-medium text-gray-900">Backup selecionado:</p>
+                <p className="text-sm font-medium text-gray-900">{t('backup.modals.restore.selected')}</p>
                 <p className="text-xs text-gray-600 mt-1">{selectedBackup.fileName}</p>
                 <p className="text-xs text-gray-500 mt-1">
                   Criado em: {formatDate(selectedBackup.createdAt)}
@@ -554,14 +543,14 @@ export function SystemBackup() {
                 }}
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
               >
-                Cancelar
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleRestoreBackup}
                 disabled={restoring}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50"
               >
-                {restoring ? 'Restaurando...' : 'Confirmar Restauração'}
+                {restoring ? t('backup.modals.restore.restoring') : t('backup.modals.restore.confirm')}
               </button>
             </div>
           </div>
@@ -573,30 +562,30 @@ export function SystemBackup() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
             <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-orange-900">📤 Restaurar de Arquivo</h3>
+              <h3 className="text-lg font-semibold text-orange-900">{t('backup.modals.upload.title')}</h3>
             </div>
 
             <div className="p-6">
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
-                <p className="text-sm text-orange-800 font-medium">⚠️ Use esta função para:</p>
+                <p className="text-sm text-orange-800 font-medium">{t('backup.modals.upload.useFor')}</p>
                 <ul className="text-xs text-orange-700 mt-2 ml-4 space-y-1 list-disc">
-                  <li>Restaurar backup em um novo servidor</li>
-                  <li>Migrar dados de outro ambiente</li>
-                  <li>Recuperar de um backup externo</li>
+                  {(t('backup.modals.upload.useForPoints', { returnObjects: true }) as string[]).map((point, i) => (
+                    <li key={i}>{point}</li>
+                  ))}
                 </ul>
               </div>
 
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                <p className="text-sm text-red-800 font-medium">❌ ATENÇÃO:</p>
+                <p className="text-sm text-red-800 font-medium">{t('backup.modals.upload.warningTitle')}</p>
                 <p className="text-xs text-red-700 mt-2">
-                  O backup enviado substituirá TODOS os dados atuais do sistema!
+                  {t('backup.modals.upload.warningText')}
                 </p>
               </div>
 
               <div className="space-y-4">
                 <div>
                   <label htmlFor="backupFile" className="block text-sm font-medium text-gray-700 mb-2">
-                    Selecione o arquivo de backup (.tar.gz)
+                    {t('backup.modals.upload.selectFile')}
                   </label>
                   <input
                     type="file"
@@ -616,13 +605,12 @@ export function SystemBackup() {
 
                 <div className="bg-gray-50 rounded-lg p-3">
                   <p className="text-xs text-gray-600">
-                    <strong>Processo:</strong>
+                    <strong>{t('backup.modals.upload.process')}</strong>
                   </p>
                   <ol className="text-xs text-gray-600 mt-1 ml-4 space-y-1 list-decimal">
-                    <li>O arquivo será enviado ao servidor</li>
-                    <li>O banco de dados atual será substituído</li>
-                    <li>Os arquivos atuais serão substituídos</li>
-                    <li>O sistema será restaurado para o estado do backup</li>
+                    {(t('backup.modals.upload.processSteps', { returnObjects: true }) as string[]).map((step, i) => (
+                      <li key={i}>{step}</li>
+                    ))}
                   </ol>
                 </div>
               </div>
@@ -636,14 +624,14 @@ export function SystemBackup() {
                 }}
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
               >
-                Cancelar
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleUploadAndRestore}
                 disabled={!uploadFile || uploading}
                 className="px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-lg hover:bg-orange-700 disabled:opacity-50"
               >
-                {uploading ? 'Enviando e Restaurando...' : 'Enviar e Restaurar'}
+                {uploading ? t('backup.modals.upload.uploading') : t('backup.modals.upload.submit')}
               </button>
             </div>
           </div>

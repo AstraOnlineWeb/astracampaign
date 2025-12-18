@@ -1,30 +1,33 @@
 import { memo } from 'react';
 import { NodeProps } from 'reactflow';
+import { useTranslation } from 'react-i18next';
 import { BaseNode } from './BaseNode';
 
 export const ActionNode = memo((props: NodeProps) => {
+  const { t } = useTranslation();
+  
   const getDescription = () => {
     const type = props.data.config?.actionType;
-    if (!type) return 'Selecione uma ação';
+    if (!type) return t('flowBuilder.nodes.action.selectAction');
 
-    const labels: Record<string, string> = {
-      text: '📝 Texto',
-      image: '🖼️ Imagem',
-      video: '🎬 Vídeo',
-      audio: '🎵 Áudio',
-      document: '📄 Arquivo',
-      openai: '🤖 OpenAI',
-      groq: '⚡ Groq AI',
+    const actionTypes: Record<string, string> = {
+      text: t('flowBuilder.nodes.action.types.text'),
+      image: t('flowBuilder.nodes.action.types.image'),
+      video: t('flowBuilder.nodes.action.types.video'),
+      audio: t('flowBuilder.nodes.action.types.audio'),
+      document: t('flowBuilder.nodes.action.types.document'),
+      openai: t('flowBuilder.nodes.action.types.openai'),
+      groq: t('flowBuilder.nodes.action.types.groq'),
     };
 
-    return labels[type] || type;
+    return actionTypes[type] || type;
   };
 
   return (
     <BaseNode
       {...props}
       icon="🚀"
-      label="Ação"
+      label={t('flowBuilder.nodes.action.label')}
       color="#3ddc97"
       description={getDescription()}
       onDelete={props.data.onDelete}

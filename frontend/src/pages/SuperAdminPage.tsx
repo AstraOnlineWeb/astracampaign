@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 
 interface Tenant {
@@ -41,6 +42,7 @@ interface TenantFormData {
 }
 
 export function SuperAdminPage() {
+  const { t } = useTranslation();
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -81,10 +83,10 @@ export function SuperAdminPage() {
         const data = await response.json();
         setTenants(data);
       } else {
-        throw new Error('Erro ao carregar empresas');
+        throw new Error(t('superAdmin.messages.loadError'));
       }
     } catch (error) {
-      toast.error('Erro ao carregar empresas');
+      toast.error(t('superAdmin.messages.loadError'));
       console.error(error);
     } finally {
       setLoading(false);
@@ -104,13 +106,13 @@ export function SuperAdminPage() {
       });
 
       if (response.ok) {
-        toast.success('Tenant criado com sucesso!');
+        toast.success(t('superAdmin.messages.createSuccess'));
         setShowCreateModal(false);
         resetForm();
         loadTenants();
       } else {
         const error = await response.json();
-        throw new Error(error.error || 'Erro ao criar tenant');
+        throw new Error(error.error || t('superAdmin.messages.createError'));
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -138,14 +140,14 @@ export function SuperAdminPage() {
       });
 
       if (response.ok) {
-        toast.success('Tenant atualizado com sucesso!');
+        toast.success(t('superAdmin.messages.updateSuccess'));
         setShowEditModal(false);
         setSelectedTenant(null);
         resetForm();
         loadTenants();
       } else {
         const error = await response.json();
-        throw new Error(error.error || 'Erro ao atualizar tenant');
+        throw new Error(error.error || t('superAdmin.messages.updateError'));
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -169,11 +171,11 @@ export function SuperAdminPage() {
       });
 
       if (response.ok) {
-        toast.success(`Tenant ${!tenant.active ? 'ativado' : 'desativado'} com sucesso!`);
+        toast.success(t('superAdmin.messages.toggleStatusSuccess', { status: !tenant.active ? t('superAdmin.messages.activated') : t('superAdmin.messages.deactivated') }));
         loadTenants();
       } else {
         const error = await response.json();
-        throw new Error(error.error || 'Erro ao alterar status do tenant');
+        throw new Error(error.error || t('superAdmin.messages.toggleStatusError'));
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -250,8 +252,8 @@ export function SuperAdminPage() {
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Gerenciamento de Empresas</h1>
-          <p className="text-gray-600 mt-2">Gerencie todas as empresas do sistema</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('superAdmin.page.title')}</h1>
+          <p className="text-gray-600 mt-2">{t('superAdmin.page.subtitle')}</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
@@ -260,7 +262,7 @@ export function SuperAdminPage() {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          Nova Empresa
+          {t('superAdmin.actions.new')}
         </button>
       </div>
 
@@ -274,7 +276,7 @@ export function SuperAdminPage() {
               </svg>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Empresas</p>
+              <p className="text-sm font-medium text-gray-600">{t('superAdmin.stats.total')}</p>
               <p className="text-2xl font-bold text-gray-900">{tenants.length}</p>
             </div>
           </div>
@@ -288,7 +290,7 @@ export function SuperAdminPage() {
               </svg>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Ativos</p>
+              <p className="text-sm font-medium text-gray-600">{t('superAdmin.stats.active')}</p>
               <p className="text-2xl font-bold text-gray-900">{tenants.filter(t => t.active).length}</p>
             </div>
           </div>
@@ -302,7 +304,7 @@ export function SuperAdminPage() {
               </svg>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Inativos</p>
+              <p className="text-sm font-medium text-gray-600">{t('superAdmin.stats.inactive')}</p>
               <p className="text-2xl font-bold text-gray-900">{tenants.filter(t => !t.active).length}</p>
             </div>
           </div>
@@ -316,7 +318,7 @@ export function SuperAdminPage() {
               </svg>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Usuários</p>
+              <p className="text-sm font-medium text-gray-600">{t('superAdmin.stats.users')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {tenants.reduce((acc, t) => acc + (t._count?.users || 0), 0)}
               </p>
@@ -328,7 +330,7 @@ export function SuperAdminPage() {
       {/* Tenants List */}
       <div className="bg-white rounded-lg shadow">
         <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Empresas</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t('superAdmin.tenants.listTitle')}</h2>
         </div>
         <div className="divide-y divide-gray-200">
           {tenants.map((tenant) => (
@@ -349,12 +351,11 @@ export function SuperAdminPage() {
                       </p>
                     </div>
 
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      tenant.active
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${tenant.active
                         ? 'bg-green-100 text-green-800'
                         : 'bg-red-100 text-red-800'
-                    }`}>
-                      {tenant.active ? 'Ativo' : 'Inativo'}
+                      }`}>
+                      {tenant.active ? t('superAdmin.status.active') : t('superAdmin.status.inactive')}
                     </span>
                   </div>
 
@@ -362,10 +363,10 @@ export function SuperAdminPage() {
                   {tenant._count && tenant.quota && (
                     <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
                       {[
-                        { label: 'Usuários', current: tenant._count.users, max: tenant.quota.maxUsers },
-                        { label: 'Contatos', current: tenant._count.contacts, max: tenant.quota.maxContacts },
-                        { label: 'Campanhas', current: tenant._count.campaigns, max: tenant.quota.maxCampaigns },
-                        { label: 'Conexões', current: tenant._count.whatsappSessions, max: tenant.quota.maxConnections }
+                        { label: t('superAdmin.quotas.users'), current: tenant._count.users, max: tenant.quota.maxUsers },
+                        { label: t('superAdmin.quotas.contacts'), current: tenant._count.contacts, max: tenant.quota.maxContacts },
+                        { label: t('superAdmin.quotas.campaigns'), current: tenant._count.campaigns, max: tenant.quota.maxCampaigns },
+                        { label: t('superAdmin.quotas.connections'), current: tenant._count.whatsappSessions, max: tenant.quota.maxConnections }
                       ].map((stat) => {
                         const percentage = getUsagePercentage(stat.current, stat.max);
                         return (
@@ -386,17 +387,16 @@ export function SuperAdminPage() {
                     onClick={() => openEditModal(tenant)}
                     className="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
                   >
-                    Editar
+                    {t('superAdmin.actions.edit')}
                   </button>
                   <button
                     onClick={() => handleToggleTenantStatus(tenant)}
-                    className={`px-3 py-2 text-sm rounded-lg ${
-                      tenant.active
+                    className={`px-3 py-2 text-sm rounded-lg ${tenant.active
                         ? 'bg-red-100 text-red-700 hover:bg-red-200'
                         : 'bg-green-100 text-green-700 hover:bg-green-200'
-                    }`}
+                      }`}
                   >
-                    {tenant.active ? 'Desativar' : 'Ativar'}
+                    {tenant.active ? t('superAdmin.actions.deactivate') : t('superAdmin.actions.activate')}
                   </button>
                 </div>
               </div>
@@ -410,45 +410,45 @@ export function SuperAdminPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
             <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-xl font-semibold">Criar Novo Tenant</h2>
+              <h2 className="text-xl font-semibold">{t('superAdmin.modals.create.title')}</h2>
             </div>
             <div className="p-6 space-y-6">
               {/* Tenant Info */}
               <div>
-                <h3 className="text-lg font-medium mb-4">Informações do Tenant</h3>
+                <h3 className="text-lg font-medium mb-4">{t('superAdmin.form.sections.info')}</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Slug *
+                      {t('superAdmin.form.fields.slug')} *
                     </label>
                     <input
                       type="text"
                       value={formData.slug}
-                      onChange={(e) => setFormData({...formData, slug: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                       placeholder="empresa-abc"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Nome *
+                      {t('superAdmin.form.fields.name')} *
                     </label>
                     <input
                       type="text"
                       value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                       placeholder="Empresa ABC Ltda"
                     />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Domínio
+                      {t('superAdmin.form.fields.domain')}
                     </label>
                     <input
                       type="text"
                       value={formData.domain}
-                      onChange={(e) => setFormData({...formData, domain: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                       placeholder="empresa.com.br"
                     />
@@ -458,49 +458,49 @@ export function SuperAdminPage() {
 
               {/* Admin User */}
               <div>
-                <h3 className="text-lg font-medium mb-4">Usuário Administrador</h3>
+                <h3 className="text-lg font-medium mb-4">{t('superAdmin.form.sections.admin')}</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Nome *
+                      {t('superAdmin.form.fields.adminName')} *
                     </label>
                     <input
                       type="text"
                       value={formData.adminUser.nome}
                       onChange={(e) => setFormData({
                         ...formData,
-                        adminUser: {...formData.adminUser, nome: e.target.value}
+                        adminUser: { ...formData.adminUser, nome: e.target.value }
                       })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email *
+                      {t('superAdmin.form.fields.email')} *
                     </label>
                     <input
                       type="email"
                       value={formData.adminUser.email}
                       onChange={(e) => setFormData({
                         ...formData,
-                        adminUser: {...formData.adminUser, email: e.target.value}
+                        adminUser: { ...formData.adminUser, email: e.target.value }
                       })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Senha *
+                      {t('superAdmin.form.fields.password')} *
                     </label>
                     <input
                       type="password"
                       value={formData.adminUser.senha}
                       onChange={(e) => setFormData({
                         ...formData,
-                        adminUser: {...formData.adminUser, senha: e.target.value}
+                        adminUser: { ...formData.adminUser, senha: e.target.value }
                       })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                      placeholder="Mínimo 8 caracteres"
+                      placeholder={t('superAdmin.form.fields.passwordPlaceholder')}
                     />
                   </div>
                 </div>
@@ -508,60 +508,60 @@ export function SuperAdminPage() {
 
               {/* Quotas */}
               <div>
-                <h3 className="text-lg font-medium mb-4">Quotas</h3>
+                <h3 className="text-lg font-medium mb-4">{t('superAdmin.form.sections.quotas')}</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Max Usuários
+                      {t('superAdmin.quotas.maxUsers')}
                     </label>
                     <input
                       type="number"
                       value={formData.quotas.maxUsers}
                       onChange={(e) => setFormData({
                         ...formData,
-                        quotas: {...formData.quotas, maxUsers: parseInt(e.target.value)}
+                        quotas: { ...formData.quotas, maxUsers: parseInt(e.target.value) }
                       })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Max Contatos
+                      {t('superAdmin.quotas.maxContacts')}
                     </label>
                     <input
                       type="number"
                       value={formData.quotas.maxContacts}
                       onChange={(e) => setFormData({
                         ...formData,
-                        quotas: {...formData.quotas, maxContacts: parseInt(e.target.value)}
+                        quotas: { ...formData.quotas, maxContacts: parseInt(e.target.value) }
                       })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Max Campanhas
+                      {t('superAdmin.quotas.maxCampaigns')}
                     </label>
                     <input
                       type="number"
                       value={formData.quotas.maxCampaigns}
                       onChange={(e) => setFormData({
                         ...formData,
-                        quotas: {...formData.quotas, maxCampaigns: parseInt(e.target.value)}
+                        quotas: { ...formData.quotas, maxCampaigns: parseInt(e.target.value) }
                       })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Max Conexões
+                      {t('superAdmin.quotas.maxConnections')}
                     </label>
                     <input
                       type="number"
                       value={formData.quotas.maxConnections}
                       onChange={(e) => setFormData({
                         ...formData,
-                        quotas: {...formData.quotas, maxConnections: parseInt(e.target.value)}
+                        quotas: { ...formData.quotas, maxConnections: parseInt(e.target.value) }
                       })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
@@ -577,13 +577,13 @@ export function SuperAdminPage() {
                 }}
                 className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
               >
-                Cancelar
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleCreateTenant}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                Criar Tenant
+                {t('superAdmin.actions.create')}
               </button>
             </div>
           </div>
@@ -595,15 +595,15 @@ export function SuperAdminPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
             <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-xl font-semibold">Editar Tenant</h2>
+              <h2 className="text-xl font-semibold">{t('superAdmin.modals.edit.title')}</h2>
             </div>
             <div className="p-6 space-y-6">
               <div>
-                <h3 className="text-lg font-medium mb-4">Informações do Tenant</h3>
+                <h3 className="text-lg font-medium mb-4">{t('superAdmin.form.sections.info')}</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Slug
+                      {t('superAdmin.form.fields.slug')}
                     </label>
                     <input
                       type="text"
@@ -614,23 +614,23 @@ export function SuperAdminPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Nome *
+                      {t('superAdmin.form.fields.name')} *
                     </label>
                     <input
                       type="text"
                       value={formData.name}
-                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Domínio
+                      {t('superAdmin.form.fields.domain')}
                     </label>
                     <input
                       type="text"
                       value={formData.domain}
-                      onChange={(e) => setFormData({...formData, domain: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
                   </div>
@@ -638,60 +638,60 @@ export function SuperAdminPage() {
               </div>
 
               <div>
-                <h3 className="text-lg font-medium mb-4">Quotas</h3>
+                <h3 className="text-lg font-medium mb-4">{t('superAdmin.form.sections.quotas')}</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Max Usuários
+                      {t('superAdmin.quotas.maxUsers')}
                     </label>
                     <input
                       type="number"
                       value={formData.quotas.maxUsers}
                       onChange={(e) => setFormData({
                         ...formData,
-                        quotas: {...formData.quotas, maxUsers: parseInt(e.target.value)}
+                        quotas: { ...formData.quotas, maxUsers: parseInt(e.target.value) }
                       })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Max Contatos
+                      {t('superAdmin.quotas.maxContacts')}
                     </label>
                     <input
                       type="number"
                       value={formData.quotas.maxContacts}
                       onChange={(e) => setFormData({
                         ...formData,
-                        quotas: {...formData.quotas, maxContacts: parseInt(e.target.value)}
+                        quotas: { ...formData.quotas, maxContacts: parseInt(e.target.value) }
                       })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Max Campanhas
+                      {t('superAdmin.quotas.maxCampaigns')}
                     </label>
                     <input
                       type="number"
                       value={formData.quotas.maxCampaigns}
                       onChange={(e) => setFormData({
                         ...formData,
-                        quotas: {...formData.quotas, maxCampaigns: parseInt(e.target.value)}
+                        quotas: { ...formData.quotas, maxCampaigns: parseInt(e.target.value) }
                       })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Max Conexões
+                      {t('superAdmin.quotas.maxConnections')}
                     </label>
                     <input
                       type="number"
                       value={formData.quotas.maxConnections}
                       onChange={(e) => setFormData({
                         ...formData,
-                        quotas: {...formData.quotas, maxConnections: parseInt(e.target.value)}
+                        quotas: { ...formData.quotas, maxConnections: parseInt(e.target.value) }
                       })}
                       className="w-full border border-gray-300 rounded-lg px-3 py-2"
                     />
@@ -708,13 +708,13 @@ export function SuperAdminPage() {
                 }}
                 className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
               >
-                Cancelar
+                {t('common.cancel')}
               </button>
               <button
                 onClick={handleUpdateTenant}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                Salvar Alterações
+                {t('common.saveChanges')}
               </button>
             </div>
           </div>

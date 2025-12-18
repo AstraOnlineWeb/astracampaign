@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 interface BackupInfo {
   tenantId: string;
@@ -27,6 +28,7 @@ interface BackupStats {
 }
 
 export function BackupManagement() {
+  const { t } = useTranslation();
   const [stats, setStats] = useState<BackupStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -47,11 +49,11 @@ export function BackupManagement() {
         const data = await response.json();
         setStats(data.stats);
       } else {
-        toast.error('Erro ao carregar estatísticas de backup');
+        toast.error(t('backup.error'));
       }
     } catch (error) {
       console.error('Erro ao carregar backup stats:', error);
-      toast.error('Erro ao carregar dados de backup');
+      toast.error(t('backup.error'));
     } finally {
       setLoading(false);
     }
@@ -75,17 +77,17 @@ export function BackupManagement() {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          toast.success(data.message || 'Backup criado com sucesso');
+          toast.success(data.message || t('backup.messages.createSuccess'));
           await loadBackupStats(); // Recarrega stats
         } else {
-          toast.error(data.message || 'Erro ao criar backup');
+          toast.error(data.message || t('backup.messages.createError'));
         }
       } else {
-        toast.error('Erro ao criar backup');
+        toast.error(t('backup.messages.createError'));
       }
     } catch (error) {
       console.error('Erro ao criar backup:', error);
-      toast.error('Erro ao criar backup');
+      toast.error(t('backup.messages.createError'));
     } finally {
       setActionLoading(null);
     }
@@ -116,14 +118,14 @@ export function BackupManagement() {
           toast.success(data.message);
           await loadBackupStats();
         } else {
-          toast.error(data.message || 'Erro ao configurar agendamento');
+          toast.error(data.message || t('backup.messages.saveConfigError'));
         }
       } else {
-        toast.error('Erro ao configurar agendamento');
+        toast.error(t('backup.messages.saveConfigError'));
       }
     } catch (error) {
       console.error('Erro ao configurar agendamento:', error);
-      toast.error('Erro ao configurar agendamento');
+      toast.error(t('backup.messages.saveConfigError'));
     } finally {
       setActionLoading(null);
     }
@@ -138,8 +140,8 @@ export function BackupManagement() {
   };
 
   const formatDate = (dateString: string | null): string => {
-    if (!dateString) return 'Nunca';
-    return new Date(dateString).toLocaleString('pt-BR');
+    if (!dateString) return t('backup.status.never');
+    return new Date(dateString).toLocaleString();
   };
 
   if (loading) {
@@ -161,7 +163,7 @@ export function BackupManagement() {
     return (
       <div className="bg-white rounded-lg shadow p-6">
         <div className="text-center text-gray-500">
-          Erro ao carregar dados de backup
+          {t('backup.error')}
         </div>
       </div>
     );
@@ -172,27 +174,27 @@ export function BackupManagement() {
       {/* Estatísticas Gerais */}
       <div className="bg-white rounded-lg shadow">
         <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Sistema de Backup</h2>
-          <p className="text-sm text-gray-600 mt-1">Gerenciamento de backups automáticos por tenant</p>
+          <h2 className="text-lg font-semibold text-gray-900">{t('backup.managementTitle')}</h2>
+          <p className="text-sm text-gray-600 mt-1">{t('backup.managementSubtitle')}</p>
         </div>
 
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">{stats.totalTenants}</div>
-              <div className="text-sm text-gray-600">Empresas</div>
+              <div className="text-sm text-gray-600">{t('backup.stats.companies')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">{stats.totalBackups}</div>
-              <div className="text-sm text-gray-600">Backups Totais</div>
+              <div className="text-sm text-gray-600">{t('backup.stats.totalBackups')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">{formatFileSize(stats.totalSize)}</div>
-              <div className="text-sm text-gray-600">Espaço Usado</div>
+              <div className="text-sm text-gray-600">{t('backup.stats.usedSpace')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-orange-600">{stats.scheduledJobs}</div>
-              <div className="text-sm text-gray-600">Jobs Agendados</div>
+              <div className="text-sm text-gray-600">{t('backup.stats.scheduledJobs')}</div>
             </div>
           </div>
 
@@ -209,20 +211,20 @@ export function BackupManagement() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Criando backup...
+                  {t('backup.actions.creating')}
                 </>
               ) : (
-                'Backup de Todas as Empresas'
+                t('backup.actions.globalBackup')
               )}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Lista de Empresas */
+      {/* Lista de Empresas */}
       <div className="bg-white rounded-lg shadow">
         <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">Backup por Empresa</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t('backup.list.tenantTitle')}</h3>
         </div>
 
         <div className="overflow-x-auto">
@@ -230,22 +232,22 @@ export function BackupManagement() {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Tenant
+                  {t('backup.list.headers.tenant')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Backups
+                  {t('backup.list.headers.backups')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Tamanho Total
+                  {t('backup.list.headers.size')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Último Backup
+                  {t('backup.list.headers.lastBackup')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Agendamento
+                  {t('backup.list.headers.schedule')}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Ações
+                  {t('backup.list.headers.actions')}
                 </th>
               </tr>
             </thead>
@@ -271,11 +273,10 @@ export function BackupManagement() {
                     <button
                       onClick={() => toggleSchedule(tenant.tenantId, !tenant.isScheduled)}
                       disabled={actionLoading === `schedule-${tenant.tenantId}`}
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors disabled:opacity-50 ${
-                        tenant.isScheduled
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors disabled:opacity-50 ${tenant.isScheduled
                           ? 'bg-green-100 text-green-800 hover:bg-green-200'
                           : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                      }`}
+                        }`}
                     >
                       {actionLoading === `schedule-${tenant.tenantId}` ? (
                         <svg className="animate-spin h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24">
@@ -285,7 +286,7 @@ export function BackupManagement() {
                       ) : (
                         <div className={`w-2 h-2 rounded-full mr-1 ${tenant.isScheduled ? 'bg-green-500' : 'bg-gray-400'}`}></div>
                       )}
-                      {tenant.isScheduled ? 'Ativo' : 'Inativo'}
+                      {tenant.isScheduled ? t('backup.status.active') : t('backup.status.inactive')}
                     </button>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -300,10 +301,10 @@ export function BackupManagement() {
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
-                          Executando...
+                          {t('backup.actions.creating')}
                         </>
                       ) : (
-                        'Backup Agora'
+                        t('backup.actions.backupNow')
                       )}
                     </button>
                   </td>

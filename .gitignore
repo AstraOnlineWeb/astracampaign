@@ -14,10 +14,12 @@ CAMPANHA_INTERATIVA_TESTES.md
 INSTALL_DEPENDENCIES.md
 RELEASE_v0.0.3.txt
 apiquepasa.txt
-
+docker-compose.dev.yml
+docker-dev-setup.md
+start-dev.sh
 # Screenshots e prints
 prints/
-
+ea3fd76c-212c-41aa-a1fc-f895f3577d29/
 # Scripts auxiliares e testes
 recreate-repo.sh
 test_dispatch_teste1.js

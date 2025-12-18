@@ -2,11 +2,20 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+# Instalar OpenSSL y otras dependencias necesarias para Prisma
+RUN apk add --no-cache openssl openssl-dev libc6-compat
+
+# Instalar dependencias
 COPY package*.json ./
 RUN npm install
 
+# Copiar código fuente
 COPY . .
+
+# Generar Prisma Client
+RUN npx prisma generate
 
 EXPOSE 3003
 
+# Comando para desarrollo con hot reload
 CMD ["npm", "run", "dev"]

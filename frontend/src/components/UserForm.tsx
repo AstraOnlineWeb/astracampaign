@@ -2,39 +2,36 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useTranslation } from 'react-i18next';
 import { User, UserInput } from '../types';
 
-const createUserSchema = z.object({
-  nome: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
-  email: z.string().email('E-mail inválido'),
-  senha: z.string()
-    .min(6, 'Senha deve ter pelo menos 6 caracteres')
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Senha deve conter pelo menos uma letra minúscula, uma maiúscula e um número'),
-  role: z.enum(['ADMIN', 'USER']),
-  ativo: z.boolean(),
-});
-
-const updateUserSchema = z.object({
-  nome: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
-  email: z.string().email('E-mail inválido'),
-  senha: z.string()
-    .min(6, 'Senha deve ter pelo menos 6 caracteres')
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Senha deve conter pelo menos uma letra minúscula, uma maiúscula e um número')
-    .optional(),
-  role: z.enum(['ADMIN', 'USER']),
-  ativo: z.boolean(),
-});
-
-type UserFormData = z.infer<typeof createUserSchema> | z.infer<typeof updateUserSchema>;
-
-interface UserFormProps {
-  user?: User;
-  onSubmit: (data: UserInput) => Promise<void>;
-  onCancel: () => void;
-}
-
 export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
+  const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Schema definition inside component to use t()
+  const createUserSchema = z.object({
+    nome: z.string().min(2, t('users.validation.nameMin')),
+    email: z.string().email(t('users.validation.emailInvalid')),
+    senha: z.string()
+      .min(6, t('users.validation.passwordMin'))
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, t('users.validation.passwordRegex')),
+    role: z.enum(['ADMIN', 'USER']),
+    ativo: z.boolean(),
+  });
+
+  const updateUserSchema = z.object({
+    nome: z.string().min(2, t('users.validation.nameMin')),
+    email: z.string().email(t('users.validation.emailInvalid')),
+    senha: z.string()
+      .min(6, t('users.validation.passwordMin'))
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, t('users.validation.passwordRegex'))
+      .optional(),
+    role: z.enum(['ADMIN', 'USER']),
+    ativo: z.boolean(),
+  });
+
+  type UserFormData = z.infer<typeof createUserSchema> | z.infer<typeof updateUserSchema>;
 
   const {
     register,
@@ -81,13 +78,13 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
         <div className="p-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
-            {user ? 'Editar Usuário' : 'Novo Usuário'}
+            {user ? t('users.form.title.edit') : t('users.form.title.new')}
           </h3>
 
           <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
             <div>
               <label htmlFor="nome" className="block text-sm font-medium text-gray-700 mb-1">
-                Nome
+                {t('users.form.name')}
               </label>
               <input
                 {...register('nome')}
@@ -103,7 +100,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                E-mail
+                {t('users.form.email')}
               </label>
               <input
                 {...register('email')}
@@ -119,7 +116,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
 
             <div>
               <label htmlFor="senha" className="block text-sm font-medium text-gray-700 mb-1">
-                {user ? 'Nova Senha (deixe em branco para manter)' : 'Senha'}
+                {user ? t('users.form.newPassword') : t('users.form.password')}
               </label>
               <input
                 {...register('senha')}
@@ -127,11 +124,11 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
                 id="senha"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 disabled={isSubmitting}
-                placeholder={user ? '' : 'Mín. 6 caracteres com maiúscula, minúscula e número'}
+                placeholder={user ? '' : t('users.form.passwordPlaceholder')}
               />
               {!user && (
                 <p className="mt-1 text-xs text-gray-500">
-                  A senha deve ter pelo menos 6 caracteres incluindo uma letra maiúscula, uma minúscula e um número
+                  {t('users.form.passwordHint')}
                 </p>
               )}
               {errors.senha && (
@@ -141,7 +138,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
 
             <div>
               <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
-                Papel
+                {t('users.form.role')}
               </label>
               <select
                 {...register('role')}
@@ -149,8 +146,8 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 disabled={isSubmitting}
               >
-                <option value="USER">Usuário</option>
-                <option value="ADMIN">Administrador</option>
+                <option value="USER">{t('users.form.roles.user')}</option>
+                <option value="ADMIN">{t('users.form.roles.admin')}</option>
               </select>
               {errors.role && (
                 <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>
@@ -166,7 +163,7 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
                 disabled={isSubmitting}
               />
               <label htmlFor="ativo" className="ml-2 block text-sm text-gray-900">
-                Usuário ativo
+                {t('users.form.active')}
               </label>
             </div>
 
@@ -177,14 +174,14 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 disabled={isSubmitting}
               >
-                Cancelar
+                {t('users.form.cancel')}
               </button>
               <button
                 type="submit"
                 className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Salvando...' : (user ? 'Atualizar' : 'Criar')}
+                {isSubmitting ? t('users.form.saving') : (user ? t('users.form.update') : t('users.form.create'))}
               </button>
             </div>
           </form>
@@ -192,4 +189,10 @@ export function UserForm({ user, onSubmit, onCancel }: UserFormProps) {
       </div>
     </div>
   );
+}
+
+interface UserFormProps {
+  user?: User;
+  onSubmit: (data: UserInput) => Promise<void>;
+  onCancel: () => void;
 }

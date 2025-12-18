@@ -2,16 +2,15 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { CategoryInput, Category } from '../types';
 import { apiService } from '../services/api';
 
-const categorySchema = z.object({
-  nome: z.string().min(1, 'Nome é obrigatório'),
-  cor: z.string().min(1, 'Cor é obrigatória'),
-  descricao: z.string().optional(),
-});
-
-type CategoryFormData = z.infer<typeof categorySchema>;
+type CategoryFormData = {
+  nome: string;
+  cor: string;
+  descricao?: string;
+};
 
 interface CategoryFormProps {
   category?: Category;
@@ -33,6 +32,14 @@ const defaultColors = [
 ];
 
 export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProps) {
+  const { t } = useTranslation();
+
+  const categorySchema = z.object({
+    nome: z.string().min(1, t('categories.validation.nameRequired')),
+    cor: z.string().min(1, t('categories.validation.colorRequired')),
+    descricao: z.string().optional(),
+  });
+
   const {
     register,
     handleSubmit,
@@ -60,15 +67,15 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
 
       if (category) {
         await apiService.updateCategory(category.id, categoryInput);
-        toast.success('Categoria atualizada com sucesso');
+        toast.success(t('categories.messages.updateSuccess'));
       } else {
         await apiService.createCategory(categoryInput);
-        toast.success('Categoria criada com sucesso');
+        toast.success(t('categories.messages.createSuccess'));
       }
 
       onSuccess();
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erro ao salvar categoria';
+      const errorMessage = err instanceof Error ? err.message : t('categories.messages.error');
       toast.error(errorMessage);
     }
   };
@@ -83,24 +90,24 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
             </svg>
           </div>
           <h2 id="form-title" className="text-2xl font-bold text-gray-900">
-            {category ? 'Editar Categoria' : 'Nova Categoria'}
+            {category ? t('categories.edit') : t('categories.new')}
           </h2>
           <p className="text-gray-500 mt-2">
-            {category ? 'Atualize as informações da categoria' : 'Crie uma nova categoria para organizar seus contatos'}
+            {category ? t('categories.subtitle.edit') : t('categories.subtitle.new')}
           </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label htmlFor="nome" className="block text-sm font-semibold text-gray-700 mb-2">
-              Nome *
+              {t('categories.form.name')} *
             </label>
             <input
               id="nome"
               type="text"
               {...register('nome')}
               className="input-field"
-              placeholder="Digite o nome da categoria"
+              placeholder={t('categories.form.namePlaceholder')}
               aria-invalid={errors.nome ? 'true' : 'false'}
               aria-describedby={errors.nome ? 'nome-error' : undefined}
             />
@@ -113,7 +120,7 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
 
           <div>
             <label htmlFor="cor" className="block text-sm font-semibold text-gray-700 mb-3">
-              Cor *
+              {t('categories.form.color')} *
             </label>
             <div className="grid grid-cols-5 gap-3 mb-4">
               {defaultColors.map((color) => (
@@ -121,11 +128,10 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
                   key={color}
                   type="button"
                   onClick={() => setValue('cor', color)}
-                  className={`w-12 h-12 rounded-xl border-3 transition-all duration-200 hover:scale-110 ${
-                    selectedColor === color ? 'border-gray-800 shadow-lg' : 'border-gray-200 hover:border-gray-400'
-                  }`}
+                  className={`w-12 h-12 rounded-xl border-3 transition-all duration-200 hover:scale-110 ${selectedColor === color ? 'border-gray-800 shadow-lg' : 'border-gray-200 hover:border-gray-400'
+                    }`}
                   style={{ backgroundColor: color }}
-                  aria-label={`Selecionar cor ${color}`}
+                  aria-label={t('categories.form.customColorHint')} // Using hint as label for color buttons for now as generic
                 />
               ))}
             </div>
@@ -139,8 +145,8 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
                 aria-describedby={errors.cor ? 'cor-error' : undefined}
               />
               <div className="flex-1">
-                <div className="text-sm text-gray-600">Cor personalizada</div>
-                <div className="text-xs text-gray-400">Clique para escolher uma cor específica</div>
+                <div className="text-sm text-gray-600">{t('categories.form.customColor')}</div>
+                <div className="text-xs text-gray-400">{t('categories.form.customColorHint')}</div>
               </div>
             </div>
             {errors.cor && (
@@ -152,14 +158,14 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
 
           <div>
             <label htmlFor="descricao" className="block text-sm font-semibold text-gray-700 mb-2">
-              Descrição
+              {t('categories.form.description')}
             </label>
             <textarea
               id="descricao"
               {...register('descricao')}
               rows={4}
               className="input-field resize-none"
-              placeholder="Digite uma descrição para a categoria (opcional)"
+              placeholder={t('categories.form.descriptionPlaceholder')}
             />
           </div>
 
@@ -168,15 +174,15 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
               type="button"
               onClick={onCancel}
               className="flex-1 bg-gray-100 text-gray-700 py-3 px-6 rounded-xl hover:bg-gray-200 font-medium transition-all duration-200 border border-gray-200"
-              aria-label="Cancelar operação"
+              aria-label={t('categories.form.cancel')}
             >
-              Cancelar
+              {t('categories.form.cancel')}
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
               className="btn-primary flex-1 py-3 px-6 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              aria-label={category ? 'Salvar alterações da categoria' : 'Criar nova categoria'}
+              aria-label={category ? t('categories.save') : t('categories.save')}
             >
               {isSubmitting ? (
                 <>
@@ -184,10 +190,10 @@ export function CategoryForm({ category, onSuccess, onCancel }: CategoryFormProp
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Salvando...
+                  {t('categories.form.saving')}
                 </>
               ) : (
-                'Salvar Categoria'
+                t('categories.form.save')
               )}
             </button>
           </div>

@@ -2,20 +2,21 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { ContactInput, Contact } from '../types';
 import { apiService } from '../services/api';
 import { validatePhone } from '../utils/phoneUtils';
 
-const contactSchema = z.object({
-  nome: z.string().min(1, 'Nome é obrigatório'),
-  telefone: z.string().min(1, 'Telefone é obrigatório').refine(validatePhone, {
-    message: 'Formato de telefone inválido',
+const createContactSchema = (t: any) => z.object({
+  nome: z.string().min(1, t('contacts.validation.nameRequired')),
+  telefone: z.string().min(1, t('contacts.validation.phoneRequired')).refine(validatePhone, {
+    message: t('contacts.validation.phoneInvalid'),
   }),
-  email: z.string().email('Email inválido').optional().or(z.literal('')),
+  email: z.string().email(t('contacts.validation.emailInvalid')).optional().or(z.literal('')),
   observacoes: z.string().optional(),
 });
 
-type ContactFormData = z.infer<typeof contactSchema>;
+type ContactFormData = z.infer<ReturnType<typeof createContactSchema>>;
 
 interface ContactFormProps {
   contact?: Contact;
@@ -24,6 +25,10 @@ interface ContactFormProps {
 }
 
 export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) {
+  const { t } = useTranslation();
+
+  const contactSchema = createContactSchema(t);
+
   const {
     register,
     handleSubmit,
@@ -50,16 +55,16 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
 
       if (contact) {
         await apiService.updateContact(contact.id, contactInput);
-        toast.success('Contato atualizado com sucesso');
+        toast.success(t('contacts.messages.updateSuccess'));
       } else {
         await apiService.createContact(contactInput);
-        toast.success('Contato criado com sucesso');
+        toast.success(t('contacts.messages.createSuccess'));
       }
 
       reset();
       onSuccess();
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erro ao salvar contato';
+      const errorMessage = err instanceof Error ? err.message : t('contacts.messages.genericError');
       toast.error(errorMessage);
     }
   };
@@ -73,13 +78,13 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md" role="dialog" aria-labelledby="form-title">
         <h2 id="form-title" className="text-xl font-semibold mb-4">
-          {contact ? 'Editar Contato' : 'Novo Contato'}
+          {contact ? t('contacts.form.title.edit') : t('contacts.form.title.new')}
         </h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label htmlFor="nome" className="block text-sm font-medium text-gray-700 mb-1">
-              Nome *
+              {t('contacts.form.name')} *
             </label>
             <input
               id="nome"
@@ -98,13 +103,13 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
 
           <div>
             <label htmlFor="telefone" className="block text-sm font-medium text-gray-700 mb-1">
-              Telefone *
+              {t('contacts.form.phone')} *
             </label>
             <input
               id="telefone"
               type="tel"
               {...register('telefone')}
-              placeholder="+55 11 99999-9999"
+              placeholder={t('contacts.form.phonePlaceholder')}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               aria-invalid={errors.telefone ? 'true' : 'false'}
               aria-describedby={errors.telefone ? 'telefone-error' : undefined}
@@ -118,7 +123,7 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+              {t('contacts.form.email')}
             </label>
             <input
               id="email"
@@ -138,7 +143,7 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
 
           <div>
             <label htmlFor="observacoes" className="block text-sm font-medium text-gray-700 mb-1">
-              Observações
+              {t('contacts.form.notes')}
             </label>
             <textarea
               id="observacoes"
@@ -153,17 +158,17 @@ export function ContactForm({ contact, onSuccess, onCancel }: ContactFormProps) 
               type="submit"
               disabled={isSubmitting}
               className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              aria-label={contact ? 'Salvar alterações do contato' : 'Criar novo contato'}
+              aria-label={contact ? t('contacts.form.title.edit') : t('contacts.form.title.new')}
             >
-              {isSubmitting ? 'Salvando...' : 'Salvar'}
+              {isSubmitting ? t('contacts.form.saving') : t('contacts.form.save')}
             </button>
             <button
               type="button"
               onClick={handleCancel}
               className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
-              aria-label="Cancelar operação"
+              aria-label={t('common.cancel')}
             >
-              Cancelar
+              {t('common.cancel')}
             </button>
           </div>
         </form>
